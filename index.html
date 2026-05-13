@@ -1140,14 +1140,53 @@ function render(data){
 // FAB
 const ivw=document.getElementById("itinerary-view"),svw=document.getElementById("snacks-view"),infvw=document.getElementById("info-view"),expvw=document.getElementById("expenses-view");
 const bti=document.getElementById("bt-itinerary"),bts=document.getElementById("bt-snacks"),btinfo=document.getElementById("bt-info"),btexp=document.getElementById("bt-expenses");
-function initExpensesViewSafe(){
+let expensesModuleImportPromise = null;
+function showExpensesLoading(message){
   const root=document.getElementById("expenses-root");
-  if(root && !root.innerHTML.trim()){
-    root.innerHTML='<div class="card"><div class="weather-title">支出模組載入中…</div><div class="section-sub" style="margin-top:6px;">如畫面停留在此，請稍等一秒或重新整理。</div></div>';
+  if(!root) return;
+  if(!root.innerHTML.trim() || root.dataset.loading === "true"){
+    root.dataset.loading = "true";
+    root.innerHTML=`<div class="card"><div class="weather-title">${message || "支出模組載入中…"}</div><div class="section-sub" style="margin-top:6px;">如停留超過數秒，請檢查 assets/js/expenses-module.js 及 assets/js/firebase-config.js 是否已上載。</div></div>`;
   }
-  if(window.tripData?.meta?.expenses?.enabled && typeof window.initExpensesModule==="function"){
-    window.initExpensesModule(window.tripData);
+}
+function showExpensesLoadError(error){
+  const root=document.getElementById("expenses-root");
+  if(!root) return;
+  console.error("Expenses module load error:", error);
+  root.dataset.loading = "false";
+  root.innerHTML=`<div class="card"><div class="weather-title">支出模組載入失敗</div><div class="section-sub" style="margin-top:6px;">請確認 assets/js/expenses-module.js、assets/js/firebase-config.js 及 assets/css/expenses.css 已正確上載。錯誤：${String(error?.message || error || "unknown")}</div></div>`;
+}
+function mountExpensesModuleNow(mod){
+  const initFn = window.initExpensesModule || mod?.initExpensesModule;
+  if(window.tripData?.meta?.expenses?.enabled && typeof initFn === "function"){
+    const root=document.getElementById("expenses-root");
+    if(root) root.dataset.loading = "false";
+    initFn(window.tripData);
+    return true;
   }
+  return false;
+}
+function initExpensesViewSafe(){
+  if(!window.tripData?.meta?.expenses?.enabled){
+    showExpensesLoading("此行程未啟用支出模組");
+    return;
+  }
+
+  if(mountExpensesModuleNow()) return;
+
+  showExpensesLoading("支出模組載入中…");
+
+  if(!expensesModuleImportPromise){
+    expensesModuleImportPromise = import("./assets/js/expenses-module.js");
+  }
+
+  expensesModuleImportPromise
+    .then(mod => {
+      if(!mountExpensesModuleNow(mod)){
+        throw new Error("initExpensesModule not found after module import");
+      }
+    })
+    .catch(showExpensesLoadError);
 }
 function setView(v){
   bti.classList.remove("active");bts.classList.remove("active");btinfo.classList.remove("active");btexp.classList.remove("active");
@@ -1175,5 +1214,4 @@ fetch(getTripJsonUrl())
   .catch(()=>{document.getElementById("today-chip").textContent="無法載入行程資料";document.getElementById("header-title-main").textContent="無法載入行程資料";});
 </script>
 
-<script type="module" src="assets/js/expenses-module.js"></script>
 </body></html>
