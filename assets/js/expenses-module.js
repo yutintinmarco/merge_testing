@@ -41,6 +41,16 @@ function mountExpensesHtml(root) {
       <p id="tripStatusText" class="hint"></p>
     </section>
 
+
+    <div class="expenses-inner-tabs" id="expensesInnerTabs" role="tablist" aria-label="支出功能">
+      <button type="button" class="expenses-inner-tab active" data-expenses-tab="add">新增</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="overview">總覽</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="analytics">分析</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="settings">設定</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="logs">紀錄</button>
+    </div>
+
+    <section class="expenses-panel active" data-expenses-panel="add">
     <section class="card quick-add-card" id="quickAddCard">
       <div class="quick-add-header">
         <div>
@@ -178,6 +188,56 @@ function mountExpensesHtml(root) {
     </section>
 
     <section class="card">
+      <h2>OCR 入單（免費版）</h2>
+      <label>
+        收據圖片
+        <input type="file" id="ocrReceiptInput" accept="image/*" />
+      </label>
+      <button type="button" id="ocrScanBtn" class="secondary-btn">掃描並分析</button>
+      <p class="hint">本地 Tesseract OCR + 規則抽取（免費）</p>
+    </section>
+
+
+    </section>
+
+    <section class="expenses-panel" data-expenses-panel="overview">
+    <section class="card">
+      <h2>資料備份</h2>
+      <p class="hint">JSON Backup 係完整系統備份，包含 trip 設定、支出、找數紀錄、Deleted Items 同 Activity Log。Excel 主要用於對數及報銷。</p>
+      <div class="backup-actions">
+        <button type="button" id="exportJsonBackupBtn" data-action="export-json" class="secondary-btn">匯出 JSON Backup</button>
+        <button type="button" id="exportExcelReportBtn" data-action="export-excel" class="secondary-btn">匯出 Excel Report</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="summary-header-row">
+        <h2>結算 Summary</h2>
+        <button type="button" id="exportExcelBtn" data-action="export-excel" class="secondary-btn export-btn">匯出 Excel</button>
+        <button type="button" id="exportJsonBtn" data-action="export-json" class="secondary-btn export-btn">匯出 JSON Backup</button>
+      </div>
+      <div id="summary"></div>
+    </section>
+
+    <section class="card">
+      <h2>支出列表</h2>
+      <div id="expenseList"></div>
+    </section>
+
+
+    </section>
+
+    <section class="expenses-panel" data-expenses-panel="analytics">
+    <section class="card" id="analyticsCard">
+      <h2>圖表分析</h2>
+      <p class="hint">以下分析以目前結算基準幣別計算，並已排除 Deleted Items。</p>
+      <div id="analyticsSummary"></div>
+    </section>
+
+    </section>
+
+    <section class="expenses-panel" data-expenses-panel="settings">
+    <section class="card">
       <h2>匯率設定（自定義）</h2>
       <label>
         結算基準幣別
@@ -193,16 +253,6 @@ function mountExpensesHtml(root) {
 
       <div id="ratesContainer" class="rates-grid"></div>
       <button type="button" id="saveRatesBtn" class="secondary-btn">儲存匯率</button>
-    </section>
-
-    <section class="card">
-      <h2>OCR 入單（免費版）</h2>
-      <label>
-        收據圖片
-        <input type="file" id="ocrReceiptInput" accept="image/*" />
-      </label>
-      <button type="button" id="ocrScanBtn" class="secondary-btn">掃描並分析</button>
-      <p class="hint">本地 Tesseract OCR + 規則抽取（免費）</p>
     </section>
 
     <section class="card">
@@ -237,29 +287,10 @@ function mountExpensesHtml(root) {
 
 
 
-    <section class="card">
-      <h2>資料備份</h2>
-      <p class="hint">JSON Backup 係完整系統備份，包含 trip 設定、支出、找數紀錄、Deleted Items 同 Activity Log。Excel 主要用於對數及報銷。</p>
-      <div class="backup-actions">
-        <button type="button" id="exportJsonBackupBtn" data-action="export-json" class="secondary-btn">匯出 JSON Backup</button>
-        <button type="button" id="exportExcelReportBtn" data-action="export-excel" class="secondary-btn">匯出 Excel Report</button>
-      </div>
+
     </section>
 
-    <section class="card">
-      <div class="summary-header-row">
-        <h2>結算 Summary</h2>
-        <button type="button" id="exportExcelBtn" data-action="export-excel" class="secondary-btn export-btn">匯出 Excel</button>
-        <button type="button" id="exportJsonBtn" data-action="export-json" class="secondary-btn export-btn">匯出 JSON Backup</button>
-      </div>
-      <div id="summary"></div>
-    </section>
-
-    <section class="card">
-      <h2>支出列表</h2>
-      <div id="expenseList"></div>
-    </section>
-
+    <section class="expenses-panel" data-expenses-panel="logs">
     <section class="card">
       <h2>Deleted Items</h2>
       <p class="hint">已刪除支出會保留作 audit trail，不會參與結算。</p>
@@ -270,6 +301,8 @@ function mountExpensesHtml(root) {
       <h2>Activity Log</h2>
       <p class="hint">記錄新增、修改、刪除、找數、鎖定等主要動作。</p>
       <div id="activityLogList"></div>
+    </section>
+
     </section>
   </main>
 
@@ -344,6 +377,7 @@ const noteInput = document.getElementById("note");
 const syncStatus = document.getElementById("syncStatus");
 const expenseList = document.getElementById("expenseList");
 const summary = document.getElementById("summary");
+const analyticsSummary = document.getElementById("analyticsSummary");
 const submitBtn = document.getElementById("submitBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 const memberList = document.getElementById("memberList");
@@ -943,6 +977,25 @@ function describeSplit(expense) {
   return `${label} · ${rows.map(row => `${row.member}: ${tripSettings.baseCurrency} ${Number(row.amount).toFixed(2)}`).join(" / ")}`;
 }
 
+
+function setupExpenseInnerTabs() {
+  const tabs = Array.from(document.querySelectorAll('.expenses-module [data-expenses-tab]'));
+  const panels = Array.from(document.querySelectorAll('.expenses-module [data-expenses-panel]'));
+
+  function activate(tabName) {
+    tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.expensesTab === tabName));
+    panels.forEach(panel => panel.classList.toggle('active', panel.dataset.expensesPanel === tabName));
+
+    if (tabName === 'analytics') {
+      renderAnalytics();
+    }
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => activate(tab.dataset.expensesTab));
+  });
+}
+
 function setAuthUI(user) {
   if (user) {
     googleSignInBtn.classList.add("hidden");
@@ -1050,7 +1103,7 @@ async function saveTripSettings() {
   await setDoc(getTripDocRef(), { settings: tripSettings }, { merge: true });
   alert("匯率設定已儲存。");
   await logActivity("settings_updated", `修改匯率設定，基準貨幣為 ${newBase}`, "trip", tripId, { baseCurrency: newBase });
-  renderRateEditor(); updateTripStatusUi(); renderSummary(); renderExpenses();
+  renderRateEditor(); updateTripStatusUi(); renderSummary(); renderAnalytics(); renderExpenses();
 }
 
 async function ensureTripMembersAndSettings() {
@@ -1158,7 +1211,7 @@ function startTripListener() {
         ...data.settings,
         exchangeRates: { ...tripSettings.exchangeRates, ...(data.settings.exchangeRates || {}) }
       };
-      renderRateEditor(); updateTripStatusUi(); renderSummary(); renderExpenses();
+      renderRateEditor(); updateTripStatusUi(); renderSummary(); renderAnalytics(); renderExpenses();
     }
   }, err => {
     console.error(err);
@@ -1178,6 +1231,7 @@ function listenToExpenses() {
     renderExpenses();
     renderDeletedExpenses();
     renderSummary();
+    renderAnalytics();
     syncStatus.textContent = `Synced (${tripId})`;
   }, err => {
     console.error(err);
@@ -1192,6 +1246,7 @@ function listenToSettlements() {
   stopSettlementsListener = onSnapshot(q, snap => {
     settlements = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderSummary();
+    renderAnalytics();
   }, err => {
     console.error(err);
     syncStatus.textContent = err?.code === "permission-denied" ? "No access to settlements" : "Settlement sync error";
@@ -1636,6 +1691,70 @@ function calculateSummary() {
     currency,
     recordedPaymentsTotal: getTotalRecordedPayments(currency)
   };
+}
+
+
+function sumBy(rows, keyFn, amountFn) {
+  const map = new Map();
+  rows.forEach(row => {
+    const key = keyFn(row) || "未分類";
+    const amount = Number(amountFn(row) || 0);
+    map.set(key, round2((map.get(key) || 0) + amount));
+  });
+  return Array.from(map.entries())
+    .map(([label, amount]) => ({ label, amount }))
+    .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
+}
+
+function renderAnalytics() {
+  if (!analyticsSummary) return;
+
+  const base = tripSettings.baseCurrency || "HKD";
+  const activeExpenses = expenses || [];
+  const total = round2(activeExpenses.reduce((sum, expense) => {
+    return sum + Number(expense.convertedAmount ?? convertToBase(expense.originalAmount ?? expense.amount ?? 0, expense.originalCurrency ?? expense.currency ?? base) ?? 0);
+  }, 0));
+
+  if (!activeExpenses.length) {
+    analyticsSummary.innerHTML = `<p class="neutral">暫時未有支出可供分析。</p>`;
+    return;
+  }
+
+  const byCategory = sumBy(activeExpenses, e => e.category || "Other", e => e.convertedAmount ?? convertToBase(e.originalAmount ?? e.amount ?? 0, e.originalCurrency ?? e.currency ?? base));
+  const byDate = sumBy(activeExpenses, e => e.date || "未填日期", e => e.convertedAmount ?? convertToBase(e.originalAmount ?? e.amount ?? 0, e.originalCurrency ?? e.currency ?? base));
+  const byPayer = sumBy(activeExpenses, e => e.paidBy || "未知付款人", e => e.convertedAmount ?? convertToBase(e.originalAmount ?? e.amount ?? 0, e.originalCurrency ?? e.currency ?? base));
+
+  function block(title, rows) {
+    const max = Math.max(...rows.map(r => Math.abs(r.amount)), 1);
+    return `
+      <div class="analytics-block">
+        <h3>${safeEscape(title)}</h3>
+        ${rows.map(row => {
+          const pct = Math.max(2, Math.round(Math.abs(row.amount) / max * 100));
+          return `
+            <div class="analytics-row">
+              <div class="analytics-row-top">
+                <span>${safeEscape(row.label)}</span>
+                <strong>${safeEscape(base)} ${Number(row.amount).toFixed(2)}</strong>
+              </div>
+              <div class="analytics-bar"><span style="width:${pct}%"></span></div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }
+
+  analyticsSummary.innerHTML = `
+    <div class="analytics-total-card">
+      <span>總支出</span>
+      <strong>${safeEscape(base)} ${total.toFixed(2)}</strong>
+      <small>共 ${activeExpenses.length} 筆支出，不包括 Deleted Items</small>
+    </div>
+    ${block("按分類", byCategory)}
+    ${block("按日期", byDate)}
+    ${block("按付款人", byPayer)}
+  `;
 }
 
 function renderSummary() {
@@ -2406,6 +2525,7 @@ async function runReceiptOCR() {
 }
 
 /* boot */
+setupExpenseInnerTabs();
 setToday();
 form.addEventListener("submit", saveExpense);
 cancelEditBtn.addEventListener("click", resetExpenseForm);
@@ -2502,6 +2622,7 @@ onAuthStateChanged(auth, async (user) => {
     renderActivityLogs();
     updateTripStatusUi();
     summary.innerHTML = "";
+    if (analyticsSummary) analyticsSummary.innerHTML = "";
     return;
   }
 
