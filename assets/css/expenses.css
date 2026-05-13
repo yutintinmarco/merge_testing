@@ -1557,3 +1557,104 @@ body.expenses-modal-open {
     max-height: min(80dvh, 680px) !important;
   }
 }
+
+/* v5.1.5 Modal backdrop match
+   Copy the main itinerary popup behaviour as closely as possible, including dark mode.
+   This final override intentionally sits at the end to beat older modal hotfix rules. */
+.expenses-module .modal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  background: rgba(0,0,0,0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  overscroll-behavior: contain !important;
+  box-sizing: border-box !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.expenses-module .modal.hidden {
+  display: none !important;
+}
+
+.expenses-module .modal-card,
+.expenses-module .expense-form-modal-card,
+.expenses-module .expense-detail-modal-card,
+.expenses-module .settlement-action-modal-card {
+  width: 90% !important;
+  max-width: 420px !important;
+  max-height: min(82dvh, 720px) !important;
+  background: #fff !important;
+  border-radius: 18px !important;
+  padding: 14px 16px 16px 16px !important;
+  margin: 0 !important;
+  box-shadow: 0 18px 40px rgba(15,23,42,0.30) !important;
+  border: 2px solid transparent !important;
+  position: relative !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  box-sizing: border-box !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.expenses-module .modal-card form,
+.expenses-module .expense-form-modal-card form {
+  padding-bottom: 0 !important;
+}
+
+.expenses-module .sticky-modal-actions {
+  position: static !important;
+  bottom: auto !important;
+  margin: 8px 0 0 0 !important;
+  padding: 8px 0 0 0 !important;
+  border-top: 1px solid rgba(210,210,215,0.72) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+@media (max-width: 480px) {
+  .expenses-module .modal-card,
+  .expenses-module .expense-form-modal-card,
+  .expenses-module .expense-detail-modal-card,
+  .expenses-module .settlement-action-modal-card {
+    width: 90% !important;
+    max-width: 420px !important;
+    max-height: min(82dvh, 720px) !important;
+  }
+}
+
+html.theme-dark .expenses-module .modal,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal {
+  background: rgba(0,0,0,0.60) !important;
+}
+
+html.theme-dark .expenses-module .modal-card,
+html.theme-dark .expenses-module .expense-form-modal-card,
+html.theme-dark .expenses-module .expense-detail-modal-card,
+html.theme-dark .expenses-module .settlement-action-modal-card,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal-card,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-form-modal-card,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-detail-modal-card,
+html:not(.theme-light):not(.theme-dark) .expenses-module .settlement-action-modal-card {
+  background: rgba(26,26,34,0.96) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  box-shadow: 0 24px 56px rgba(0,0,0,0.60) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
