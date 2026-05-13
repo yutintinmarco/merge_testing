@@ -53,66 +53,137 @@ function mountExpensesHtml(root) {
     </div>
 
     <section class="expenses-panel active" data-expenses-panel="add">
-    <section class="card quick-add-card" id="quickAddCard">
-      <div class="quick-add-header">
-        <div>
-          <p class="eyebrow">Quick Add</p>
-          <h2>快速新增</h2>
+      <section class="card quick-add-card" id="quickAddCard">
+        <div class="quick-add-header">
+          <div>
+            <p class="eyebrow">Quick Add</p>
+            <h2>快速新增</h2>
+          </div>
+          <span class="quick-pill">全員平均分</span>
         </div>
-        <span class="quick-pill">全員平均分</span>
-      </div>
 
-      <p class="hint">適合旅行現場即刻入數。參與人預設為所有 members，複雜分帳請用下方完整表格。</p>
+        <p class="hint">適合旅行現場即刻入數。參與人預設為所有 members，複雜分帳請用完整新增。</p>
 
-      <div class="quick-grid">
-        <label>
-          項目名稱
-          <input type="text" id="quickTitle" placeholder="例如：Ichiran Ramen / Taxi / Hotel" autocomplete="off" />
-        </label>
+        <div class="quick-grid">
+          <label>
+            項目名稱
+            <input type="text" id="quickTitle" placeholder="例如：Ichiran Ramen / Taxi / Hotel" autocomplete="off" />
+          </label>
 
-        <label>
-          金額
-          <input type="number" id="quickAmount" step="0.01" min="0" inputmode="decimal" placeholder="0.00" />
-        </label>
+          <label>
+            金額
+            <input type="number" id="quickAmount" step="0.01" min="0" inputmode="decimal" placeholder="0.00" />
+          </label>
 
-        <label>
-          貨幣
-          <select id="quickCurrency">
-            <option value="HKD">HKD</option>
-            <option value="JPY">JPY</option>
-            <option value="CNY">CNY</option>
-            <option value="TWD">TWD</option>
-            <option value="KRW">KRW</option>
-            <option value="USD">USD</option>
-          </select>
-        </label>
+          <label>
+            貨幣
+            <select id="quickCurrency">
+              <option value="HKD">HKD</option>
+              <option value="JPY">JPY</option>
+              <option value="CNY">CNY</option>
+              <option value="TWD">TWD</option>
+              <option value="KRW">KRW</option>
+              <option value="USD">USD</option>
+            </select>
+          </label>
 
-        <label>
-          付款人
-          <select id="quickPaidBy"></select>
-        </label>
+          <label>
+            付款人
+            <select id="quickPaidBy"></select>
+          </label>
 
-        <label>
-          分類
-          <select id="quickCategory">
-            <option value="Food">Food</option>
-            <option value="Transport">Transport</option>
-            <option value="Hotel">Hotel</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Ticket">Ticket</option>
-            <option value="Other">Other</option>
-          </select>
-        </label>
+          <label>
+            分類
+            <select id="quickCategory">
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Hotel">Hotel</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Ticket">Ticket</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
 
-        <button type="button" id="quickAddBtn" class="quick-add-main-btn">快速新增</button>
-      </div>
+          <button type="button" id="quickAddBtn" class="quick-add-main-btn">快速新增</button>
+        </div>
 
-      <p id="quickAddHint" class="hint">輸入項目名稱後，系統會自動估分類；你仍可手動修改。</p>
+        <p id="quickAddHint" class="hint">輸入項目名稱後，系統會自動估分類；你仍可手動修改。</p>
+      </section>
+
+      <section class="card expense-actions-card">
+        <h2>進階入數</h2>
+        <p class="hint">完整新增同 OCR 已收納成 popup，主畫面保持清爽。</p>
+        <div class="expense-action-grid">
+          <button type="button" id="openFullAddBtn" class="secondary-btn">＋ 完整新增</button>
+          <button type="button" id="openOcrEntryBtn" class="secondary-btn">📷 OCR 入單</button>
+        </div>
+      </section>
+
+      <section class="card recent-expenses-card">
+        <h2>最近支出</h2>
+        <div id="recentExpenseList"></div>
+      </section>
     </section>
 
-    <section class="card">
-      <h2>完整新增 / 編輯支出</h2>
+    <section class="expenses-panel" data-expenses-panel="details">
+      <section class="card">
+        <h2>支出明細</h2>
+        <p class="hint">列表只顯示重點資料。按入每筆支出可查看詳細資料、修改或刪除。</p>
+        <div id="expenseList"></div>
+      </section>
+    </section>
 
+    <section class="expenses-panel" data-expenses-panel="settlement">
+      <section class="card">
+        <h2>結算 Summary</h2>
+        <div id="summary"></div>
+      </section>
+    </section>
+
+    <section class="expenses-panel" data-expenses-panel="analytics">
+      <section class="card" id="analyticsCard">
+        <h2>圖表分析</h2>
+        <p class="hint">以下分析以目前結算基準幣別計算，並已排除 Deleted Items。</p>
+        <div id="analyticsSummary"></div>
+      </section>
+    </section>
+
+    <section class="expenses-panel" data-expenses-panel="settings">
+      <section class="card settings-menu-card">
+        <h2>設定</h2>
+        <p class="hint">常用設定已收納成選單，需要時再打開。</p>
+        <div class="settings-menu-grid">
+          <button type="button" class="settings-menu-btn" data-settings-open="account"><span>👤</span><strong>帳戶與登入</strong><small>Google login / logout</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="members"><span>👥</span><strong>成員管理</strong><small>新增 / 移除 members</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="rates"><span>💱</span><strong>匯率設定</strong><small>修改後會重算支出</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="backup"><span>📦</span><strong>資料備份</strong><small>Excel / JSON export</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="access"><span>🔐</span><strong>權限管理</strong><small>Allowed emails</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="lock"><span>🔒</span><strong>鎖定旅程</strong><small>Freeze expenses</small></button>
+        </div>
+      </section>
+    </section>
+
+    <section class="expenses-panel" data-expenses-panel="logs">
+      <section class="card">
+        <h2>Deleted Items</h2>
+        <p class="hint">已刪除支出會保留作 audit trail，不會參與結算。</p>
+        <div id="deletedExpenseList"></div>
+      </section>
+
+      <section class="card">
+        <h2>操作記錄</h2>
+        <p class="hint">記錄新增、修改、刪除、找數、鎖定等主要動作。</p>
+        <div id="activityLogList"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="expenseFormModal" class="modal hidden">
+    <div class="modal-card expense-form-modal-card">
+      <div class="modal-heading-row">
+        <h3 id="expenseFormModalTitle">完整新增支出</h3>
+        <button type="button" class="modal-x-btn" id="closeExpenseFormModalBtn">×</button>
+      </div>
       <form id="expenseForm">
         <label>
           日期
@@ -182,71 +253,64 @@ function mountExpensesHtml(root) {
           <textarea id="note" rows="2" placeholder="Optional"></textarea>
         </label>
 
-        <div class="form-actions">
+        <div class="form-actions sticky-modal-actions">
           <button type="submit" id="submitBtn">新增</button>
           <button type="button" id="cancelEditBtn" class="secondary-btn hidden">取消編輯</button>
         </div>
       </form>
-    </section>
+    </div>
+  </div>
 
-    <section class="card">
-      <h2>OCR 入單（免費版）</h2>
+  <div id="ocrEntryModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row">
+        <h3>OCR 入單</h3>
+        <button type="button" class="modal-x-btn" id="closeOcrEntryModalBtn">×</button>
+      </div>
       <label>
         收據圖片
         <input type="file" id="ocrReceiptInput" accept="image/*" />
       </label>
       <button type="button" id="ocrScanBtn" class="secondary-btn">掃描並分析</button>
-      <p class="hint">本地 Tesseract OCR + 規則抽取（免費）</p>
-    </section>
+      <p class="hint">本地 Tesseract OCR + 規則抽取（免費）。分析完成後可確認並填入完整新增表格。</p>
+    </div>
+  </div>
 
+  <div id="expenseDetailModal" class="modal hidden">
+    <div class="modal-card expense-detail-modal-card">
+      <div class="modal-heading-row">
+        <h3>支出詳情</h3>
+        <button type="button" class="modal-x-btn" id="closeExpenseDetailModalBtn">×</button>
+      </div>
+      <div id="expenseDetailContent"></div>
+    </div>
+  </div>
 
-    </section>
-
-    <section class="expenses-panel" data-expenses-panel="details">
-    <section class="card">
-      <h2>支出明細</h2>
-      <p class="hint">按 Edit 會自動跳到「新增」頁面進行修改。</p>
-      <div id="expenseList"></div>
-    </section>
-    </section>
-
-    <section class="expenses-panel" data-expenses-panel="settlement">
-    <section class="card">
-      <h2>結算 Summary</h2>
-      <div id="summary"></div>
-    </section>
-    </section>
-
-    <section class="expenses-panel" data-expenses-panel="analytics">
-    <section class="card" id="analyticsCard">
-      <h2>圖表分析</h2>
-      <p class="hint">以下分析以目前結算基準幣別計算，並已排除 Deleted Items。</p>
-      <div id="analyticsSummary"></div>
-    </section>
-
-    </section>
-
-    <section class="expenses-panel" data-expenses-panel="settings">
-    <section class="card">
-      <h2>Google Login / 帳戶</h2>
+  <div id="accountSettingsModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>帳戶與登入</h3><button type="button" class="modal-x-btn" data-modal-close="accountSettingsModal">×</button></div>
       <div class="auth-row">
         <button type="button" id="googleSignInBtn">Google 登入</button>
         <button type="button" id="signOutBtn" class="secondary-btn hidden">登出</button>
       </div>
       <p id="authUserText" class="hint"></p>
-    </section>
+    </div>
+  </div>
 
-    <section class="card">
-      <h2>資料備份</h2>
+  <div id="backupSettingsModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>資料備份</h3><button type="button" class="modal-x-btn" data-modal-close="backupSettingsModal">×</button></div>
       <p class="hint">JSON Backup 係完整系統備份。Excel 主要用於對數及報銷。</p>
       <div class="backup-actions">
         <button type="button" id="exportJsonBackupBtn" data-action="export-json" class="secondary-btn">匯出 JSON Backup</button>
         <button type="button" id="exportExcelReportBtn" data-action="export-excel" class="secondary-btn">匯出 Excel Report</button>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section class="card">
-      <h2>匯率設定（自定義）</h2>
+  <div id="ratesSettingsModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>匯率設定</h3><button type="button" class="modal-x-btn" data-modal-close="ratesSettingsModal">×</button></div>
       <label>
         結算基準幣別
         <select id="baseCurrency">
@@ -258,13 +322,14 @@ function mountExpensesHtml(root) {
           <option value="USD">USD</option>
         </select>
       </label>
-
       <div id="ratesContainer" class="rates-grid"></div>
-      <button type="button" id="saveRatesBtn" class="secondary-btn">儲存匯率</button>
-    </section>
+      <button type="button" id="saveRatesBtn" class="secondary-btn">儲存匯率並重算支出</button>
+    </div>
+  </div>
 
-    <section class="card">
-      <h2>旅程設定 / Members</h2>
+  <div id="membersSettingsModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>成員管理</h3><button type="button" class="modal-x-btn" data-modal-close="membersSettingsModal">×</button></div>
       <div class="member-controls">
         <div id="memberList" class="member-list"></div>
         <div class="member-add-row">
@@ -272,52 +337,41 @@ function mountExpensesHtml(root) {
           <button type="button" id="addMemberBtn" class="secondary-btn">新增成員</button>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section class="card hidden" id="adminPanel">
-      <h2>管理員 <span class="admin-badge">Creator</span></h2>
-      <p class="hint">以下 email 登入後可自動加入此 trip</p>
-      <div id="allowedEmailList" class="member-list"></div>
-      <div class="member-add-row" style="margin-top:12px">
-        <input type="email" id="allowedEmailInput" placeholder="example@gmail.com" />
-        <button type="button" id="addAllowedEmailBtn" class="secondary-btn">新增</button>
-      </div>
-    </section>
+  <div id="accessSettingsModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>權限管理</h3><button type="button" class="modal-x-btn" data-modal-close="accessSettingsModal">×</button></div>
+      <section class="hidden" id="adminPanel">
+        <p class="hint">以下 email 登入後可自動加入此 trip。只有 creator 可見。</p>
+        <div id="allowedEmailList" class="member-list"></div>
+        <div class="member-add-row" style="margin-top:12px">
+          <input type="email" id="allowedEmailInput" placeholder="example@gmail.com" />
+          <button type="button" id="addAllowedEmailBtn" class="secondary-btn">新增</button>
+        </div>
+      </section>
+      <p id="accessNoAdminHint" class="hint">如你不是 creator，權限管理不會顯示可編輯名單。</p>
+    </div>
+  </div>
 
-    <section class="card hidden" id="tripControlPanel">
-      <h2>旅程控制</h2>
-      <p class="hint">鎖定後不可再新增、修改或刪除支出，亦不可修改成員及匯率；仍可記錄找數及匯出 Excel。</p>
-      <div class="form-actions">
-        <button type="button" id="lockTripBtn">鎖定此旅程</button>
-        <button type="button" id="unlockTripBtn" class="secondary-btn hidden">解鎖此旅程</button>
-      </div>
-    </section>
-
-
-
-
-    </section>
-
-    <section class="expenses-panel" data-expenses-panel="logs">
-    <section class="card">
-      <h2>Deleted Items</h2>
-      <p class="hint">已刪除支出會保留作 audit trail，不會參與結算。</p>
-      <div id="deletedExpenseList"></div>
-    </section>
-
-    <section class="card">
-      <h2>操作記錄</h2>
-      <p class="hint">記錄新增、修改、刪除、找數、鎖定等主要動作。</p>
-      <div id="activityLogList"></div>
-    </section>
-
-    </section>
-  </main>
+  <div id="lockSettingsModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>鎖定旅程</h3><button type="button" class="modal-x-btn" data-modal-close="lockSettingsModal">×</button></div>
+      <section class="hidden" id="tripControlPanel">
+        <p class="hint">鎖定後不可再新增、修改或刪除支出，亦不可修改成員及匯率；仍可記錄找數及匯出 Excel。</p>
+        <div class="form-actions">
+          <button type="button" id="lockTripBtn">鎖定此旅程</button>
+          <button type="button" id="unlockTripBtn" class="secondary-btn hidden">解鎖此旅程</button>
+        </div>
+      </section>
+      <p id="lockNoAdminHint" class="hint">只有 creator 可以鎖定或解鎖旅程。</p>
+    </div>
+  </div>
 
   <div id="ocrPreviewModal" class="modal hidden">
     <div class="modal-card">
-      <h3>確認收據資料</h3>
-
+      <div class="modal-heading-row"><h3>確認收據資料</h3><button type="button" class="modal-x-btn" id="cancelAiFillBtn">×</button></div>
       <label>商戶 <input type="text" id="aiMerchantInput" /></label>
       <label>日期 <input type="date" id="aiDateInput" /></label>
       <label>
@@ -334,10 +388,8 @@ function mountExpensesHtml(root) {
       <label>總額 <input type="number" id="aiTotalInput" step="0.01" min="0" /></label>
       <label>信心值 <input type="text" id="aiConfidenceInput" readonly /></label>
       <label>解析說明 <textarea id="aiReasonInput" rows="3" readonly></textarea></label>
-
       <div class="form-actions">
-        <button type="button" id="confirmAiFillBtn">確認填入</button>
-        <button type="button" id="cancelAiFillBtn" class="secondary-btn">取消</button>
+        <button type="button" id="confirmAiFillBtn">確認填入完整表格</button>
       </div>
     </div>
   </div>
@@ -441,6 +493,19 @@ const activityLogList = document.getElementById("activityLogList");
 const expenseSnapshotCard = document.getElementById("expenseSnapshotCard");
 const expenseSnapshotTotal = document.getElementById("expenseSnapshotTotal");
 const expenseSnapshotCats = document.getElementById("expenseSnapshotCats");
+const recentExpenseList = document.getElementById("recentExpenseList");
+const openFullAddBtn = document.getElementById("openFullAddBtn");
+const openOcrEntryBtn = document.getElementById("openOcrEntryBtn");
+const expenseFormModal = document.getElementById("expenseFormModal");
+const expenseFormModalTitle = document.getElementById("expenseFormModalTitle");
+const closeExpenseFormModalBtn = document.getElementById("closeExpenseFormModalBtn");
+const ocrEntryModal = document.getElementById("ocrEntryModal");
+const closeOcrEntryModalBtn = document.getElementById("closeOcrEntryModalBtn");
+const expenseDetailModal = document.getElementById("expenseDetailModal");
+const expenseDetailContent = document.getElementById("expenseDetailContent");
+const closeExpenseDetailModalBtn = document.getElementById("closeExpenseDetailModalBtn");
+const accessNoAdminHint = document.getElementById("accessNoAdminHint");
+const lockNoAdminHint = document.getElementById("lockNoAdminHint");
 
 
 let lastModuleStatus = "Connecting";
@@ -661,6 +726,7 @@ function updateTripStatusUi() {
   if (tripControlPanel) {
     tripControlPanel.classList.toggle("hidden", !isAdmin());
   }
+  if (lockNoAdminHint) lockNoAdminHint.classList.toggle("hidden", isAdmin());
 
   if (lockTripBtn) lockTripBtn.classList.toggle("hidden", locked || !isAdmin());
   if (unlockTripBtn) unlockTripBtn.classList.toggle("hidden", !locked || !isAdmin());
@@ -1139,6 +1205,61 @@ function describeSplit(expense) {
 }
 
 
+function openExpenseModal(modal) {
+  if (!modal) return;
+  modal.classList.remove("hidden");
+}
+
+function closeExpenseModal(modal) {
+  if (!modal) return;
+  modal.classList.add("hidden");
+}
+
+function openExpenseFormModal(title = "完整新增支出") {
+  if (expenseFormModalTitle) expenseFormModalTitle.textContent = title;
+  openExpenseModal(expenseFormModal);
+  setTimeout(() => titleInput?.focus(), 80);
+}
+
+function closeExpenseFormModal() {
+  closeExpenseModal(expenseFormModal);
+}
+
+function openOcrEntryModal() {
+  if (!assertTripOpen()) return;
+  openExpenseModal(ocrEntryModal);
+}
+
+function closeOcrEntryModal() {
+  closeExpenseModal(ocrEntryModal);
+}
+
+function getSettingModalId(key) {
+  return {
+    account: "accountSettingsModal",
+    members: "membersSettingsModal",
+    rates: "ratesSettingsModal",
+    backup: "backupSettingsModal",
+    access: "accessSettingsModal",
+    lock: "lockSettingsModal"
+  }[key];
+}
+
+function openSettingModal(key) {
+  const id = getSettingModalId(key);
+  if (!id) return;
+  openExpenseModal(document.getElementById(id));
+}
+
+function closeAllOpenModals() {
+  document.querySelectorAll(".expenses-module .modal").forEach(modal => modal.classList.add("hidden"));
+}
+
+function getExpenseById(expenseId) {
+  return allExpenses.find(item => item.id === expenseId) || expenses.find(item => item.id === expenseId);
+}
+
+
 function activateExpensesTab(tabName) {
   const tabs = Array.from(document.querySelectorAll('.expenses-module [data-expenses-tab]'));
   const panels = Array.from(document.querySelectorAll('.expenses-module [data-expenses-panel]'));
@@ -1449,6 +1570,7 @@ function enterEditMode(expenseId) {
   const expense = expenses.find(item => item.id === expenseId);
   if (!expense) return alert("搵唔到呢筆支出。");
   activateExpensesTab("add");
+  openExpenseFormModal("編輯支出");
   editingExpenseId = expense.id;
   dateInput.value = expense.date || "";
   titleInput.value = expense.title || "";
@@ -1489,9 +1611,7 @@ function enterEditMode(expenseId) {
   notice.className = "editing-notice";
   notice.textContent = `正在編輯：${expense.title}`;
   form.prepend(notice);
-  setTimeout(() => {
-    form.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, 60);
+  setTimeout(() => { titleInput?.focus(); }, 80);
 }
 
 
@@ -1645,6 +1765,7 @@ async function saveExpense(event) {
   }
 
   resetExpenseForm();
+  closeExpenseFormModal();
 }
 
 async function removeExpense(expenseId) {
@@ -1731,36 +1852,108 @@ function formatTimestamp(ts) {
   return d.toLocaleString("zh-HK", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
-function renderExpenses() {
-  if (!expenses.length) return expenseList.innerHTML = `<p class="neutral">暫時未有支出。</p>`;
-  const base = tripSettings.baseCurrency;
+function renderExpenseRows(targetEl, list, options = {}) {
+  if (!targetEl) return;
+  if (!list.length) {
+    targetEl.innerHTML = `<p class="neutral">暫時未有支出。</p>`;
+    return;
+  }
 
-  expenseList.innerHTML = expenses.map(expense => {
+  const base = tripSettings.baseCurrency;
+  const rows = options.limit ? list.slice(0, options.limit) : list;
+
+  targetEl.innerHTML = rows.map(expense => {
     const oAmt = Number(expense.originalAmount ?? expense.amount ?? 0);
     const oCur = expense.originalCurrency ?? expense.currency ?? base;
     const cAmt = Number(expense.convertedAmount ?? convertToBase(oAmt, oCur) ?? 0);
-    const shareText = Array.isArray(expense.sharedBy) ? expense.sharedBy.map(safeEscape).join(", ") : "-";
-    const createdName = expense.createdByName || formatAuditUid(expense.createdBy);
-    const updatedName = expense.updatedByName || formatAuditUid(expense.updatedBy);
+    const splitLabel = getSplitMethodLabel(expense.splitMethod || "equal");
+
     return `
-      <div class="expense-item">
-        <div class="expense-title">${safeEscape(expense.title)} · ${safeEscape(oCur)} ${oAmt.toFixed(2)}</div>
-        <div class="expense-meta">換算：${safeEscape(base)} ${cAmt.toFixed(2)}</div>
-        <div class="expense-meta">${safeEscape(expense.date)} · Paid by ${safeEscape(expense.paidBy)} · Shared by ${shareText}</div>
-        <div class="expense-meta">分帳：${safeEscape(describeSplit(expense))}</div>
-        <div class="expense-meta">${safeEscape(expense.category)}${expense.note ? ` · ${safeEscape(expense.note)}` : ""}</div>
-        <div class="expense-audit">
-          <div>建立：${safeEscape(createdName)} · ${formatTimestamp(expense.createdAt)}</div>
-          <div>更新：${safeEscape(updatedName)} · ${formatTimestamp(expense.updatedAt)}</div>
-        </div>
-        <button class="edit-btn" data-edit-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Edit</button>
-        <button class="delete-btn" data-delete-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Delete</button>
-      </div>
+      <button type="button" class="expense-list-row" data-expense-id="${safeEscape(expense.id)}">
+        <span class="expense-row-main">
+          <strong>${safeEscape(expense.title)}</strong>
+          <small>${safeEscape(expense.date)} · ${safeEscape(expense.category || "Other")} · Paid by ${safeEscape(expense.paidBy || "-")}</small>
+        </span>
+        <span class="expense-row-side">
+          <strong>${safeEscape(oCur)} ${oAmt.toFixed(2)}</strong>
+          <small>${safeEscape(base)} ${cAmt.toFixed(2)}</small>
+        </span>
+        <span class="expense-row-badge">${safeEscape(splitLabel)}</span>
+      </button>
     `;
   }).join("");
 
-  expenseList.querySelectorAll("[data-edit-id]").forEach(btn => btn.addEventListener("click", () => enterEditMode(btn.dataset.editId)));
-  expenseList.querySelectorAll("[data-delete-id]").forEach(btn => btn.addEventListener("click", () => removeExpense(btn.dataset.deleteId)));
+  targetEl.querySelectorAll("[data-expense-id]").forEach(row => {
+    row.addEventListener("click", () => openExpenseDetail(row.dataset.expenseId));
+  });
+}
+
+function renderExpenses() {
+  renderExpenseRows(expenseList, expenses);
+  renderExpenseRows(recentExpenseList, expenses, { limit: 5 });
+}
+
+function openExpenseDetail(expenseId) {
+  const expense = getExpenseById(expenseId);
+  if (!expense || !expenseDetailContent) return;
+
+  const base = tripSettings.baseCurrency;
+  const oAmt = Number(expense.originalAmount ?? expense.amount ?? 0);
+  const oCur = expense.originalCurrency ?? expense.currency ?? base;
+  const cAmt = Number(expense.convertedAmount ?? convertToBase(oAmt, oCur) ?? 0);
+  const shareText = Array.isArray(expense.sharedBy) ? expense.sharedBy.map(safeEscape).join(" / ") : "-";
+  const createdName = expense.createdByName || formatAuditUid(expense.createdBy);
+  const updatedName = expense.updatedByName || formatAuditUid(expense.updatedBy);
+  const splitRows = getExpenseSplitRows(expense, cAmt);
+  const splitRowsHtml = splitRows.length
+    ? splitRows.map(row => `<div class="detail-split-row"><span>${safeEscape(row.member)}</span><strong>${safeEscape(base)} ${Number(row.amount).toFixed(2)}</strong></div>`).join("")
+    : `<p class="neutral">沒有分帳資料</p>`;
+
+  expenseDetailContent.innerHTML = `
+    <div class="detail-title-block">
+      <h4>${safeEscape(expense.title)}</h4>
+      <span class="expense-row-badge">${safeEscape(getSplitMethodLabel(expense.splitMethod || "equal"))}</span>
+    </div>
+
+    <div class="detail-grid">
+      <div><span>日期</span><strong>${safeEscape(expense.date || "-")}</strong></div>
+      <div><span>分類</span><strong>${safeEscape(expense.category || "Other")}</strong></div>
+      <div><span>原幣金額</span><strong>${safeEscape(oCur)} ${oAmt.toFixed(2)}</strong></div>
+      <div><span>換算金額</span><strong>${safeEscape(base)} ${cAmt.toFixed(2)}</strong></div>
+      <div><span>付款人</span><strong>${safeEscape(expense.paidBy || "-")}</strong></div>
+      <div><span>參與人</span><strong>${shareText}</strong></div>
+    </div>
+
+    <div class="detail-section">
+      <h5>分帳明細</h5>
+      ${splitRowsHtml}
+    </div>
+
+    ${expense.note ? `<div class="detail-section"><h5>備註</h5><p>${safeEscape(expense.note)}</p></div>` : ""}
+
+    <div class="detail-section detail-audit-section">
+      <h5>操作資料</h5>
+      <p>建立：${safeEscape(createdName)} · ${formatTimestamp(expense.createdAt)}</p>
+      <p>更新：${safeEscape(updatedName)} · ${formatTimestamp(expense.updatedAt)}</p>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="edit-btn" data-detail-edit-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Edit</button>
+      <button type="button" class="delete-btn" data-detail-delete-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Delete</button>
+    </div>
+  `;
+
+  expenseDetailContent.querySelector("[data-detail-edit-id]")?.addEventListener("click", () => {
+    closeExpenseModal(expenseDetailModal);
+    enterEditMode(expense.id);
+  });
+
+  expenseDetailContent.querySelector("[data-detail-delete-id]")?.addEventListener("click", async () => {
+    closeExpenseModal(expenseDetailModal);
+    await removeExpense(expense.id);
+  });
+
+  openExpenseModal(expenseDetailModal);
 }
 
 function renderDeletedExpenses() {
@@ -2509,8 +2702,13 @@ function isAdmin() {
 
 function renderAllowedEmails() {
   if (!adminPanel) return;
-  if (!isAdmin()) { adminPanel.classList.add("hidden"); return; }
+  if (!isAdmin()) {
+    adminPanel.classList.add("hidden");
+    if (accessNoAdminHint) accessNoAdminHint.classList.remove("hidden");
+    return;
+  }
   adminPanel.classList.remove("hidden");
+  if (accessNoAdminHint) accessNoAdminHint.classList.add("hidden");
 
   allowedEmailList.innerHTML = allowedEmailsCache.length
     ? allowedEmailsCache.map(email => `
@@ -2706,6 +2904,8 @@ function applyAiResultToForm() {
   if (aiTotalInput.value) amountInput.value = aiTotalInput.value;
   noteInput.value = [noteInput.value.trim(), `OCR:merchant=${aiMerchantInput.value || "n/a"},confidence=${aiConfidenceInput.value || "n/a"}`].filter(Boolean).join(" | ");
   closeAiPreviewModal();
+  closeOcrEntryModal();
+  openExpenseFormModal("確認 OCR 支出");
 }
 async function runReceiptOCR() {
   if (!assertTripOpen()) return;
@@ -2732,9 +2932,38 @@ async function runReceiptOCR() {
 
 /* boot */
 setupExpenseInnerTabs();
+
+if (openFullAddBtn) openFullAddBtn.addEventListener("click", () => {
+  if (!assertTripOpen()) return;
+  resetExpenseForm();
+  openExpenseFormModal("完整新增支出");
+});
+if (openOcrEntryBtn) openOcrEntryBtn.addEventListener("click", openOcrEntryModal);
+if (closeExpenseFormModalBtn) closeExpenseFormModalBtn.addEventListener("click", () => {
+  resetExpenseForm();
+  closeExpenseFormModal();
+});
+if (closeOcrEntryModalBtn) closeOcrEntryModalBtn.addEventListener("click", closeOcrEntryModal);
+if (closeExpenseDetailModalBtn) closeExpenseDetailModalBtn.addEventListener("click", () => closeExpenseModal(expenseDetailModal));
+
+document.querySelectorAll(".expenses-module [data-settings-open]").forEach(button => {
+  button.addEventListener("click", () => openSettingModal(button.dataset.settingsOpen));
+});
+
+document.querySelectorAll(".expenses-module [data-modal-close]").forEach(button => {
+  button.addEventListener("click", () => closeExpenseModal(document.getElementById(button.dataset.modalClose)));
+});
+
+document.querySelectorAll(".expenses-module .modal").forEach(modal => {
+  modal.addEventListener("click", event => {
+    if (event.target === modal) closeExpenseModal(modal);
+  });
+});
+
+
 setToday();
 form.addEventListener("submit", saveExpense);
-cancelEditBtn.addEventListener("click", resetExpenseForm);
+cancelEditBtn.addEventListener("click", () => { resetExpenseForm(); closeExpenseFormModal(); });
 if (splitMethodInput) splitMethodInput.addEventListener("change", renderSplitConfig);
 if (sharedByGroup) sharedByGroup.addEventListener("change", renderSplitConfig);
 if (currencyInput) currencyInput.addEventListener("change", renderSplitConfig);
@@ -2751,6 +2980,7 @@ if (titleInput) titleInput.addEventListener("input", () => updateCategoryFromTit
 if (quickAddFab) {
   quickAddFab.addEventListener("click", () => {
     if (isTripLocked()) return assertTripOpen();
+    activateExpensesTab("add");
     quickAddCard?.scrollIntoView({ behavior: "smooth", block: "start" });
     setTimeout(() => {
       if (quickTitleInput && !quickTitleInput.value) quickTitleInput.focus();
