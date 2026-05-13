@@ -33,21 +33,17 @@ function mountExpensesHtml(root) {
       <h1>旅行支出記錄（Google 登入）</h1>
       <p id="syncStatus">Connecting...</p>
 
-      <div class="auth-row">
-        <button type="button" id="googleSignInBtn">Google 登入</button>
-        <button type="button" id="signOutBtn" class="secondary-btn hidden">登出</button>
-      </div>
-      <p id="authUserText" class="hint"></p>
       <p id="tripStatusText" class="hint"></p>
     </section>
 
 
     <div class="expenses-inner-tabs" id="expensesInnerTabs" role="tablist" aria-label="支出功能">
       <button type="button" class="expenses-inner-tab active" data-expenses-tab="add">新增</button>
-      <button type="button" class="expenses-inner-tab" data-expenses-tab="overview">總覽</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="details">支出明細</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="settlement">結算</button>
       <button type="button" class="expenses-inner-tab" data-expenses-tab="analytics">分析</button>
       <button type="button" class="expenses-inner-tab" data-expenses-tab="settings">設定</button>
-      <button type="button" class="expenses-inner-tab" data-expenses-tab="logs">紀錄</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="logs">操作記錄</button>
     </div>
 
     <section class="expenses-panel active" data-expenses-panel="add">
@@ -200,31 +196,22 @@ function mountExpensesHtml(root) {
 
     </section>
 
-    <section class="expenses-panel" data-expenses-panel="overview">
+    <section class="expenses-panel" data-expenses-panel="details">
     <section class="card">
-      <h2>資料備份</h2>
-      <p class="hint">JSON Backup 係完整系統備份，包含 trip 設定、支出、找數紀錄、Deleted Items 同 Activity Log。Excel 主要用於對數及報銷。</p>
-      <div class="backup-actions">
-        <button type="button" id="exportJsonBackupBtn" data-action="export-json" class="secondary-btn">匯出 JSON Backup</button>
-        <button type="button" id="exportExcelReportBtn" data-action="export-excel" class="secondary-btn">匯出 Excel Report</button>
-      </div>
+      <h2>支出明細</h2>
+      <p class="hint">按 Edit 會自動跳到「新增」頁面進行修改。</p>
+      <div id="expenseList"></div>
+    </section>
     </section>
 
+    <section class="expenses-panel" data-expenses-panel="settlement">
     <section class="card">
       <div class="summary-header-row">
         <h2>結算 Summary</h2>
         <button type="button" id="exportExcelBtn" data-action="export-excel" class="secondary-btn export-btn">匯出 Excel</button>
-        <button type="button" id="exportJsonBtn" data-action="export-json" class="secondary-btn export-btn">匯出 JSON Backup</button>
       </div>
       <div id="summary"></div>
     </section>
-
-    <section class="card">
-      <h2>支出列表</h2>
-      <div id="expenseList"></div>
-    </section>
-
-
     </section>
 
     <section class="expenses-panel" data-expenses-panel="analytics">
@@ -237,6 +224,24 @@ function mountExpensesHtml(root) {
     </section>
 
     <section class="expenses-panel" data-expenses-panel="settings">
+    <section class="card">
+      <h2>Google Login / 帳戶</h2>
+      <div class="auth-row">
+        <button type="button" id="googleSignInBtn">Google 登入</button>
+        <button type="button" id="signOutBtn" class="secondary-btn hidden">登出</button>
+      </div>
+      <p id="authUserText" class="hint"></p>
+    </section>
+
+    <section class="card">
+      <h2>資料備份</h2>
+      <p class="hint">JSON Backup 係完整系統備份。Excel 主要用於對數及報銷。</p>
+      <div class="backup-actions">
+        <button type="button" id="exportJsonBackupBtn" data-action="export-json" class="secondary-btn">匯出 JSON Backup</button>
+        <button type="button" id="exportExcelReportBtn" data-action="export-excel" class="secondary-btn">匯出 Excel Report</button>
+      </div>
+    </section>
+
     <section class="card">
       <h2>匯率設定（自定義）</h2>
       <label>
@@ -298,7 +303,7 @@ function mountExpensesHtml(root) {
     </section>
 
     <section class="card">
-      <h2>Activity Log</h2>
+      <h2>操作記錄</h2>
       <p class="hint">記錄新增、修改、刪除、找數、鎖定等主要動作。</p>
       <div id="activityLogList"></div>
     </section>
@@ -750,6 +755,117 @@ function getSelectedParticipants() { return Array.from(sharedByGroup.querySelect
 function getRateFor(currency) { const r = tripSettings.exchangeRates?.[currency]; return Number.isFinite(Number(r)) && Number(r) > 0 ? Number(r) : null; }
 function convertToBase(amount, currency) { const rate = getRateFor(currency); return rate ? round2(Number(amount) * rate) : null; }
 
+function rebuildSplitsForCurrentRates(expense, convertedAmount) {
+  const originalAmount = Number(expense.originalAmount ?? expense.amount ?? 0);
+  const originalCurrency = expense.originalCurrency ?? expense.currency ?? tripSettings.baseCurrency;
+  const fxRate = getRateFor(originalCurrency);
+  const method = expense.splitMethod || "equal";
+  const existingSplits = Array.isArray(expense.splits) ? expense.splits : [];
+  const participants = existingSplits.length
+    ? existingSplits.map(row => row.member).filter(Boolean)
+    : (Array.isArray(expense.sharedBy) ? expense.sharedBy : []);
+
+  if (!participants.length || !fxRate || !Number.isFinite(originalAmount) || originalAmount <= 0) {
+    return { sharedBy: Array.isArray(expense.sharedBy) ? expense.sharedBy : [], splits: Array.isArray(expense.splits) ? expense.splits : [] };
+  }
+
+  if (method === "amount" && existingSplits.length) {
+    const originalRows = allocateRoundingDifference(existingSplits.map(row => ({
+      member: row.member,
+      amount: Number(row.originalAmount ?? 0)
+    })), originalAmount);
+
+    const baseRows = allocateRoundingDifference(originalRows.map(row => ({
+      member: row.member,
+      amount: row.amount * fxRate
+    })), convertedAmount);
+
+    return {
+      sharedBy: originalRows.map(row => row.member),
+      splits: baseRows.map((row, index) => ({
+        member: row.member,
+        amount: row.amount,
+        originalAmount: originalRows[index].amount,
+        percentage: convertedAmount ? round2(row.amount / convertedAmount * 100) : 0
+      }))
+    };
+  }
+
+  if (method === "percentage" && existingSplits.length) {
+    const pctRows = existingSplits.map(row => ({
+      member: row.member,
+      percentage: Number(row.percentage ?? 0)
+    }));
+    const baseRows = allocateRoundingDifference(pctRows.map(row => ({
+      member: row.member,
+      amount: convertedAmount * row.percentage / 100
+    })), convertedAmount);
+    const originalRows = allocateRoundingDifference(pctRows.map(row => ({
+      member: row.member,
+      amount: originalAmount * row.percentage / 100
+    })), originalAmount);
+
+    return {
+      sharedBy: pctRows.map(row => row.member),
+      splits: baseRows.map((row, index) => ({
+        member: row.member,
+        amount: row.amount,
+        originalAmount: originalRows[index].amount,
+        percentage: round2(pctRows[index].percentage)
+      }))
+    };
+  }
+
+  const originalShareRaw = originalAmount / participants.length;
+  const originalRows = allocateRoundingDifference(participants.map(member => ({ member, amount: originalShareRaw })), originalAmount);
+  const baseRows = allocateRoundingDifference(participants.map(member => ({ member, amount: convertedAmount / participants.length })), convertedAmount);
+
+  return {
+    sharedBy: participants,
+    splits: baseRows.map((row, index) => ({
+      member: row.member,
+      amount: row.amount,
+      originalAmount: originalRows[index].amount,
+      percentage: convertedAmount ? round2(row.amount / convertedAmount * 100) : 0
+    }))
+  };
+}
+
+async function refreshAllExpenseFxAmounts() {
+  if (!currentUser) return { updated: 0, skipped: 0 };
+
+  let updated = 0;
+  let skipped = 0;
+
+  for (const expense of allExpenses) {
+    const originalAmount = Number(expense.originalAmount ?? expense.amount ?? 0);
+    const originalCurrency = expense.originalCurrency ?? expense.currency ?? tripSettings.baseCurrency;
+    const convertedAmount = convertToBase(originalAmount, originalCurrency);
+
+    if (!Number.isFinite(originalAmount) || originalAmount <= 0 || convertedAmount === null) {
+      skipped += 1;
+      continue;
+    }
+
+    const splitUpdate = rebuildSplitsForCurrentRates(expense, convertedAmount);
+
+    await updateDoc(doc(db, "trips", tripId, "expenses", expense.id), {
+      convertedAmount,
+      baseCurrency: tripSettings.baseCurrency,
+      fxRateUsed: getRateFor(originalCurrency),
+      sharedBy: splitUpdate.sharedBy,
+      splits: splitUpdate.splits,
+      updatedBy: currentUser.uid,
+      updatedByName: getCurrentUserDisplayName(),
+      updatedAt: serverTimestamp()
+    });
+
+    updated += 1;
+  }
+
+  return { updated, skipped };
+}
+
 function getSplitMethodLabel(method) {
   const labels = {
     equal: "平均分",
@@ -978,21 +1094,25 @@ function describeSplit(expense) {
 }
 
 
-function setupExpenseInnerTabs() {
+function activateExpensesTab(tabName) {
   const tabs = Array.from(document.querySelectorAll('.expenses-module [data-expenses-tab]'));
   const panels = Array.from(document.querySelectorAll('.expenses-module [data-expenses-panel]'));
+  tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.expensesTab === tabName));
+  panels.forEach(panel => panel.classList.toggle('active', panel.dataset.expensesPanel === tabName));
 
-  function activate(tabName) {
-    tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.expensesTab === tabName));
-    panels.forEach(panel => panel.classList.toggle('active', panel.dataset.expensesPanel === tabName));
-
-    if (tabName === 'analytics') {
-      renderAnalytics();
-    }
+  if (tabName === 'analytics') renderAnalytics();
+  if (tabName === 'settlement') renderSummary();
+  if (tabName === 'details') renderExpenses();
+  if (tabName === 'logs') {
+    renderDeletedExpenses();
+    renderActivityLogs();
   }
+}
 
+function setupExpenseInnerTabs() {
+  const tabs = Array.from(document.querySelectorAll('.expenses-module [data-expenses-tab]'));
   tabs.forEach(tab => {
-    tab.addEventListener('click', () => activate(tab.dataset.expensesTab));
+    tab.addEventListener('click', () => activateExpensesTab(tab.dataset.expensesTab));
   });
 }
 
@@ -1101,8 +1221,9 @@ async function saveTripSettings() {
   tripSettings = { ...tripSettings, baseCurrency: newBase, exchangeRates: nextRates };
 
   await setDoc(getTripDocRef(), { settings: tripSettings }, { merge: true });
-  alert("匯率設定已儲存。");
-  await logActivity("settings_updated", `修改匯率設定，基準貨幣為 ${newBase}`, "trip", tripId, { baseCurrency: newBase });
+  const refreshResult = await refreshAllExpenseFxAmounts();
+  alert(`匯率設定已儲存，已重新換算 ${refreshResult.updated} 筆支出。${refreshResult.skipped ? ` 未能換算 ${refreshResult.skipped} 筆，請檢查匯率。` : ""}`);
+  await logActivity("settings_updated", `修改匯率設定，基準貨幣為 ${newBase}，重新換算 ${refreshResult.updated} 筆支出`, "trip", tripId, { baseCurrency: newBase, updatedExpenses: refreshResult.updated, skippedExpenses: refreshResult.skipped });
   renderRateEditor(); updateTripStatusUi(); renderSummary(); renderAnalytics(); renderExpenses();
 }
 
@@ -1281,6 +1402,7 @@ function enterEditMode(expenseId) {
   if (!assertTripOpen()) return;
   const expense = expenses.find(item => item.id === expenseId);
   if (!expense) return alert("搵唔到呢筆支出。");
+  activateExpensesTab("add");
   editingExpenseId = expense.id;
   dateInput.value = expense.date || "";
   titleInput.value = expense.title || "";
@@ -1321,6 +1443,9 @@ function enterEditMode(expenseId) {
   notice.className = "editing-notice";
   notice.textContent = `正在編輯：${expense.title}`;
   form.prepend(notice);
+  setTimeout(() => {
+    form.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 60);
 }
 
 
