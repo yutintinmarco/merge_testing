@@ -2857,6 +2857,6 @@ onAuthStateChanged(auth, async (user) => {
 }
 
 window.initExpensesModule = initExpensesModule;
-if (window.tripData?.meta?.expenses?.enabled) {
-  // If the trip JSON has already loaded before this module, defer actual init until user opens the expenses view.
+if (document.body.classList.contains("expenses-view-active") && window.tripData?.meta?.expenses?.enabled) {
+  initExpensesModule(window.tripData);
 }
