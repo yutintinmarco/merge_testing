@@ -33,14 +33,23 @@ function mountExpensesHtml(root) {
       <p id="tripStatusText" class="hint hidden"></p>
     </section>
 
+    <section class="expense-snapshot-card" id="expenseSnapshotCard">
+      <div class="expense-snapshot-total">
+        <span>目前總支出</span>
+        <strong id="expenseSnapshotTotal">--</strong>
+      </div>
+      <div class="expense-snapshot-cats" id="expenseSnapshotCats">
+        <span class="neutral">暫時未有分類分析</span>
+      </div>
+    </section>
 
     <div class="expenses-inner-tabs" id="expensesInnerTabs" role="tablist" aria-label="支出功能">
       <button type="button" class="expenses-inner-tab active" data-expenses-tab="add">新增</button>
-      <button type="button" class="expenses-inner-tab" data-expenses-tab="details">支出明細</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="details">明細</button>
       <button type="button" class="expenses-inner-tab" data-expenses-tab="settlement">結算</button>
       <button type="button" class="expenses-inner-tab" data-expenses-tab="analytics">分析</button>
       <button type="button" class="expenses-inner-tab" data-expenses-tab="settings">設定</button>
-      <button type="button" class="expenses-inner-tab" data-expenses-tab="logs">操作記錄</button>
+      <button type="button" class="expenses-inner-tab" data-expenses-tab="logs">記錄</button>
     </div>
 
     <section class="expenses-panel active" data-expenses-panel="add">
@@ -429,6 +438,9 @@ const lockTripBtn = document.getElementById("lockTripBtn");
 const unlockTripBtn = document.getElementById("unlockTripBtn");
 const deletedExpenseList = document.getElementById("deletedExpenseList");
 const activityLogList = document.getElementById("activityLogList");
+const expenseSnapshotCard = document.getElementById("expenseSnapshotCard");
+const expenseSnapshotTotal = document.getElementById("expenseSnapshotTotal");
+const expenseSnapshotCats = document.getElementById("expenseSnapshotCats");
 
 
 let lastModuleStatus = "Connecting";
@@ -438,6 +450,7 @@ function renderCompactModuleStatus(message = lastModuleStatus) {
 
   if (!syncStatus) return;
 
+  const statusText = getCleanModuleStatus(lastModuleStatus);
   const tripLabel = tripId || "No trip";
   const statusLabel = isTripLocked() ? "Locked" : "Open";
   const loginLabel = currentUser
@@ -445,7 +458,7 @@ function renderCompactModuleStatus(message = lastModuleStatus) {
     : "未登入";
 
   syncStatus.innerHTML = `
-    <span>${safeEscape(lastModuleStatus)}</span>
+    <span>${safeEscape(statusText)}</span>
     <span class="status-dot-sep">·</span>
     <span>${safeEscape(tripLabel)}</span>
     <span class="status-dot-sep">·</span>
@@ -488,6 +501,15 @@ const getSettlementsCollection = () => collection(db, "trips", tripId, "settleme
 const getActivityLogsCollection = () => collection(db, "trips", tripId, "activityLogs");
 const uniqueStrings = (arr) => [...new Set((arr || []).filter(Boolean).map(v => String(v)))];
 const normalizeEmail = (e) => String(e || "").trim().toLowerCase();
+const escapeRegExp = (text) => String(text || "").replace(/[.*+?^${}()|[\]\]/g, "\\$&");
+
+function getCleanModuleStatus(message) {
+  const raw = String(message || "Ready");
+  if (!tripId) return raw;
+  return raw
+    .replace(new RegExp(`\\s*\\(${escapeRegExp(tripId)}\\)`, "g"), "")
+    .replace(/\\s+$/g, "");
+}
 
 function getCurrentUserDisplayName() {
   if (!currentUser) return "未知用戶";
@@ -1855,7 +1877,42 @@ function sumBy(rows, keyFn, amountFn) {
     .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
 }
 
+function renderExpenseSnapshot() {
+  if (!expenseSnapshotCard || !expenseSnapshotTotal || !expenseSnapshotCats) return;
+
+  const base = tripSettings.baseCurrency || "HKD";
+  const activeExpenses = expenses || [];
+  const total = round2(activeExpenses.reduce((sum, expense) => {
+    return sum + Number(expense.convertedAmount ?? convertToBase(expense.originalAmount ?? expense.amount ?? 0, expense.originalCurrency ?? expense.currency ?? base) ?? 0);
+  }, 0));
+
+  expenseSnapshotTotal.textContent = `${base} ${total.toFixed(2)}`;
+
+  if (!activeExpenses.length) {
+    expenseSnapshotCats.innerHTML = `<span class="neutral">暫時未有分類分析</span>`;
+    return;
+  }
+
+  const byCategory = sumBy(activeExpenses, e => e.category || "Other", e => e.convertedAmount ?? convertToBase(e.originalAmount ?? e.amount ?? 0, e.originalCurrency ?? e.currency ?? base));
+  const topRows = byCategory.slice(0, 4);
+  const max = Math.max(...topRows.map(r => Math.abs(r.amount)), 1);
+
+  expenseSnapshotCats.innerHTML = topRows.map(row => {
+    const pct = Math.max(3, Math.round(Math.abs(row.amount) / max * 100));
+    return `
+      <div class="snapshot-cat-row">
+        <div class="snapshot-cat-top">
+          <span>${safeEscape(row.label)}</span>
+          <strong>${safeEscape(base)} ${Number(row.amount).toFixed(2)}</strong>
+        </div>
+        <div class="snapshot-cat-bar"><span style="width:${pct}%"></span></div>
+      </div>
+    `;
+  }).join("");
+}
+
 function renderAnalytics() {
+  renderExpenseSnapshot();
   if (!analyticsSummary) return;
 
   const base = tripSettings.baseCurrency || "HKD";
