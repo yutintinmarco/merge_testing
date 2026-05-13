@@ -484,7 +484,7 @@ body.expenses-view-active #weather-card {
   </style>
             <link rel="apple-touch-icon" href="assets/icon/trip_icon.png">
   <link rel="icon" type="image/png" href="assets/icon/trip_icon.png">
-  <link rel="stylesheet" href="assets/css/expenses.css">
+  <link rel="stylesheet" href="assets/css/expenses.css?v=4.0.0">
 </head>
 <body>
 <div class="bg-fixed"></div>
@@ -1140,6 +1140,7 @@ function render(data){
 // FAB
 const ivw=document.getElementById("itinerary-view"),svw=document.getElementById("snacks-view"),infvw=document.getElementById("info-view"),expvw=document.getElementById("expenses-view");
 const bti=document.getElementById("bt-itinerary"),bts=document.getElementById("bt-snacks"),btinfo=document.getElementById("bt-info"),btexp=document.getElementById("bt-expenses");
+const EXPENSES_MODULE_VERSION = "4.0.0";
 let expensesModuleImportPromise = null;
 function showExpensesLoading(message){
   const root=document.getElementById("expenses-root");
@@ -1154,7 +1155,7 @@ function showExpensesLoadError(error){
   if(!root) return;
   console.error("Expenses module load error:", error);
   root.dataset.loading = "false";
-  root.innerHTML=`<div class="card"><div class="weather-title">支出模組載入失敗</div><div class="section-sub" style="margin-top:6px;">請確認 assets/js/expenses-module.js、assets/js/firebase-config.js 及 assets/css/expenses.css 已正確上載。錯誤：${String(error?.message || error || "unknown")}</div></div>`;
+  root.innerHTML=`<div class="card"><div class="weather-title">支出模組載入失敗</div><div class="section-sub" style="margin-top:6px;">請確認 assets/js/expenses-module.js、assets/js/firebase-config.js 及 assets/css/expenses.css 已正確上載，並留意手機快取。錯誤：${String(error?.message || error || "unknown")}</div></div>`;
 }
 function mountExpensesModuleNow(mod){
   const initFn = window.initExpensesModule || mod?.initExpensesModule;
@@ -1177,7 +1178,7 @@ function initExpensesViewSafe(){
   showExpensesLoading("支出模組載入中…");
 
   if(!expensesModuleImportPromise){
-    expensesModuleImportPromise = import("./assets/js/expenses-module.js");
+    expensesModuleImportPromise = import(`./assets/js/expenses-module.js?v=${EXPENSES_MODULE_VERSION}`);
   }
 
   expensesModuleImportPromise
