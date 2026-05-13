@@ -501,7 +501,7 @@ const getSettlementsCollection = () => collection(db, "trips", tripId, "settleme
 const getActivityLogsCollection = () => collection(db, "trips", tripId, "activityLogs");
 const uniqueStrings = (arr) => [...new Set((arr || []).filter(Boolean).map(v => String(v)))];
 const normalizeEmail = (e) => String(e || "").trim().toLowerCase();
-const escapeRegExp = (text) => String(text || "").replace(/[.*+?^${}()|[\]\]/g, "\\$&");
+const escapeRegExp = (text) => String(text || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 function getCleanModuleStatus(message) {
   const raw = String(message || "Ready");
