@@ -13,7 +13,89 @@
   padding: 18px;
   margin-bottom: 16px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-}.expenses-module .eyebrow {
+}
+.expenses-module .expenses-inner-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 12px;
+  margin-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+.expenses-module .expenses-inner-tab {
+  flex: 1 0 auto;
+  min-width: 64px;
+  border-radius: 999px;
+  padding: 9px 12px;
+  border: 1px solid #dadada;
+  background: rgba(248, 248, 250, 0.92);
+  color: #555;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: none;
+}
+.expenses-module .expenses-inner-tab.active {
+  background: #1d1d1f;
+  border-color: #1d1d1f;
+  color: #fff;
+}
+.expenses-module .expenses-panel {
+  display: none;
+}
+.expenses-module .expenses-panel.active {
+  display: block;
+}
+.expenses-module .analytics-total-card {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f5f5f7;
+  margin-bottom: 16px;
+}
+.expenses-module .analytics-total-card span {
+  color: #6e6e73;
+  font-size: 13px;
+  font-weight: 700;
+}
+.expenses-module .analytics-total-card strong {
+  font-size: 24px;
+}
+.expenses-module .analytics-total-card small {
+  color: #6e6e73;
+}
+.expenses-module .analytics-block {
+  margin-top: 18px;
+}
+.expenses-module .analytics-row {
+  padding: 10px 0;
+  border-bottom: 1px solid #eeeeee;
+}
+.expenses-module .analytics-row:last-child {
+  border-bottom: 0;
+}
+.expenses-module .analytics-row-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+.expenses-module .analytics-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: #eeeeee;
+  overflow: hidden;
+}
+.expenses-module .analytics-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #1d1d1f;
+}
+
+.expenses-module .eyebrow {
   margin: 0 0 6px;
   font-size: 13px;
   color: #6e6e73;
@@ -389,20 +471,20 @@
 }.expenses-module .quick-add-main-btn {
   min-height: 48px;
 }.expenses-module .quick-add-fab {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 9998;
-  padding: 13px 16px;
+  position: static;
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 12px 16px;
   border-radius: 999px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  box-shadow: none;
 }.expenses-module .quick-add-fab:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
 @media (max-width: 720px) {
-  .quick-grid {
+  .expenses-module .quick-grid {
     grid-template-columns: 1fr 1fr;
   }.expenses-module .quick-grid label:first-child {
     grid-column: 1 / -1;
@@ -412,15 +494,18 @@
 }
 
 @media (max-width: 480px) {
-  .quick-grid {
+  .expenses-module .quick-grid {
     grid-template-columns: 1fr;
   }.expenses-module .quick-add-fab {
-    left: 18px;
-    right: 18px;
-    bottom: 12px;
-    width: calc(100% - 36px);
-  }.expenses-module .expenses-app {
-    padding-bottom: 86px;
+  position: static;
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  box-shadow: none;
+}.expenses-module .expenses-app {
+    padding-bottom: 48px;
   }
 }.expenses-module /* Phase 4 Split Method */
 .split-method-panel {
