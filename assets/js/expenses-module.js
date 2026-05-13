@@ -403,8 +403,6 @@ function mountExpensesHtml(root) {
       </div>
     </div>
   </div>
-
-  <button type="button" id="quickAddFab" class="quick-add-fab">＋ 快速入數</button>
 </div>`;
 }
 
