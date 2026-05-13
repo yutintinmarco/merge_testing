@@ -28,12 +28,9 @@ import {
 function mountExpensesHtml(root) {
   root.innerHTML = `<div class="expenses-module">
 <main class="expenses-app">
-    <section class="header-card">
-      <p class="eyebrow">Travel Expense Module</p>
-      <h1>旅行支出記錄（Google 登入）</h1>
-      <p id="syncStatus">Connecting...</p>
-
-      <p id="tripStatusText" class="hint"></p>
+    <section class="header-card compact-status-card">
+      <p id="syncStatus" class="expense-status-line">Connecting...</p>
+      <p id="tripStatusText" class="hint hidden"></p>
     </section>
 
 
@@ -206,10 +203,7 @@ function mountExpensesHtml(root) {
 
     <section class="expenses-panel" data-expenses-panel="settlement">
     <section class="card">
-      <div class="summary-header-row">
-        <h2>結算 Summary</h2>
-        <button type="button" id="exportExcelBtn" data-action="export-excel" class="secondary-btn export-btn">匯出 Excel</button>
-      </div>
+      <h2>結算 Summary</h2>
       <div id="summary"></div>
     </section>
     </section>
@@ -435,6 +429,35 @@ const lockTripBtn = document.getElementById("lockTripBtn");
 const unlockTripBtn = document.getElementById("unlockTripBtn");
 const deletedExpenseList = document.getElementById("deletedExpenseList");
 const activityLogList = document.getElementById("activityLogList");
+
+
+let lastModuleStatus = "Connecting";
+
+function renderCompactModuleStatus(message = lastModuleStatus) {
+  lastModuleStatus = message || lastModuleStatus || "Ready";
+
+  if (!syncStatus) return;
+
+  const tripLabel = tripId || "No trip";
+  const statusLabel = isTripLocked() ? "Locked" : "Open";
+  const loginLabel = currentUser
+    ? `已登入 ${currentUser.displayName || currentUser.email || "Google"}`
+    : "未登入";
+
+  syncStatus.innerHTML = `
+    <span>${safeEscape(lastModuleStatus)}</span>
+    <span class="status-dot-sep">·</span>
+    <span>${safeEscape(tripLabel)}</span>
+    <span class="status-dot-sep">·</span>
+    <span class="${isTripLocked() ? "locked-badge" : "open-badge"}">${statusLabel}</span>
+    <span class="status-dot-sep">·</span>
+    <span>${safeEscape(loginLabel)}</span>
+  `;
+}
+
+function setModuleStatus(message) {
+  renderCompactModuleStatus(message);
+}
 
 let currentUser = null;
 let allExpenses = [];
@@ -1126,6 +1149,7 @@ function setAuthUI(user) {
     signOutBtn.classList.add("hidden");
     authUserText.textContent = "未登入";
   }
+  setModuleStatus(lastModuleStatus);
 }
 
 async function handleGoogleSignIn() {
@@ -1337,7 +1361,7 @@ function startTripListener() {
   }, err => {
     console.error(err);
     if (err?.code === "permission-denied") {
-      syncStatus.textContent = "No access to this trip";
+      setModuleStatus("No access to this trip");
       alert("你無權限進入此 trip。");
     }
   });
@@ -1353,10 +1377,10 @@ function listenToExpenses() {
     renderDeletedExpenses();
     renderSummary();
     renderAnalytics();
-    syncStatus.textContent = `Synced (${tripId})`;
+    setModuleStatus(`Synced (${tripId})`);
   }, err => {
     console.error(err);
-    syncStatus.textContent = err?.code === "permission-denied" ? "No access to expenses" : "Sync error";
+    setModuleStatus(err?.code === "permission-denied" ? "No access to expenses" : "Sync error");
   });
 }
 
@@ -1370,7 +1394,7 @@ function listenToSettlements() {
     renderAnalytics();
   }, err => {
     console.error(err);
-    syncStatus.textContent = err?.code === "permission-denied" ? "No access to settlements" : "Settlement sync error";
+    setModuleStatus(err?.code === "permission-denied" ? "No access to settlements" : "Settlement sync error");
   });
 }
 
@@ -1382,7 +1406,7 @@ function listenToActivityLogs() {
     renderActivityLogs();
   }, err => {
     console.error(err);
-    syncStatus.textContent = err?.code === "permission-denied" ? "No access to activity logs" : "Activity log sync error";
+    setModuleStatus(err?.code === "permission-denied" ? "No access to activity logs" : "Activity log sync error");
   });
 }
 
@@ -2344,25 +2368,25 @@ function exportJsonBackup() {
 
 async function handleExportExcel() {
   try {
-    syncStatus.textContent = "Preparing Excel...";
+    setModuleStatus("Preparing Excel...");
     await ensureSheetJs();
     exportWorkbook();
-    syncStatus.textContent = `Synced (${tripId})`;
+    setModuleStatus(`Synced (${tripId})`);
   } catch (error) {
     console.error(error);
-    syncStatus.textContent = "Export error";
+    setModuleStatus("Export error");
     alert("匯出 Excel 失敗，請稍後再試。");
   }
 }
 
 async function handleExportJsonBackup() {
   try {
-    syncStatus.textContent = "Preparing JSON backup...";
+    setModuleStatus("Preparing JSON backup...");
     exportJsonBackup();
-    syncStatus.textContent = `Synced (${tripId})`;
+    setModuleStatus(`Synced (${tripId})`);
   } catch (error) {
     console.error(error);
-    syncStatus.textContent = "JSON export error";
+    setModuleStatus("JSON export error");
     alert("匯出 JSON Backup 失敗，請稍後再試。");
   }
 }
@@ -2631,20 +2655,20 @@ async function runReceiptOCR() {
   const file = ocrFileInput.files?.[0];
   if (!file) return alert("請先選擇收據圖片。");
   try {
-    syncStatus.textContent = "預處理圖片...";
+    setModuleStatus("預處理圖片...");
     await ensureTesseract();
     const processed = await preprocessReceiptImage(file);
-    syncStatus.textContent = "OCR 辨識中...";
+    setModuleStatus("OCR 辨識中...");
     const { data } = await window.Tesseract.recognize(processed, "eng+chi_tra", {
       tessedit_ocr_engine_mode: "1",
       tessedit_pageseg_mode: "6",
     });
     const parsed = parseReceiptTextAdvanced(data?.text || "", currencyInput.value || "HKD");
     openAiPreviewModal(parsed);
-    syncStatus.textContent = `OCR ready (${tripId})`;
+    setModuleStatus(`OCR ready (${tripId})`);
   } catch (e) {
     console.error(e);
-    syncStatus.textContent = "OCR error";
+    setModuleStatus("OCR error");
     alert("OCR 失敗，請試另一張清晰圖片。");
   }
 }
@@ -2726,7 +2750,7 @@ onAuthStateChanged(auth, async (user) => {
   setAuthUI(user);
 
   if (!user) {
-    syncStatus.textContent = "Please sign in";
+    setModuleStatus("Please sign in");
     if (stopTripListener) stopTripListener();
     if (stopExpensesListener) stopExpensesListener();
     if (stopSettlementsListener) stopSettlementsListener();
@@ -2751,7 +2775,7 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  syncStatus.textContent = "Connected";
+  setModuleStatus("Connected");
   try {
     await ensureTripMembersAndSettings();
     initMembers();
@@ -2764,10 +2788,10 @@ onAuthStateChanged(auth, async (user) => {
   } catch (error) {
     console.error(error);
     if (error?.code === "permission-denied") {
-      syncStatus.textContent = "No access";
+      setModuleStatus("No access");
       alert("你無權限進入此 trip。請管理員把你 email 加入 allowedEmails。");
     } else {
-      syncStatus.textContent = "Init error";
+      setModuleStatus("Init error");
       alert(`初始化失敗：${error?.code || error?.message || "unknown"}`);
     }
   }
