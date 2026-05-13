@@ -484,7 +484,7 @@ body.expenses-view-active #weather-card {
   </style>
             <link rel="apple-touch-icon" href="assets/icon/trip_icon.png">
   <link rel="icon" type="image/png" href="assets/icon/trip_icon.png">
-  <link rel="stylesheet" href="assets/css/expenses.css?v=5.1.1">
+  <link rel="stylesheet" href="assets/css/expenses.css?v=5.1.2">
 </head>
 <body>
 <div class="bg-fixed"></div>
@@ -599,7 +599,18 @@ function dateInTZ(tz){try{return new Intl.DateTimeFormat("en-CA",{timeZone:tz||"
 function normGallery(v){if(!v)return[];if(Array.isArray(v))return v;return[v];}
 
 // Font / Refresh
-document.getElementById("refresh-btn").addEventListener("click",()=>location.reload(true));
+function getCurrentAppView(){
+  try{
+    if(document.body.classList.contains("expenses-view-active")) return "expenses";
+    if(document.getElementById("snacks-view")?.style.display==="block") return "snacks";
+    if(document.getElementById("info-view")?.style.display==="block") return "info";
+  }catch(e){}
+  return "itinerary";
+}
+function rememberCurrentAppView(){
+  try{sessionStorage.setItem("trip_current_view", getCurrentAppView());}catch(e){}
+}
+document.getElementById("refresh-btn").addEventListener("click",()=>{rememberCurrentAppView();location.reload(true);});
 const FMIN=0.85,FMAX=1.30,FSTEP=0.08;
 function applyFont(s){s=clamp(s,FMIN,FMAX);document.documentElement.style.setProperty("--font-scale",s);try{localStorage.setItem("trip_font_scale",s);}catch(e){}return s;}
 let fs=applyFont(parseFloat(localStorage.getItem("trip_font_scale"))||1);
@@ -652,8 +663,9 @@ if(themeBtn)themeBtn.addEventListener("click",()=>{
 const ss=document.getElementById("scroll-shell"),pi=document.getElementById("pull-indicator");
 let psy=0,pd=0,isp=false;
 ss.addEventListener("touchstart",e=>{if(ss.scrollTop===0){isp=true;psy=e.touches[0].clientY;}},{passive:true});
-ss.addEventListener("touchmove",e=>{if(!isp)return;pd=e.touches[0].clientY-psy;if(pd>0&&pi){pi.classList.add("show");pi.textContent=pd>70?"釋放以更新行程":"下拉更新行程";}},{passive:true});
-ss.addEventListener("touchend",()=>{if(!isp)return;if(pd>70)location.reload(true);else pi?.classList.remove("show");isp=false;pd=0;},{passive:true});
+const PULL_REFRESH_DISTANCE = 120;
+ss.addEventListener("touchmove",e=>{if(!isp)return;pd=e.touches[0].clientY-psy;if(pd>0&&pi){pi.classList.add("show");pi.textContent=pd>PULL_REFRESH_DISTANCE?"釋放以更新行程":"繼續下拉更新行程";}},{passive:true});
+ss.addEventListener("touchend",()=>{if(!isp)return;if(pd>PULL_REFRESH_DISTANCE){rememberCurrentAppView();location.reload(true);}else pi?.classList.remove("show");isp=false;pd=0;},{passive:true});
 
 // Weather
 function wIcon(c){
@@ -1140,7 +1152,7 @@ function render(data){
 // FAB
 const ivw=document.getElementById("itinerary-view"),svw=document.getElementById("snacks-view"),infvw=document.getElementById("info-view"),expvw=document.getElementById("expenses-view");
 const bti=document.getElementById("bt-itinerary"),bts=document.getElementById("bt-snacks"),btinfo=document.getElementById("bt-info"),btexp=document.getElementById("bt-expenses");
-const EXPENSES_MODULE_VERSION = "5.1.1";
+const EXPENSES_MODULE_VERSION = "5.1.2";
 let expensesModuleImportPromise = null;
 function showExpensesLoading(message){
   const root=document.getElementById("expenses-root");
@@ -1190,6 +1202,7 @@ function initExpensesViewSafe(){
     .catch(showExpensesLoadError);
 }
 function setView(v){
+  try{sessionStorage.setItem("trip_current_view", v || "itinerary");}catch(e){}
   bti.classList.remove("active");bts.classList.remove("active");btinfo.classList.remove("active");btexp.classList.remove("active");
   ivw.style.display="none";svw.style.display="none";infvw.style.display="none";expvw.style.display="none";
   document.body.classList.toggle("expenses-view-active", v==="expenses");
@@ -1211,7 +1224,7 @@ document.addEventListener("click",()=>fm.classList.remove("open"),{passive:true}
 // Load
 fetch(getTripJsonUrl())
   .then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json();})
-  .then(data=>{window.tripData=data;render(data);renderWeather(data);renderInfo(data);})
+  .then(data=>{window.tripData=data;render(data);renderWeather(data);renderInfo(data);try{const saved=sessionStorage.getItem("trip_current_view"); if(["itinerary","snacks","info","expenses"].includes(saved)) setView(saved);}catch(e){}})
   .catch(()=>{document.getElementById("today-chip").textContent="無法載入行程資料";document.getElementById("header-title-main").textContent="無法載入行程資料";});
 </script>
 
