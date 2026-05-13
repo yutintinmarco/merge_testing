@@ -1421,3 +1421,86 @@ html.theme-dark .expenses-module .modal,
 html:not(.theme-light):not(.theme-dark) .expenses-module .modal {
   background: rgba(0,0,0,0.60);
 }
+
+
+/* v5.1.3 Popup height and backdrop hotfix
+   Keep popups visually aligned with the main itinerary popup, reduce modal height,
+   remove the floating quick-add button, and prevent sticky submit bar from moving awkwardly. */
+.expenses-module .quick-add-fab {
+  display: none !important;
+}
+
+.expenses-module .modal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-width: none !important;
+  max-height: none !important;
+  z-index: 2600 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: rgba(0, 0, 0, 0.38) !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.expenses-module .modal.hidden {
+  display: none !important;
+}
+
+.expenses-module .modal-card,
+.expenses-module .expense-form-modal-card,
+.expenses-module .expense-detail-modal-card,
+.expenses-module .settlement-action-modal-card {
+  width: 90vw !important;
+  max-width: 420px !important;
+  max-height: min(70dvh, 560px) !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  border-radius: 18px !important;
+  padding: 14px 16px 16px 16px !important;
+  box-sizing: border-box !important;
+}
+
+.expenses-module .expense-form-modal-card form {
+  padding-bottom: 0 !important;
+}
+
+.expenses-module .sticky-modal-actions {
+  position: static !important;
+  bottom: auto !important;
+  margin: 12px 0 0 0 !important;
+  padding: 10px 0 0 0 !important;
+  border-top: 1px solid rgba(210,210,215,0.72) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.expenses-module .sticky-modal-actions button {
+  width: 100% !important;
+}
+
+@media (max-width: 480px) {
+  .expenses-module .modal-card,
+  .expenses-module .expense-form-modal-card,
+  .expenses-module .expense-detail-modal-card,
+  .expenses-module .settlement-action-modal-card {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    max-height: min(68dvh, 520px) !important;
+    padding: 12px 14px 14px 14px !important;
+  }
+}
+
+html.theme-dark .expenses-module .modal,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal {
+  background: rgba(0, 0, 0, 0.62) !important;
+}
