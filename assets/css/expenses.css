@@ -1019,3 +1019,254 @@ html.theme-dark .expenses-module .expenses-inner-tab.active {
   .expenses-module .expenses-inner-tabs { gap: 4px !important; }
   .expenses-module .expenses-inner-tab { font-size: calc(10px * var(--font-scale)) !important; padding: 0 2px !important; }
 }
+
+
+/* Integration v5.1 UI restructure */
+.expenses-module .expense-actions-card .expense-action-grid,
+.expenses-module .settings-menu-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.expenses-module .expense-action-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.expenses-module .settings-menu-grid {
+  grid-template-columns: 1fr;
+}
+
+.expenses-module .settings-menu-btn {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  text-align: left;
+  background: rgba(255,255,255,0.52);
+  color: #111;
+  border: 1px solid rgba(255,255,255,0.62);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 16px rgba(15,23,42,0.06);
+}
+
+.expenses-module .settings-menu-btn span {
+  grid-row: 1 / span 2;
+  font-size: calc(20px * var(--font-scale));
+}
+
+.expenses-module .settings-menu-btn strong {
+  font-size: calc(13px * var(--font-scale));
+}
+
+.expenses-module .settings-menu-btn small {
+  color: #6e6e73;
+  font-size: calc(10px * var(--font-scale));
+  margin-top: 2px;
+}
+
+.expenses-module .expense-list-row {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  padding: 11px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 10px;
+  align-items: center;
+  text-align: left;
+  box-shadow: none;
+}
+
+.expenses-module .expense-list-row:last-child {
+  border-bottom: 0;
+}
+
+.expenses-module .expense-row-main,
+.expenses-module .expense-row-side {
+  display: grid;
+  gap: 3px;
+}
+
+.expenses-module .expense-row-main strong,
+.expenses-module .expense-row-side strong {
+  font-size: calc(13px * var(--font-scale));
+}
+
+.expenses-module .expense-row-main small,
+.expenses-module .expense-row-side small {
+  color: #6e6e73;
+  font-size: calc(10px * var(--font-scale));
+}
+
+.expenses-module .expense-row-side {
+  text-align: right;
+}
+
+.expenses-module .expense-row-badge {
+  grid-column: 1 / -1;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  background: rgba(17,17,17,0.08);
+  color: #333;
+  font-size: calc(10px * var(--font-scale));
+  font-weight: 700;
+}
+
+.expenses-module .modal-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.expenses-module .modal-heading-row h3 {
+  margin: 0;
+  font-size: calc(16px * var(--font-scale));
+}
+
+.expenses-module .modal-x-btn {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 999px;
+  padding: 0;
+  background: rgba(242,242,247,0.92);
+  color: #111;
+  font-size: calc(20px * var(--font-scale));
+  line-height: 1;
+}
+
+.expenses-module .expense-form-modal-card,
+.expenses-module .expense-detail-modal-card {
+  max-height: 86vh;
+}
+
+.expenses-module .sticky-modal-actions {
+  position: sticky;
+  bottom: 0;
+  background: rgba(255,255,255,0.94);
+  padding-top: 10px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.expenses-module .detail-title-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.expenses-module .detail-title-block h4 {
+  margin: 0;
+  font-size: calc(18px * var(--font-scale));
+}
+
+.expenses-module .detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.expenses-module .detail-grid div,
+.expenses-module .detail-section {
+  background: rgba(245,245,247,0.72);
+  border-radius: 12px;
+  padding: 9px 10px;
+}
+
+.expenses-module .detail-grid span,
+.expenses-module .detail-section h5 {
+  display: block;
+  color: #6e6e73;
+  font-size: calc(10px * var(--font-scale));
+  margin: 0 0 4px;
+}
+
+.expenses-module .detail-grid strong,
+.expenses-module .detail-section p {
+  font-size: calc(12px * var(--font-scale));
+  margin: 0;
+}
+
+.expenses-module .detail-section {
+  margin-top: 10px;
+}
+
+.expenses-module .detail-split-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: calc(12px * var(--font-scale));
+}
+
+.expenses-module .detail-split-row:last-child {
+  border-bottom: 0;
+}
+
+.expenses-module .recent-expenses-card .expense-list-row:nth-child(n+6) {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .expenses-module .expense-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .expenses-module .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+html.theme-dark .expenses-module .settings-menu-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .settings-menu-btn {
+  background: rgba(36,36,44,0.72);
+  border-color: rgba(255,255,255,0.10);
+  color: #f0f0f2;
+}
+
+html.theme-dark .expenses-module .settings-menu-btn small,
+html:not(.theme-light):not(.theme-dark) .expenses-module .settings-menu-btn small,
+html.theme-dark .expenses-module .expense-row-main small,
+html.theme-dark .expenses-module .expense-row-side small,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-row-main small,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-row-side small {
+  color: rgba(190,190,205,0.76);
+}
+
+html.theme-dark .expenses-module .expense-row-badge,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-row-badge {
+  background: rgba(255,255,255,0.12);
+  color: rgba(240,240,242,0.88);
+}
+
+html.theme-dark .expenses-module .modal-x-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal-x-btn {
+  background: rgba(44,44,52,0.90);
+  color: #f0f0f2;
+}
+
+html.theme-dark .expenses-module .sticky-modal-actions,
+html:not(.theme-light):not(.theme-dark) .expenses-module .sticky-modal-actions {
+  background: rgba(26,26,34,0.94);
+}
+
+html.theme-dark .expenses-module .detail-grid div,
+html.theme-dark .expenses-module .detail-section,
+html:not(.theme-light):not(.theme-dark) .expenses-module .detail-grid div,
+html:not(.theme-light):not(.theme-dark) .expenses-module .detail-section {
+  background: rgba(255,255,255,0.06);
+}
