@@ -932,3 +932,98 @@ html.theme-dark .expenses-module .expenses-inner-tab.active {
   border-color: var(--expense-primary);
   color: #fff;
 }
+
+
+/* Integration v3.3 tab and snapshot hotfix */
+.expenses-module .expenses-inner-tabs {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  width: 100% !important;
+  margin: 12px 0 10px !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+.expenses-module .expenses-inner-tab {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 31px !important;
+  min-height: 31px !important;
+  padding: 0 3px !important;
+  flex: none !important;
+  font-size: calc(10.5px * var(--font-scale)) !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+.expenses-module .expense-snapshot-card {
+  background: var(--expense-card-bg);
+  border: 1px solid var(--expense-border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin: 0 0 12px;
+  box-shadow: var(--expense-shadow);
+  backdrop-filter: blur(28px) saturate(1.12);
+  -webkit-backdrop-filter: blur(28px) saturate(1.12);
+}
+
+.expenses-module .expense-snapshot-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.expenses-module .expense-snapshot-total span {
+  color: var(--expense-muted);
+  font-size: calc(11px * var(--font-scale));
+  font-weight: 700;
+}
+
+.expenses-module .expense-snapshot-total strong {
+  color: var(--expense-text);
+  font-size: calc(17px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.expenses-module .expense-snapshot-cats {
+  display: grid;
+  gap: 7px;
+}
+
+.expenses-module .snapshot-cat-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 3px;
+  color: var(--expense-muted);
+  font-size: calc(10.5px * var(--font-scale));
+}
+
+.expenses-module .snapshot-cat-top strong {
+  color: var(--expense-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.expenses-module .snapshot-cat-bar {
+  height: 5px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--expense-soft-bg);
+}
+
+.expenses-module .snapshot-cat-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--expense-primary);
+}
+
+@media (max-width: 390px) {
+  .expenses-module .expenses-inner-tabs { gap: 4px !important; }
+  .expenses-module .expenses-inner-tab { font-size: calc(10px * var(--font-scale)) !important; padding: 0 2px !important; }
+}
