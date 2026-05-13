@@ -286,6 +286,16 @@ function mountExpensesHtml(root) {
     </div>
   </div>
 
+  <div id="settlementActionModal" class="modal hidden">
+    <div class="modal-card settlement-action-modal-card">
+      <div class="modal-heading-row">
+        <h3>找數</h3>
+        <button type="button" class="modal-x-btn" id="closeSettlementActionModalBtn">×</button>
+      </div>
+      <div id="settlementActionContent"></div>
+    </div>
+  </div>
+
   <div id="accountSettingsModal" class="modal hidden">
     <div class="modal-card">
       <div class="modal-heading-row"><h3>帳戶與登入</h3><button type="button" class="modal-x-btn" data-modal-close="accountSettingsModal">×</button></div>
@@ -504,6 +514,9 @@ const closeOcrEntryModalBtn = document.getElementById("closeOcrEntryModalBtn");
 const expenseDetailModal = document.getElementById("expenseDetailModal");
 const expenseDetailContent = document.getElementById("expenseDetailContent");
 const closeExpenseDetailModalBtn = document.getElementById("closeExpenseDetailModalBtn");
+const settlementActionModal = document.getElementById("settlementActionModal");
+const settlementActionContent = document.getElementById("settlementActionContent");
+const closeSettlementActionModalBtn = document.getElementById("closeSettlementActionModalBtn");
 const accessNoAdminHint = document.getElementById("accessNoAdminHint");
 const lockNoAdminHint = document.getElementById("lockNoAdminHint");
 
@@ -554,6 +567,8 @@ let stopActivityLogsListener = null;
 let tripAllowedUids = [];
 let tripCreatorUid = null;
 let allowedEmailsCache = [];
+let expenseModalLockCount = 0;
+let expenseModalLockedScrollTop = 0;
 
 /* utils */
 const safeEscape = (text) => String(text ?? "")
@@ -1205,14 +1220,49 @@ function describeSplit(expense) {
 }
 
 
+function lockExpenseBackgroundScroll() {
+  const shell = document.getElementById("scroll-shell");
+
+  if (expenseModalLockCount === 0) {
+    expenseModalLockedScrollTop = shell ? shell.scrollTop : window.scrollY || 0;
+
+    if (shell) {
+      shell.dataset.expensePreviousOverflowY = shell.style.overflowY || "";
+      shell.style.overflowY = "hidden";
+    }
+
+    document.body.classList.add("expenses-modal-open");
+  }
+
+  expenseModalLockCount += 1;
+}
+
+function unlockExpenseBackgroundScroll() {
+  const shell = document.getElementById("scroll-shell");
+
+  expenseModalLockCount = Math.max(0, expenseModalLockCount - 1);
+
+  if (expenseModalLockCount === 0) {
+    if (shell) {
+      shell.style.overflowY = shell.dataset.expensePreviousOverflowY || "auto";
+      shell.scrollTop = expenseModalLockedScrollTop;
+      delete shell.dataset.expensePreviousOverflowY;
+    }
+
+    document.body.classList.remove("expenses-modal-open");
+  }
+}
+
 function openExpenseModal(modal) {
-  if (!modal) return;
+  if (!modal || !modal.classList.contains("hidden")) return;
+  lockExpenseBackgroundScroll();
   modal.classList.remove("hidden");
 }
 
 function closeExpenseModal(modal) {
-  if (!modal) return;
+  if (!modal || modal.classList.contains("hidden")) return;
   modal.classList.add("hidden");
+  unlockExpenseBackgroundScroll();
 }
 
 function openExpenseFormModal(title = "完整新增支出") {
@@ -1234,6 +1284,14 @@ function closeOcrEntryModal() {
   closeExpenseModal(ocrEntryModal);
 }
 
+function openSettlementActionModal() {
+  openExpenseModal(settlementActionModal);
+}
+
+function closeSettlementActionModal() {
+  closeExpenseModal(settlementActionModal);
+}
+
 function getSettingModalId(key) {
   return {
     account: "accountSettingsModal",
@@ -1252,7 +1310,9 @@ function openSettingModal(key) {
 }
 
 function closeAllOpenModals() {
-  document.querySelectorAll(".expenses-module .modal").forEach(modal => modal.classList.add("hidden"));
+  document.querySelectorAll(".expenses-module .modal").forEach(modal => {
+    if (!modal.classList.contains("hidden")) closeExpenseModal(modal);
+  });
 }
 
 function getExpenseById(expenseId) {
@@ -2227,17 +2287,32 @@ function renderSummary() {
       }).join("")
     : `<p class="neutral">暫時未有已找數紀錄。</p>`;
 
+  const remainingAmount = round2(settlement.reduce((sum, item) => sum + Number(item.amount || 0), 0));
+
   summary.innerHTML = `
     <h3>每人淨額（${currency}，已計入找數）</h3>
     <p class="hint">已找數總額：${currency} ${recordedPaymentsTotal.toFixed(2)}。如有人找多咗，系統會自動反映為對方要找返。</p>
     ${netHtml}
-    <h3>建議結算（剩餘應找）</h3>
-    ${settlementHtml}
-    <h3>已找數紀錄</h3>
-    ${paidHistoryHtml}
+    <button type="button" id="openSettlementActionBtn" class="secondary-btn settlement-popup-btn">找數 / 查看建議結算</button>
+    <p class="hint">剩餘應找：${currency} ${remainingAmount.toFixed(2)}，建議結算 ${settlement.length} 項。</p>
   `;
 
-  summary.querySelectorAll("[data-record-payment]").forEach(btn => {
+  if (settlementActionContent) {
+    settlementActionContent.innerHTML = `
+      <h3>建議結算（剩餘應找）</h3>
+      ${settlementHtml}
+      <h3>已找數紀錄</h3>
+      ${paidHistoryHtml}
+    `;
+  }
+
+  document.getElementById("openSettlementActionBtn")?.addEventListener("click", () => {
+    openSettlementActionModal();
+  });
+
+  const settlementContainer = settlementActionContent || summary;
+
+  settlementContainer.querySelectorAll("[data-record-payment]").forEach(btn => {
     btn.addEventListener("click", () => recordSettlementPayment({
       settlementKey: btn.dataset.settlementKey,
       settlementPairKey: btn.dataset.recordPayment,
@@ -2249,7 +2324,7 @@ function renderSummary() {
     }));
   });
 
-  summary.querySelectorAll("[data-unpay-id]").forEach(btn => {
+  settlementContainer.querySelectorAll("[data-unpay-id]").forEach(btn => {
     btn.addEventListener("click", () => cancelSettlementPaid(btn.dataset.unpayId));
   });
 }
@@ -2257,7 +2332,7 @@ function renderSummary() {
 async function recordSettlementPayment(item) {
   if (!currentUser) return alert("請先登入。");
 
-  const input = summary.querySelector(`[data-payment-input="${CSS.escape(item.settlementPairKey)}"]`);
+  const input = (settlementActionContent || summary).querySelector(`[data-payment-input="${CSS.escape(item.settlementPairKey)}"]`);
   const paidAmount = Number(input?.value);
 
   if (!Number.isFinite(paidAmount) || paidAmount <= 0) {
@@ -2945,6 +3020,7 @@ if (closeExpenseFormModalBtn) closeExpenseFormModalBtn.addEventListener("click",
 });
 if (closeOcrEntryModalBtn) closeOcrEntryModalBtn.addEventListener("click", closeOcrEntryModal);
 if (closeExpenseDetailModalBtn) closeExpenseDetailModalBtn.addEventListener("click", () => closeExpenseModal(expenseDetailModal));
+if (closeSettlementActionModalBtn) closeSettlementActionModalBtn.addEventListener("click", closeSettlementActionModal);
 
 document.querySelectorAll(".expenses-module [data-settings-open]").forEach(button => {
   button.addEventListener("click", () => openSettingModal(button.dataset.settingsOpen));
