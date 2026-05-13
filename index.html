@@ -1140,6 +1140,15 @@ function render(data){
 // FAB
 const ivw=document.getElementById("itinerary-view"),svw=document.getElementById("snacks-view"),infvw=document.getElementById("info-view"),expvw=document.getElementById("expenses-view");
 const bti=document.getElementById("bt-itinerary"),bts=document.getElementById("bt-snacks"),btinfo=document.getElementById("bt-info"),btexp=document.getElementById("bt-expenses");
+function initExpensesViewSafe(){
+  const root=document.getElementById("expenses-root");
+  if(root && !root.innerHTML.trim()){
+    root.innerHTML='<div class="card"><div class="weather-title">支出模組載入中…</div><div class="section-sub" style="margin-top:6px;">如畫面停留在此，請稍等一秒或重新整理。</div></div>';
+  }
+  if(window.tripData?.meta?.expenses?.enabled && typeof window.initExpensesModule==="function"){
+    window.initExpensesModule(window.tripData);
+  }
+}
 function setView(v){
   bti.classList.remove("active");bts.classList.remove("active");btinfo.classList.remove("active");btexp.classList.remove("active");
   ivw.style.display="none";svw.style.display="none";infvw.style.display="none";expvw.style.display="none";
@@ -1148,7 +1157,7 @@ function setView(v){
   else if(v==="info"){btinfo.classList.add("active");infvw.style.display="block";}
   else if(v==="expenses"){
     btexp.classList.add("active");expvw.style.display="block";
-    if(window.tripData?.meta?.expenses?.enabled){window.initExpensesModule?.(window.tripData);}
+    initExpensesViewSafe();
   }
   else{bti.classList.add("active");ivw.style.display="block";}
   updateNowIndicator();
