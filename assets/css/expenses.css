@@ -55,10 +55,30 @@
   background: transparent;
   border: none;
   box-shadow: none;
-  padding: 4px 2px 8px;
-  margin-bottom: 8px;
+  padding: 2px 2px 6px;
+  margin-bottom: 6px;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+}
+
+.expenses-module .compact-status-card {
+  margin-bottom: 4px;
+}
+
+.expenses-module .expense-status-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+  font-size: calc(11px * var(--font-scale));
+  line-height: 1.45;
+  color: var(--expense-muted);
+  font-weight: 650;
+}
+
+.expenses-module .status-dot-sep {
+  color: var(--expense-muted-2);
 }
 
 .expenses-module .eyebrow {
@@ -104,21 +124,22 @@
   line-height: 1.5;
 }
 
+.expenses-module #syncStatus.expense-status-line {
+  margin: 0;
+}
+
 /* Inner tabs */
 .expenses-module .expenses-inner-tabs {
-  position: sticky;
-  top: calc(env(safe-area-inset-top) + 2px);
-  z-index: 20;
   display: flex;
-  gap: 7px;
+  gap: 8px;
+  margin: 16px 0 10px 0;
   overflow-x: auto;
-  padding: 6px 2px 12px;
-  margin: 0 0 8px;
+  padding: 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.20), rgba(255,255,255,0));
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .expenses-module .expenses-inner-tabs::-webkit-scrollbar {
@@ -127,15 +148,16 @@
 
 .expenses-module .expenses-inner-tab {
   flex: 1 0 auto;
-  min-width: 68px;
-  border-radius: 999px;
-  padding: 7px 11px;
-  border: 1px solid rgba(218,218,218,0.85);
-  background: rgba(248,248,250,0.78);
-  color: #555;
+  min-width: 52px;
+  padding: 7px 10px;
+  text-align: center;
   font-size: calc(11px * var(--font-scale));
-  font-weight: 700;
+  border-radius: 999px;
+  border: 1px solid #dadada;
+  background: #f8f8fa;
+  color: #555;
   white-space: nowrap;
+  font-weight: 600;
   box-shadow: none;
   -webkit-appearance: none;
   appearance: none;
@@ -145,6 +167,7 @@
   background: var(--expense-primary);
   border-color: var(--expense-primary);
   color: var(--expense-primary-text);
+  font-weight: 700;
 }
 
 .expenses-module .expenses-panel {
@@ -721,7 +744,7 @@
   }
 
   .expenses-module .expenses-inner-tab {
-    min-width: 64px;
+    min-width: 52px;
     padding: 7px 10px;
   }
 
@@ -775,7 +798,7 @@
   }
 
   html:not(.theme-light):not(.theme-dark) .expenses-module .expenses-inner-tabs {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.16), rgba(0,0,0,0));
+    background: transparent;
   }
 
   html:not(.theme-light):not(.theme-dark) .expenses-module input,
@@ -827,7 +850,7 @@ html.theme-dark .expenses-module {
 }
 
 html.theme-dark .expenses-module .expenses-inner-tabs {
-  background: linear-gradient(to bottom, rgba(0,0,0,0.16), rgba(0,0,0,0));
+  background: transparent;
 }
 
 html.theme-dark .expenses-module input,
@@ -861,4 +884,29 @@ html.theme-dark .expenses-module .modal-card {
 /* Explicit light theme keeps the same glass look as the itinerary. */
 html.theme-light .expenses-module {
   color: #111;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  html:not(.theme-light):not(.theme-dark) .expenses-module .expenses-inner-tab {
+    background: rgba(36,36,44,0.70);
+    border-color: rgba(255,255,255,0.12);
+    color: rgba(200,200,215,0.78);
+  }
+  html:not(.theme-light):not(.theme-dark) .expenses-module .expenses-inner-tab.active {
+    background: var(--expense-primary);
+    border-color: var(--expense-primary);
+    color: #fff;
+  }
+}
+
+html.theme-dark .expenses-module .expenses-inner-tab {
+  background: rgba(36,36,44,0.70);
+  border-color: rgba(255,255,255,0.12);
+  color: rgba(200,200,215,0.78);
+}
+html.theme-dark .expenses-module .expenses-inner-tab.active {
+  background: var(--expense-primary);
+  border-color: var(--expense-primary);
+  color: #fff;
 }
