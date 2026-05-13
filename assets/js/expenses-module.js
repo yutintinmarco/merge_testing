@@ -573,6 +573,26 @@ const safeEscape = (text) => String(text ?? "")
   .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 const round2 = (n) => Math.round((Number(n) + Number.EPSILON) * 100) / 100;
+function localDateISO(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+function timestampMillis(value) {
+  if (!value) return 0;
+  if (typeof value.toMillis === "function") return value.toMillis();
+  if (typeof value.toDate === "function") return value.toDate().getTime();
+  const n = new Date(value).getTime();
+  return Number.isFinite(n) ? n : 0;
+}
+function sortExpensesForDisplay(list) {
+  return [...(list || [])].sort((a, b) => {
+    const dateCompare = String(b.date || "").localeCompare(String(a.date || ""));
+    if (dateCompare !== 0) return dateCompare;
+    return timestampMillis(b.createdAt || b.updatedAt) - timestampMillis(a.createdAt || a.updatedAt);
+  });
+}
 const getTripDocRef = () => doc(db, "trips", tripId);
 const getExpensesCollection = () => collection(db, "trips", tripId, "expenses");
 const getSettlementsCollection = () => collection(db, "trips", tripId, "settlements");
@@ -705,11 +725,11 @@ function assertTripOpen(message = "此旅程已鎖定，不能再修改支出或
 }
 
 function getActiveExpenses() {
-  return allExpenses.filter(expense => expense.isDeleted !== true);
+  return sortExpensesForDisplay(allExpenses.filter(expense => expense.isDeleted !== true));
 }
 
 function getDeletedExpenses() {
-  return allExpenses.filter(expense => expense.isDeleted === true);
+  return sortExpensesForDisplay(allExpenses.filter(expense => expense.isDeleted === true));
 }
 
 function setFormDisabled(disabled) {
@@ -827,12 +847,12 @@ function applyRecordedPaymentsToNet(net, currency) {
 }
 
 function getExportFileName() {
-  const date = new Date().toISOString().slice(0, 10).replaceAll("-", "");
+  const date = localDateISO().replaceAll("-", "");
   return `trip-expenses-${tripId}-${date}.xlsx`;
 }
 
 function getJsonBackupFileName() {
-  const date = new Date().toISOString().slice(0, 10).replaceAll("-", "");
+  const date = localDateISO().replaceAll("-", "");
   return `trip-expenses-backup-${tripId}-${date}.json`;
 }
 
@@ -874,7 +894,7 @@ function downloadTextFile(filename, text, mimeType) {
   URL.revokeObjectURL(url);
 }
 
-function setToday() { dateInput.value = new Date().toISOString().slice(0, 10); }
+function setToday() { dateInput.value = localDateISO(); }
 function getSelectedParticipants() { return Array.from(sharedByGroup.querySelectorAll("input:checked")).map(i => i.value); }
 function getRateFor(currency) { const r = tripSettings.exchangeRates?.[currency]; return Number.isFinite(Number(r)) && Number(r) > 0 ? Number(r) : null; }
 function convertToBase(amount, currency) { const rate = getRateFor(currency); return rate ? round2(Number(amount) * rate) : null; }
@@ -1226,9 +1246,12 @@ function lockExpenseBackgroundScroll() {
 
     if (shell) {
       shell.dataset.expensePreviousOverflowY = shell.style.overflowY || "";
+      shell.dataset.expensePreviousOverscroll = shell.style.overscrollBehavior || "";
       shell.style.overflowY = "hidden";
+      shell.style.overscrollBehavior = "none";
     }
 
+    document.documentElement.classList.add("expenses-modal-open");
     document.body.classList.add("expenses-modal-open");
   }
 
@@ -1243,10 +1266,13 @@ function unlockExpenseBackgroundScroll() {
   if (expenseModalLockCount === 0) {
     if (shell) {
       shell.style.overflowY = shell.dataset.expensePreviousOverflowY || "auto";
+      shell.style.overscrollBehavior = shell.dataset.expensePreviousOverscroll || "";
       shell.scrollTop = expenseModalLockedScrollTop;
       delete shell.dataset.expensePreviousOverflowY;
+      delete shell.dataset.expensePreviousOverscroll;
     }
 
+    document.documentElement.classList.remove("expenses-modal-open");
     document.body.classList.remove("expenses-modal-open");
   }
 }
@@ -1572,7 +1598,7 @@ function listenToExpenses() {
   if (stopExpensesListener) stopExpensesListener();
   const q = query(getExpensesCollection(), orderBy("date", "desc"));
   stopExpensesListener = onSnapshot(q, snap => {
-    allExpenses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    allExpenses = sortExpensesForDisplay(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     expenses = getActiveExpenses();
     renderExpenses();
     renderDeletedExpenses();
@@ -1712,7 +1738,7 @@ async function saveQuickExpense() {
   }));
 
   const payload = {
-    date: new Date().toISOString().slice(0, 10),
+    date: localDateISO(),
     title,
     amount: originalAmount,
     currency: originalCurrency,
@@ -2967,9 +2993,9 @@ function openAiPreviewModal(result) {
   aiTotalInput.value = Number.isFinite(Number(result.total)) ? String(result.total) : "";
   aiConfidenceInput.value = typeof result.confidence === "number" ? `${Math.round(result.confidence * 100)}%` : "n/a";
   aiReasonInput.value = result.reason || "";
-  ocrPreviewModal.classList.remove("hidden");
+  openExpenseModal(ocrPreviewModal);
 }
-function closeAiPreviewModal() { ocrPreviewModal.classList.add("hidden"); }
+function closeAiPreviewModal() { closeExpenseModal(ocrPreviewModal); }
 function applyAiResultToForm() {
   if (aiMerchantInput.value.trim() && !titleInput.value.trim()) titleInput.value = aiMerchantInput.value.trim();
   if (aiDateInput.value) dateInput.value = aiDateInput.value;
@@ -3032,6 +3058,9 @@ document.querySelectorAll(".expenses-module .modal").forEach(modal => {
   modal.addEventListener("click", event => {
     if (event.target === modal) closeExpenseModal(modal);
   });
+  modal.addEventListener("touchmove", event => {
+    event.stopPropagation();
+  }, { passive: true });
 });
 
 
