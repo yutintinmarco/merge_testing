@@ -473,6 +473,14 @@ html.theme-dark .info-mini-copy { background: rgba(44,44,52,0.80); border-color:
 html.theme-dark .info-mini-copy.copied { background: rgba(42,90,42,0.65); border-color: #5a9e5a; color: #a8dba8; }
 html.theme-dark .info-hint { color: rgba(150,150,175,0.65); }
 
+  
+/* Expenses view: replace travel fixed cards with expense snapshot */
+body.expenses-view-active #team-bar,
+body.expenses-view-active #flight-card,
+body.expenses-view-active #weather-card {
+  display: none !important;
+}
+
   </style>
             <link rel="apple-touch-icon" href="assets/icon/trip_icon.png">
   <link rel="icon" type="image/png" href="assets/icon/trip_icon.png">
@@ -1135,6 +1143,7 @@ const bti=document.getElementById("bt-itinerary"),bts=document.getElementById("b
 function setView(v){
   bti.classList.remove("active");bts.classList.remove("active");btinfo.classList.remove("active");btexp.classList.remove("active");
   ivw.style.display="none";svw.style.display="none";infvw.style.display="none";expvw.style.display="none";
+  document.body.classList.toggle("expenses-view-active", v==="expenses");
   if(v==="snacks"){bts.classList.add("active");svw.style.display="block";}
   else if(v==="info"){btinfo.classList.add("active");infvw.style.display="block";}
   else if(v==="expenses"){
