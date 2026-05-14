@@ -1930,3 +1930,498 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .analytics-filter-all.i
   color: #111 !important;
   border-color: rgba(230,230,238,0.90) !important;
 }
+
+/* =========================================================
+   Integration v5.3 Appearance Polish
+   Final visual layer only. Keeps existing functions intact.
+   ========================================================= */
+.expenses-module {
+  --expense-radius: 16px;
+  --expense-radius-sm: 12px;
+  --expense-card-bg: rgba(255,255,255,0.25);
+  --expense-soft-bg: rgba(255,255,255,0.34);
+  --expense-field-bg: rgba(255,255,255,0.72);
+  --expense-border: rgba(255,255,255,0.58);
+  --expense-line: rgba(0,0,0,0.075);
+  --expense-shadow: 0 10px 24px rgba(15,23,42,0.10);
+  font-size: calc(13px * var(--font-scale)) !important;
+  line-height: 1.42 !important;
+  letter-spacing: 0 !important;
+}
+
+.expenses-module .expenses-app {
+  max-width: 480px !important;
+  padding: 0 0 108px !important;
+}
+
+.expenses-module .header-card,
+.expenses-module .card,
+.expenses-module .expense-snapshot-card,
+.expenses-module .analytics-pie-card,
+.expenses-module .analytics-filter-card {
+  border-radius: 16px !important;
+  border: 1px solid var(--expense-border) !important;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.09) !important;
+  backdrop-filter: blur(28px) saturate(1.10) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(1.10) !important;
+}
+
+.expenses-module .card {
+  padding: 13px 14px !important;
+  margin-bottom: 12px !important;
+}
+
+.expenses-module .header-card {
+  padding: 0 2px 4px !important;
+  margin-bottom: 6px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.expenses-module .compact-status-card {
+  padding: 8px 10px !important;
+  margin-bottom: 8px !important;
+  background: rgba(255,255,255,0.22) !important;
+}
+
+.expenses-module .expense-status-line {
+  gap: 4px !important;
+  font-size: calc(10.5px * var(--font-scale)) !important;
+  line-height: 1.35 !important;
+  font-weight: 650 !important;
+}
+
+.expenses-module h1,
+.expenses-module h2,
+.expenses-module h3,
+.expenses-module h4,
+.expenses-module h5 {
+  letter-spacing: 0 !important;
+}
+
+.expenses-module h2 {
+  margin-bottom: 10px !important;
+  font-size: calc(14px * var(--font-scale)) !important;
+  line-height: 1.3 !important;
+}
+
+.expenses-module h3 {
+  margin-bottom: 8px !important;
+  font-size: calc(13px * var(--font-scale)) !important;
+  line-height: 1.3 !important;
+}
+
+.expenses-module .hint,
+.expenses-module .section-sub,
+.expenses-module .expense-meta,
+.expenses-module .settlement-status,
+.expenses-module .settlement-progress,
+.expenses-module .expense-audit,
+.expenses-module .analytics-pie-heading span,
+.expenses-module .analytics-pie-heading small,
+.expenses-module .analytics-filter-title small {
+  font-size: calc(10.5px * var(--font-scale)) !important;
+  line-height: 1.42 !important;
+}
+
+/* Tabs: same visual rhythm as the trip day tabs */
+.expenses-module .expenses-inner-tabs {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 5px !important;
+  margin: 10px 0 10px !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+.expenses-module .expenses-inner-tab {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  padding: 0 2px !important;
+  border-radius: 999px !important;
+  border: 1px solid #dadada !important;
+  background: rgba(248,248,250,0.90) !important;
+  color: #555 !important;
+  font-size: calc(10.5px * var(--font-scale)) !important;
+  line-height: 1 !important;
+  font-weight: 650 !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+}
+
+.expenses-module .expenses-inner-tab.active {
+  background: color-mix(in srgb, var(--expense-primary) 88%, #fff) !important;
+  border-color: color-mix(in srgb, var(--expense-primary) 90%, #fff) !important;
+  color: #fff !important;
+  font-weight: 760 !important;
+}
+
+/* Top total badge: compact and calm */
+.expenses-module .expense-snapshot-card {
+  padding: 8px 11px !important;
+  margin: 0 0 8px !important;
+}
+
+.expenses-module .expense-snapshot-total {
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+.expenses-module .expense-snapshot-total span {
+  font-size: calc(10px * var(--font-scale)) !important;
+  font-weight: 700 !important;
+}
+
+.expenses-module .expense-snapshot-total strong {
+  font-size: calc(14px * var(--font-scale)) !important;
+  font-weight: 820 !important;
+}
+
+/* Inputs and buttons: consistent density */
+.expenses-module form,
+.expenses-module .split-config,
+.expenses-module .settings-menu-grid,
+.expenses-module .expense-action-grid {
+  gap: 10px !important;
+}
+
+.expenses-module label {
+  gap: 5px !important;
+  font-size: calc(11.5px * var(--font-scale)) !important;
+  line-height: 1.35 !important;
+}
+
+.expenses-module input,
+.expenses-module select,
+.expenses-module textarea {
+  border-radius: 13px !important;
+  padding: 10px 11px !important;
+  line-height: 1.35 !important;
+}
+
+.expenses-module button {
+  border-radius: 14px !important;
+  min-height: 40px !important;
+  padding: 10px 13px !important;
+  font-size: calc(12.5px * var(--font-scale)) !important;
+  line-height: 1.2 !important;
+}
+
+.expenses-module .secondary-btn,
+.expenses-module .edit-btn,
+.expenses-module .delete-btn,
+.expenses-module .settle-btn {
+  background: rgba(245,245,247,0.86) !important;
+  border: 1px solid rgba(210,210,215,0.72) !important;
+}
+
+.expenses-module .quick-grid {
+  gap: 8px !important;
+  margin-top: 10px !important;
+}
+
+.expenses-module .quick-add-main-btn {
+  min-height: 44px !important;
+}
+
+.expenses-module .quick-add-header {
+  margin-bottom: 6px !important;
+}
+
+.expenses-module .quick-pill,
+.expenses-module .open-badge,
+.expenses-module .locked-badge,
+.expenses-module .paid-badge,
+.expenses-module .unpaid-badge,
+.expenses-module .partial-badge,
+.expenses-module .admin-badge,
+.expenses-module .expense-row-badge {
+  padding: 3px 8px !important;
+  font-size: calc(9.8px * var(--font-scale)) !important;
+  line-height: 1.28 !important;
+}
+
+/* List rhythm */
+.expenses-module .expense-item,
+.expenses-module .summary-item,
+.expenses-module .settlement-item,
+.expenses-module .activity-item {
+  padding: 10px 0 !important;
+}
+
+.expenses-module .expense-list-row {
+  padding: 10px 0 !important;
+  gap: 4px 10px !important;
+}
+
+.expenses-module .expense-title,
+.expenses-module .expense-row-main strong,
+.expenses-module .expense-row-side strong {
+  font-size: calc(12.5px * var(--font-scale)) !important;
+  line-height: 1.36 !important;
+}
+
+.expenses-module .expense-row-main small,
+.expenses-module .expense-row-side small {
+  font-size: calc(10px * var(--font-scale)) !important;
+  line-height: 1.35 !important;
+}
+
+.expenses-module .expense-row-side {
+  align-self: start !important;
+  padding-top: 1px !important;
+}
+
+/* Settings menu: closer to iOS setting rows */
+.expenses-module .settings-menu-btn {
+  min-height: 54px !important;
+  padding: 9px 11px !important;
+  grid-template-columns: 30px 1fr !important;
+  column-gap: 9px !important;
+  border-radius: 14px !important;
+  box-shadow: 0 5px 14px rgba(15,23,42,0.055) !important;
+}
+
+.expenses-module .settings-menu-btn span {
+  font-size: calc(18px * var(--font-scale)) !important;
+}
+
+.expenses-module .settings-menu-btn strong {
+  font-size: calc(12.5px * var(--font-scale)) !important;
+  line-height: 1.25 !important;
+}
+
+.expenses-module .settings-menu-btn small {
+  font-size: calc(9.8px * var(--font-scale)) !important;
+  line-height: 1.25 !important;
+  margin-top: 1px !important;
+}
+
+/* Analytics: cleaner, less crowded */
+.expenses-module .analytics-total-card,
+.expenses-module .analytics-pie-card,
+.expenses-module .analytics-filter-card {
+  margin-bottom: 12px !important;
+  padding: 12px !important;
+}
+
+.expenses-module .analytics-total-card strong {
+  font-size: calc(20px * var(--font-scale)) !important;
+}
+
+.expenses-module .analytics-pie-heading {
+  margin-bottom: 10px !important;
+}
+
+.expenses-module .analytics-pie-wrap {
+  width: min(198px, 58vw) !important;
+  margin-bottom: 10px !important;
+}
+
+.expenses-module .analytics-pie-legend {
+  gap: 6px !important;
+}
+
+.expenses-module .analytics-pie-legend-row,
+.expenses-module .analytics-row-top {
+  font-size: calc(11.5px * var(--font-scale)) !important;
+  line-height: 1.35 !important;
+}
+
+.expenses-module .analytics-block {
+  margin-top: 14px !important;
+}
+
+.expenses-module .analytics-row {
+  padding: 8px 0 !important;
+}
+
+.expenses-module .analytics-bar {
+  height: 6px !important;
+}
+
+.expenses-module .analytics-filter-grid {
+  gap: 7px !important;
+}
+
+.expenses-module .analytics-filter-chip {
+  min-height: 29px !important;
+  padding: 5px 9px !important;
+  font-size: calc(10.5px * var(--font-scale)) !important;
+}
+
+/* Detail modal content */
+.expenses-module .detail-title-block {
+  margin-bottom: 10px !important;
+}
+
+.expenses-module .detail-title-block h4 {
+  font-size: calc(16px * var(--font-scale)) !important;
+  line-height: 1.25 !important;
+}
+
+.expenses-module .detail-grid {
+  gap: 7px !important;
+}
+
+.expenses-module .detail-grid div,
+.expenses-module .detail-section {
+  border-radius: 12px !important;
+  padding: 8px 9px !important;
+}
+
+.expenses-module .detail-section {
+  margin-top: 8px !important;
+}
+
+.expenses-module .detail-split-row {
+  padding: 4px 0 !important;
+}
+
+/* Modal: same spirit as itinerary popup, with tidier inner spacing */
+.expenses-module .modal {
+  background: rgba(0,0,0,0.35) !important;
+}
+
+.expenses-module .modal-card,
+.expenses-module .expense-form-modal-card,
+.expenses-module .expense-detail-modal-card,
+.expenses-module .settlement-action-modal-card {
+  width: 90% !important;
+  max-width: 420px !important;
+  max-height: min(82dvh, 720px) !important;
+  padding: 13px 15px 14px !important;
+  border-radius: 18px !important;
+  box-shadow: 0 18px 40px rgba(15,23,42,0.30) !important;
+}
+
+.expenses-module .modal-heading-row {
+  margin-bottom: 8px !important;
+}
+
+.expenses-module .modal-heading-row h3 {
+  font-size: calc(15px * var(--font-scale)) !important;
+  line-height: 1.3 !important;
+}
+
+.expenses-module .modal-x-btn {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  font-size: calc(18px * var(--font-scale)) !important;
+}
+
+.expenses-module .sticky-modal-actions {
+  margin-top: 7px !important;
+  padding-top: 7px !important;
+}
+
+.expenses-module .modal-card .hint,
+.expenses-module .expense-form-modal-card .hint {
+  margin-top: 2px !important;
+  margin-bottom: 1px !important;
+  line-height: 1.36 !important;
+}
+
+/* Keep bottom clear from main FAB */
+.expenses-module .expenses-panel:last-child,
+.expenses-module .card:last-child {
+  margin-bottom: 14px !important;
+}
+
+@media (max-width: 480px) {
+  .expenses-module .expenses-app {
+    padding-bottom: 126px !important;
+  }
+
+  .expenses-module .card {
+    padding: 12px 13px !important;
+    margin-bottom: 11px !important;
+  }
+
+  .expenses-module .expenses-inner-tabs {
+    gap: 4px !important;
+  }
+
+  .expenses-module .expenses-inner-tab {
+    height: 29px !important;
+    min-height: 29px !important;
+    font-size: calc(10px * var(--font-scale)) !important;
+  }
+
+  .expenses-module .quick-grid,
+  .expenses-module .form-actions,
+  .expenses-module .backup-actions,
+  .expenses-module .summary-header-row,
+  .expenses-module .settlement-payment-row,
+  .expenses-module .member-add-row,
+  .expenses-module .rate-row,
+  .expenses-module .split-row,
+  .expenses-module .auth-row {
+    gap: 8px !important;
+  }
+
+  .expenses-module .analytics-pie-wrap {
+    width: min(190px, 56vw) !important;
+  }
+
+  .expenses-module .modal-card,
+  .expenses-module .expense-form-modal-card,
+  .expenses-module .expense-detail-modal-card,
+  .expenses-module .settlement-action-modal-card {
+    width: 90% !important;
+    max-width: 420px !important;
+    max-height: min(82dvh, 720px) !important;
+    padding: 12px 14px 13px !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.theme-light):not(.theme-dark) .expenses-module .compact-status-card,
+  html:not(.theme-light):not(.theme-dark) .expenses-module .expense-snapshot-card,
+  html:not(.theme-light):not(.theme-dark) .expenses-module .analytics-pie-card,
+  html:not(.theme-light):not(.theme-dark) .expenses-module .analytics-filter-card {
+    background: rgba(24,24,30,0.62) !important;
+    border-color: rgba(255,255,255,0.09) !important;
+  }
+
+  html:not(.theme-light):not(.theme-dark) .expenses-module .expenses-inner-tab {
+    background: rgba(36,36,44,0.70) !important;
+    border-color: rgba(255,255,255,0.12) !important;
+    color: rgba(200,200,215,0.78) !important;
+  }
+
+  html:not(.theme-light):not(.theme-dark) .expenses-module .expenses-inner-tab.active {
+    background: var(--expense-primary) !important;
+    border-color: var(--expense-primary) !important;
+    color: #fff !important;
+  }
+}
+
+html.theme-dark .expenses-module .compact-status-card,
+html.theme-dark .expenses-module .expense-snapshot-card,
+html.theme-dark .expenses-module .analytics-pie-card,
+html.theme-dark .expenses-module .analytics-filter-card {
+  background: rgba(24,24,30,0.62) !important;
+  border-color: rgba(255,255,255,0.09) !important;
+}
+
+html.theme-dark .expenses-module .expenses-inner-tab {
+  background: rgba(36,36,44,0.70) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: rgba(200,200,215,0.78) !important;
+}
+
+html.theme-dark .expenses-module .expenses-inner-tab.active {
+  background: var(--expense-primary) !important;
+  border-color: var(--expense-primary) !important;
+  color: #fff !important;
+}
