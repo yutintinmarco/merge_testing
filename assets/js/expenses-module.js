@@ -28,11 +28,6 @@ import {
 function mountExpensesHtml(root) {
   root.innerHTML = `<div class="expenses-module">
 <main class="expenses-app">
-    <section class="header-card compact-status-card">
-      <p id="syncStatus" class="expense-status-line">Connecting...</p>
-      <p id="tripStatusText" class="hint hidden"></p>
-    </section>
-
     <section class="expense-snapshot-card" id="expenseSnapshotCard">
       <div class="expense-snapshot-total">
         <span>目前總支出</span>
@@ -176,7 +171,13 @@ function mountExpensesHtml(root) {
         <div id="activityLogList"></div>
       </section>
     </section>
-  </main>
+  
+    <section class="header-card compact-status-card expense-bottom-status-card">
+      <p id="syncStatus" class="expense-status-line">Connecting...</p>
+      <p id="tripStatusText" class="hint hidden"></p>
+    </section>
+
+</main>
 
   <div id="expenseFormModal" class="modal hidden">
     <div class="modal-card expense-form-modal-card">
