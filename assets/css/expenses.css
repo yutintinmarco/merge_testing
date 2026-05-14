@@ -2543,30 +2543,54 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
 }
 
 
-/* v5.3.2: unify expense detail modal footer buttons */
-.expenses-module #expenseDetailFooterActions {
+/* v5.3.3 modal footer / status / footer-note polish */
+.expenses-module #expenseDetailFooterActions.modal-footer-actions {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   gap: 8px !important;
-  align-items: center !important;
+  align-items: stretch !important;
   justify-content: stretch !important;
+  width: 100% !important;
 }
 
-.expenses-module #expenseDetailFooterActions button {
+.expenses-module #expenseDetailFooterActions.modal-footer-actions button {
   width: 100% !important;
   min-width: 0 !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
+  margin: 0 !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  padding: 8px 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   white-space: nowrap !important;
-  text-align: center !important;
+  line-height: 1.1 !important;
 }
 
-.expenses-module #expenseDetailFooterActions .edit-btn,
-.expenses-module #expenseDetailFooterActions .delete-btn,
-.expenses-module #expenseDetailFooterActions .modal-close-btn {
-  min-height: 34px !important;
+.expenses-module #expenseDetailFooterActions.modal-footer-actions button:first-child:not(.modal-close-btn) {
+  margin-left: 0 !important;
+}
+
+.expenses-module .expense-bottom-status-card {
+  margin-top: 10px !important;
+  margin-bottom: 4px !important;
   padding: 8px 10px !important;
-  border-radius: 999px !important;
-  font-size: calc(11.5px * var(--font-scale)) !important;
-  line-height: 1.2 !important;
+  opacity: 0.92;
+}
+
+.expenses-module .expense-bottom-status-card .expense-status-line {
+  justify-content: center !important;
+  text-align: center !important;
+  line-height: 1.35 !important;
+}
+
+@media (max-width: 380px) {
+  .expenses-module #expenseDetailFooterActions.modal-footer-actions {
+    gap: 6px !important;
+  }
+  .expenses-module #expenseDetailFooterActions.modal-footer-actions button {
+    font-size: calc(11px * var(--font-scale)) !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
 }
