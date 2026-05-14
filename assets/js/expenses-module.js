@@ -2067,8 +2067,8 @@ function openExpenseDetail(expenseId) {
 
   if (expenseDetailFooterActions) {
     expenseDetailFooterActions.innerHTML = `
-      <button type="button" class="edit-btn" data-detail-edit-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Edit</button>
-      <button type="button" class="delete-btn" data-detail-delete-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Delete</button>
+      <button type="button" class="edit-btn" data-detail-edit-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>編輯</button>
+      <button type="button" class="delete-btn" data-detail-delete-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>刪除</button>
       <button type="button" class="modal-close-btn" id="closeExpenseDetailModalBtn">關閉</button>
     `;
 
