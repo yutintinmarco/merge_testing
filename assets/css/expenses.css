@@ -2541,3 +2541,32 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
   border-color: rgba(255,255,255,0.14) !important;
   color: rgba(220,220,230,0.88) !important;
 }
+
+
+/* v5.3.2: unify expense detail modal footer buttons */
+.expenses-module #expenseDetailFooterActions {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  align-items: center !important;
+  justify-content: stretch !important;
+}
+
+.expenses-module #expenseDetailFooterActions button {
+  width: 100% !important;
+  min-width: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
+.expenses-module #expenseDetailFooterActions .edit-btn,
+.expenses-module #expenseDetailFooterActions .delete-btn,
+.expenses-module #expenseDetailFooterActions .modal-close-btn {
+  min-height: 34px !important;
+  padding: 8px 10px !important;
+  border-radius: 999px !important;
+  font-size: calc(11.5px * var(--font-scale)) !important;
+  line-height: 1.2 !important;
+}
