@@ -1839,3 +1839,94 @@ html.theme-dark .expenses-module .analytics-filter-all {
     border-color: rgba(230,230,238,0.90);
   }
 }
+
+
+/* v5.2.1 compact total badge and visible category filter ticks */
+.expenses-module .expense-snapshot-card {
+  padding: 8px 12px !important;
+  margin: 0 0 10px !important;
+  border-radius: 14px !important;
+}
+
+.expenses-module .expense-snapshot-total {
+  margin-bottom: 0 !important;
+  align-items: center !important;
+}
+
+.expenses-module .expense-snapshot-total span {
+  font-size: calc(10.5px * var(--font-scale)) !important;
+}
+
+.expenses-module .expense-snapshot-total strong {
+  font-size: calc(14px * var(--font-scale)) !important;
+}
+
+.expenses-module .expense-snapshot-cats {
+  display: none !important;
+}
+
+.expenses-module .analytics-filter-chip {
+  position: relative;
+  border-color: var(--expense-border) !important;
+  background: rgba(255,255,255,0.52) !important;
+  opacity: 0.62;
+}
+
+.expenses-module .analytics-filter-chip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.expenses-module .analytics-filter-chip .analytics-check {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  font-size: calc(10px * var(--font-scale));
+  font-weight: 900;
+  line-height: 1;
+  color: transparent;
+  background: rgba(142,142,147,0.18);
+  border: 1px solid rgba(142,142,147,0.38);
+}
+
+.expenses-module .analytics-filter-chip.is-selected {
+  opacity: 1;
+  background: rgba(255,255,255,0.86) !important;
+  border-color: var(--expense-primary) !important;
+  box-shadow: 0 2px 8px rgba(15,23,42,0.08);
+}
+
+.expenses-module .analytics-filter-chip.is-selected .analytics-check {
+  color: #fff;
+  background: var(--expense-primary);
+  border-color: var(--expense-primary);
+}
+
+.expenses-module .analytics-filter-all.is-selected {
+  background: rgba(17,17,17,0.88) !important;
+  color: #fff !important;
+  border-color: rgba(17,17,17,0.88) !important;
+}
+
+html.theme-dark .expenses-module .analytics-filter-chip,
+html:not(.theme-light):not(.theme-dark) .expenses-module .analytics-filter-chip {
+  background: rgba(44,44,52,0.56) !important;
+}
+
+html.theme-dark .expenses-module .analytics-filter-chip.is-selected,
+html:not(.theme-light):not(.theme-dark) .expenses-module .analytics-filter-chip.is-selected {
+  background: rgba(64,64,76,0.92) !important;
+  border-color: var(--expense-primary) !important;
+}
+
+html.theme-dark .expenses-module .analytics-filter-all.is-selected,
+html:not(.theme-light):not(.theme-dark) .expenses-module .analytics-filter-all.is-selected {
+  background: rgba(230,230,238,0.90) !important;
+  color: #111 !important;
+  border-color: rgba(230,230,238,0.90) !important;
+}
