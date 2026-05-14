@@ -2425,3 +2425,119 @@ html.theme-dark .expenses-module .expenses-inner-tab.active {
   border-color: var(--expense-primary) !important;
   color: #fff !important;
 }
+
+
+/* v5.3.1 Modal footer unification
+   Align all expenses popups with the itinerary popup pattern: no top-right X,
+   action buttons and Close button sit in the bottom footer. */
+.expenses-module .modal-x-btn {
+  display: none !important;
+}
+
+.expenses-module .modal-card,
+.expenses-module .expense-form-modal-card,
+.expenses-module .expense-detail-modal-card,
+.expenses-module .settlement-action-modal-card {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.expenses-module .modal-heading-row {
+  flex: 0 0 auto !important;
+}
+
+.expenses-module .modal-body-scroll,
+.expenses-module .expense-form-modal-card .modal-body-scroll,
+.expenses-module .expense-detail-modal-card .modal-body-scroll,
+.expenses-module .settlement-action-modal-card .modal-body-scroll {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 1px 1px 8px 1px !important;
+}
+
+.expenses-module .modal-form,
+.expenses-module .modal-form-with-footer {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+}
+
+.expenses-module .modal-footer-actions,
+.expenses-module .sticky-modal-actions {
+  flex: 0 0 auto !important;
+  position: static !important;
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  margin-top: 9px !important;
+  padding-top: 9px !important;
+  padding-bottom: max(0px, env(safe-area-inset-bottom)) !important;
+  border-top: 1px solid rgba(0,0,0,0.08) !important;
+  background: transparent !important;
+}
+
+.expenses-module .modal-footer-actions button,
+.expenses-module .sticky-modal-actions button {
+  width: auto !important;
+  min-width: 82px !important;
+  min-height: 34px !important;
+  padding: 8px 14px !important;
+  border-radius: 999px !important;
+  font-size: calc(12px * var(--font-scale)) !important;
+  line-height: 1.2 !important;
+}
+
+.expenses-module .modal-footer-actions button:first-child:not(.modal-close-btn),
+.expenses-module .sticky-modal-actions button:first-child:not(.modal-close-btn) {
+  margin-left: auto !important;
+}
+
+.expenses-module .modal-close-btn {
+  border: 1px solid #ddd !important;
+  background: #f9f9fb !important;
+  color: #333 !important;
+  font-weight: 600 !important;
+}
+
+.expenses-module .expense-form-modal-card,
+.expenses-module .modal-card,
+.expenses-module .expense-detail-modal-card,
+.expenses-module .settlement-action-modal-card {
+  max-height: min(84dvh, 730px) !important;
+}
+
+@media (max-width: 480px) {
+  .expenses-module .modal-footer-actions,
+  .expenses-module .sticky-modal-actions {
+    gap: 7px !important;
+  }
+
+  .expenses-module .modal-footer-actions button,
+  .expenses-module .sticky-modal-actions button {
+    min-width: 72px !important;
+    padding: 8px 12px !important;
+    font-size: calc(11.5px * var(--font-scale)) !important;
+  }
+}
+
+html.theme-dark .expenses-module .modal-footer-actions,
+html.theme-dark .expenses-module .sticky-modal-actions,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal-footer-actions,
+html:not(.theme-light):not(.theme-dark) .expenses-module .sticky-modal-actions {
+  border-top-color: rgba(255,255,255,0.10) !important;
+}
+
+html.theme-dark .expenses-module .modal-close-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
+  background: rgba(40,40,50,0.80) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+  color: rgba(220,220,230,0.88) !important;
+}
