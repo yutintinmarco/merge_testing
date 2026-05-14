@@ -2165,7 +2165,7 @@ function sumBy(rows, keyFn, amountFn) {
 }
 
 function renderExpenseSnapshot() {
-  if (!expenseSnapshotCard || !expenseSnapshotTotal || !expenseSnapshotCats) return;
+  if (!expenseSnapshotCard || !expenseSnapshotTotal) return;
 
   const base = tripSettings.baseCurrency || "HKD";
   const activeExpenses = expenses || [];
@@ -2175,27 +2175,9 @@ function renderExpenseSnapshot() {
 
   expenseSnapshotTotal.textContent = `${base} ${total.toFixed(2)}`;
 
-  if (!activeExpenses.length) {
-    expenseSnapshotCats.innerHTML = `<span class="neutral">暫時未有分類分析</span>`;
-    return;
+  if (expenseSnapshotCats) {
+    expenseSnapshotCats.innerHTML = "";
   }
-
-  const byCategory = sumBy(activeExpenses, e => e.category || "Other", e => e.convertedAmount ?? convertToBase(e.originalAmount ?? e.amount ?? 0, e.originalCurrency ?? e.currency ?? base));
-  const topRows = byCategory.slice(0, 4);
-  const max = Math.max(...topRows.map(r => Math.abs(r.amount)), 1);
-
-  expenseSnapshotCats.innerHTML = topRows.map(row => {
-    const pct = Math.max(3, Math.round(Math.abs(row.amount) / max * 100));
-    return `
-      <div class="snapshot-cat-row">
-        <div class="snapshot-cat-top">
-          <span>${safeEscape(row.label)}</span>
-          <strong>${safeEscape(base)} ${Number(row.amount).toFixed(2)}</strong>
-        </div>
-        <div class="snapshot-cat-bar"><span style="width:${pct}%"></span></div>
-      </div>
-    `;
-  }).join("");
 }
 
 function getAnalyticsCategoryRows(activeExpenses, base) {
@@ -2364,17 +2346,22 @@ function renderAnalytics() {
         <small>Pie chart 及按分類統計會即時更新</small>
       </div>
       <div class="analytics-filter-grid">
-        <label class="analytics-filter-chip analytics-filter-all">
+        <label class="analytics-filter-chip analytics-filter-all ${allChecked ? "is-selected" : ""}">
           <input type="checkbox" data-analytics-filter="all" ${allChecked ? "checked" : ""} />
+          <span class="analytics-check">✓</span>
           <span>All</span>
         </label>
-        ${availableCategories.map((category, index) => `
-          <label class="analytics-filter-chip">
-            <input type="checkbox" data-analytics-category="${safeEscape(category)}" ${analyticsSelectedCategories.has(category) ? "checked" : ""} />
-            <i style="background:${getCategoryColor(category, index)}"></i>
-            <span>${safeEscape(category)}</span>
-          </label>
-        `).join("")}
+        ${availableCategories.map((category, index) => {
+          const selected = analyticsSelectedCategories.has(category);
+          return `
+            <label class="analytics-filter-chip ${selected ? "is-selected" : ""}">
+              <input type="checkbox" data-analytics-category="${safeEscape(category)}" ${selected ? "checked" : ""} />
+              <span class="analytics-check">✓</span>
+              <i style="background:${getCategoryColor(category, index)}"></i>
+              <span>${safeEscape(category)}</span>
+            </label>
+          `;
+        }).join("")}
       </div>
     </div>
   `;
