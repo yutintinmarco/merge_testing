@@ -182,80 +182,82 @@ function mountExpensesHtml(root) {
     <div class="modal-card expense-form-modal-card">
       <div class="modal-heading-row">
         <h3 id="expenseFormModalTitle">完整新增支出</h3>
-        <button type="button" class="modal-x-btn" id="closeExpenseFormModalBtn">×</button>
       </div>
-      <form id="expenseForm">
-        <label>
-          日期
-          <input type="date" id="date" required />
-        </label>
-
-        <label>
-          項目
-          <input type="text" id="title" placeholder="例如：Lunch / Taxi" required />
-        </label>
-
-        <label>
-          金額
-          <input type="number" id="amount" step="0.01" min="0" required />
-        </label>
-
-        <label>
-          貨幣
-          <select id="currency">
-            <option value="HKD">HKD</option>
-            <option value="JPY">JPY</option>
-            <option value="CNY">CNY</option>
-            <option value="TWD">TWD</option>
-            <option value="KRW">KRW</option>
-            <option value="USD">USD</option>
-          </select>
-        </label>
-
-        <label>
-          付款人
-          <select id="paidBy"></select>
-        </label>
-
-        <fieldset>
-          <legend>參與人 / 分攤對象</legend>
-          <div id="sharedByGroup" class="checkbox-grid"></div>
-          <p class="hint">付款人可以不在分攤名單內，例如 Marco 代 A、B 先付。</p>
-        </fieldset>
-
-        <section class="split-method-panel">
+      <form id="expenseForm" class="modal-form modal-form-with-footer">
+        <div class="modal-body-scroll">
           <label>
-            分帳方式
-            <select id="splitMethod">
-              <option value="equal">平均分</option>
-              <option value="amount">指定金額</option>
-              <option value="percentage">指定百分比</option>
+            日期
+            <input type="date" id="date" required />
+          </label>
+
+          <label>
+            項目
+            <input type="text" id="title" placeholder="例如：Lunch / Taxi" required />
+          </label>
+
+          <label>
+            金額
+            <input type="number" id="amount" step="0.01" min="0" required />
+          </label>
+
+          <label>
+            貨幣
+            <select id="currency">
+              <option value="HKD">HKD</option>
+              <option value="JPY">JPY</option>
+              <option value="CNY">CNY</option>
+              <option value="TWD">TWD</option>
+              <option value="KRW">KRW</option>
+              <option value="USD">USD</option>
             </select>
           </label>
-          <div id="splitConfig" class="split-config"></div>
-          <p id="splitValidationMessage" class="validation-message"></p>
-        </section>
 
-        <label>
-          分類
-          <select id="category">
-            <option value="Food">Food</option>
-            <option value="Transport">Transport</option>
-            <option value="Hotel">Hotel</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Ticket">Ticket</option>
-            <option value="Other">Other</option>
-          </select>
-        </label>
+          <label>
+            付款人
+            <select id="paidBy"></select>
+          </label>
 
-        <label>
-          備註
-          <textarea id="note" rows="2" placeholder="Optional"></textarea>
-        </label>
+          <fieldset>
+            <legend>參與人 / 分攤對象</legend>
+            <div id="sharedByGroup" class="checkbox-grid"></div>
+            <p class="hint">付款人可以不在分攤名單內，例如 Marco 代 A、B 先付。</p>
+          </fieldset>
 
-        <div class="form-actions sticky-modal-actions">
+          <section class="split-method-panel">
+            <label>
+              分帳方式
+              <select id="splitMethod">
+                <option value="equal">平均分</option>
+                <option value="amount">指定金額</option>
+                <option value="percentage">指定百分比</option>
+              </select>
+            </label>
+            <div id="splitConfig" class="split-config"></div>
+            <p id="splitValidationMessage" class="validation-message"></p>
+          </section>
+
+          <label>
+            分類
+            <select id="category">
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Hotel">Hotel</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Ticket">Ticket</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label>
+            備註
+            <textarea id="note" rows="2" placeholder="Optional"></textarea>
+          </label>
+        </div>
+
+        <div class="modal-footer-actions sticky-modal-actions">
           <button type="submit" id="submitBtn">新增</button>
           <button type="button" id="cancelEditBtn" class="secondary-btn hidden">取消編輯</button>
+          <button type="button" id="closeExpenseFormModalBtn" class="modal-close-btn">關閉</button>
         </div>
       </form>
     </div>
@@ -265,14 +267,18 @@ function mountExpensesHtml(root) {
     <div class="modal-card">
       <div class="modal-heading-row">
         <h3>OCR 入單</h3>
-        <button type="button" class="modal-x-btn" id="closeOcrEntryModalBtn">×</button>
       </div>
-      <label>
-        收據圖片
-        <input type="file" id="ocrReceiptInput" accept="image/*" />
-      </label>
-      <button type="button" id="ocrScanBtn" class="secondary-btn">掃描並分析</button>
-      <p class="hint">本地 Tesseract OCR + 規則抽取（免費）。分析完成後可確認並填入完整新增表格。</p>
+      <div class="modal-body-scroll">
+        <label>
+          收據圖片
+          <input type="file" id="ocrReceiptInput" accept="image/*" />
+        </label>
+        <p class="hint">本地 Tesseract OCR + 規則抽取（免費）。分析完成後可確認並填入完整新增表格。</p>
+      </div>
+      <div class="modal-footer-actions">
+        <button type="button" id="ocrScanBtn" class="secondary-btn">掃描並分析</button>
+        <button type="button" id="closeOcrEntryModalBtn" class="modal-close-btn">關閉</button>
+      </div>
     </div>
   </div>
 
@@ -280,9 +286,11 @@ function mountExpensesHtml(root) {
     <div class="modal-card expense-detail-modal-card">
       <div class="modal-heading-row">
         <h3>支出詳情</h3>
-        <button type="button" class="modal-x-btn" id="closeExpenseDetailModalBtn">×</button>
       </div>
-      <div id="expenseDetailContent"></div>
+      <div id="expenseDetailContent" class="modal-body-scroll"></div>
+      <div id="expenseDetailFooterActions" class="modal-footer-actions">
+        <button type="button" class="modal-close-btn" id="closeExpenseDetailModalBtn">關閉</button>
+      </div>
     </div>
   </div>
 
@@ -290,37 +298,46 @@ function mountExpensesHtml(root) {
     <div class="modal-card settlement-action-modal-card">
       <div class="modal-heading-row">
         <h3>找數</h3>
-        <button type="button" class="modal-x-btn" id="closeSettlementActionModalBtn">×</button>
       </div>
-      <div id="settlementActionContent"></div>
+      <div id="settlementActionContent" class="modal-body-scroll"></div>
+      <div class="modal-footer-actions">
+        <button type="button" class="modal-close-btn" id="closeSettlementActionModalBtn">關閉</button>
+      </div>
     </div>
   </div>
 
   <div id="accountSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>帳戶與登入</h3><button type="button" class="modal-x-btn" data-modal-close="accountSettingsModal">×</button></div>
-      <div class="auth-row">
-        <button type="button" id="googleSignInBtn">Google 登入</button>
-        <button type="button" id="signOutBtn" class="secondary-btn hidden">登出</button>
+      <div class="modal-heading-row"><h3>帳戶與登入</h3></div>
+      <div class="modal-body-scroll">
+        <div class="auth-row">
+          <button type="button" id="googleSignInBtn">Google 登入</button>
+          <button type="button" id="signOutBtn" class="secondary-btn hidden">登出</button>
+        </div>
+        <p id="authUserText" class="hint"></p>
       </div>
-      <p id="authUserText" class="hint"></p>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="accountSettingsModal">關閉</button></div>
     </div>
   </div>
 
   <div id="backupSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>資料備份</h3><button type="button" class="modal-x-btn" data-modal-close="backupSettingsModal">×</button></div>
-      <p class="hint">JSON Backup 係完整系統備份。Excel 主要用於對數及報銷。</p>
-      <div class="backup-actions">
-        <button type="button" id="exportJsonBackupBtn" data-action="export-json" class="secondary-btn">匯出 JSON Backup</button>
-        <button type="button" id="exportExcelReportBtn" data-action="export-excel" class="secondary-btn">匯出 Excel Report</button>
+      <div class="modal-heading-row"><h3>資料備份</h3></div>
+      <div class="modal-body-scroll">
+        <p class="hint">JSON Backup 係完整系統備份。Excel 主要用於對數及報銷。</p>
+        <div class="backup-actions">
+          <button type="button" id="exportJsonBackupBtn" data-action="export-json" class="secondary-btn">匯出 JSON Backup</button>
+          <button type="button" id="exportExcelReportBtn" data-action="export-excel" class="secondary-btn">匯出 Excel Report</button>
+        </div>
       </div>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="backupSettingsModal">關閉</button></div>
     </div>
   </div>
 
   <div id="ratesSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>匯率設定</h3><button type="button" class="modal-x-btn" data-modal-close="ratesSettingsModal">×</button></div>
+      <div class="modal-heading-row"><h3>匯率設定</h3></div>
+      <div class="modal-body-scroll">
       <label>
         結算基準幣別
         <select id="baseCurrency">
@@ -334,12 +351,15 @@ function mountExpensesHtml(root) {
       </label>
       <div id="ratesContainer" class="rates-grid"></div>
       <button type="button" id="saveRatesBtn" class="secondary-btn">儲存匯率並重算支出</button>
+      </div>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="ratesSettingsModal">關閉</button></div>
     </div>
   </div>
 
   <div id="membersSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>成員管理</h3><button type="button" class="modal-x-btn" data-modal-close="membersSettingsModal">×</button></div>
+      <div class="modal-heading-row"><h3>成員管理</h3></div>
+      <div class="modal-body-scroll">
       <div class="member-controls">
         <div id="memberList" class="member-list"></div>
         <div class="member-add-row">
@@ -347,12 +367,15 @@ function mountExpensesHtml(root) {
           <button type="button" id="addMemberBtn" class="secondary-btn">新增成員</button>
         </div>
       </div>
+      </div>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="membersSettingsModal">關閉</button></div>
     </div>
   </div>
 
   <div id="accessSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>權限管理</h3><button type="button" class="modal-x-btn" data-modal-close="accessSettingsModal">×</button></div>
+      <div class="modal-heading-row"><h3>權限管理</h3></div>
+      <div class="modal-body-scroll">
       <section class="hidden" id="adminPanel">
         <p class="hint">以下 email 登入後可自動加入此 trip。只有 creator 可見。</p>
         <div id="allowedEmailList" class="member-list"></div>
@@ -362,12 +385,15 @@ function mountExpensesHtml(root) {
         </div>
       </section>
       <p id="accessNoAdminHint" class="hint">如你不是 creator，權限管理不會顯示可編輯名單。</p>
+      </div>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="accessSettingsModal">關閉</button></div>
     </div>
   </div>
 
   <div id="lockSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>鎖定旅程</h3><button type="button" class="modal-x-btn" data-modal-close="lockSettingsModal">×</button></div>
+      <div class="modal-heading-row"><h3>鎖定旅程</h3></div>
+      <div class="modal-body-scroll">
       <section class="hidden" id="tripControlPanel">
         <p class="hint">鎖定後不可再新增、修改或刪除支出，亦不可修改成員及匯率；仍可記錄找數及匯出 Excel。</p>
         <div class="form-actions">
@@ -376,30 +402,35 @@ function mountExpensesHtml(root) {
         </div>
       </section>
       <p id="lockNoAdminHint" class="hint">只有 creator 可以鎖定或解鎖旅程。</p>
+      </div>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="lockSettingsModal">關閉</button></div>
     </div>
   </div>
 
   <div id="ocrPreviewModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>確認收據資料</h3><button type="button" class="modal-x-btn" id="cancelAiFillBtn">×</button></div>
-      <label>商戶 <input type="text" id="aiMerchantInput" /></label>
-      <label>日期 <input type="date" id="aiDateInput" /></label>
-      <label>
-        幣別
-        <select id="aiCurrencyInput">
-          <option value="HKD">HKD</option>
-          <option value="JPY">JPY</option>
-          <option value="CNY">CNY</option>
-          <option value="TWD">TWD</option>
-          <option value="KRW">KRW</option>
-          <option value="USD">USD</option>
-        </select>
-      </label>
-      <label>總額 <input type="number" id="aiTotalInput" step="0.01" min="0" /></label>
-      <label>信心值 <input type="text" id="aiConfidenceInput" readonly /></label>
-      <label>解析說明 <textarea id="aiReasonInput" rows="3" readonly></textarea></label>
-      <div class="form-actions">
+      <div class="modal-heading-row"><h3>確認收據資料</h3></div>
+      <div class="modal-body-scroll">
+        <label>商戶 <input type="text" id="aiMerchantInput" /></label>
+        <label>日期 <input type="date" id="aiDateInput" /></label>
+        <label>
+          幣別
+          <select id="aiCurrencyInput">
+            <option value="HKD">HKD</option>
+            <option value="JPY">JPY</option>
+            <option value="CNY">CNY</option>
+            <option value="TWD">TWD</option>
+            <option value="KRW">KRW</option>
+            <option value="USD">USD</option>
+          </select>
+        </label>
+        <label>總額 <input type="number" id="aiTotalInput" step="0.01" min="0" /></label>
+        <label>信心值 <input type="text" id="aiConfidenceInput" readonly /></label>
+        <label>解析說明 <textarea id="aiReasonInput" rows="3" readonly></textarea></label>
+      </div>
+      <div class="modal-footer-actions">
         <button type="button" id="confirmAiFillBtn">確認填入完整表格</button>
+        <button type="button" id="cancelAiFillBtn" class="modal-close-btn">關閉</button>
       </div>
     </div>
   </div>
@@ -511,6 +542,7 @@ const ocrEntryModal = document.getElementById("ocrEntryModal");
 const closeOcrEntryModalBtn = document.getElementById("closeOcrEntryModalBtn");
 const expenseDetailModal = document.getElementById("expenseDetailModal");
 const expenseDetailContent = document.getElementById("expenseDetailContent");
+const expenseDetailFooterActions = document.getElementById("expenseDetailFooterActions");
 const closeExpenseDetailModalBtn = document.getElementById("closeExpenseDetailModalBtn");
 const settlementActionModal = document.getElementById("settlementActionModal");
 const settlementActionContent = document.getElementById("settlementActionContent");
@@ -2031,21 +2063,27 @@ function openExpenseDetail(expenseId) {
       <p>更新：${safeEscape(updatedName)} · ${formatTimestamp(expense.updatedAt)}</p>
     </div>
 
-    <div class="form-actions">
-      <button type="button" class="edit-btn" data-detail-edit-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Edit</button>
-      <button type="button" class="delete-btn" data-detail-delete-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Delete</button>
-    </div>
   `;
 
-  expenseDetailContent.querySelector("[data-detail-edit-id]")?.addEventListener("click", () => {
-    closeExpenseModal(expenseDetailModal);
-    enterEditMode(expense.id);
-  });
+  if (expenseDetailFooterActions) {
+    expenseDetailFooterActions.innerHTML = `
+      <button type="button" class="edit-btn" data-detail-edit-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Edit</button>
+      <button type="button" class="delete-btn" data-detail-delete-id="${safeEscape(expense.id)}" ${isTripLocked() ? "disabled" : ""}>Delete</button>
+      <button type="button" class="modal-close-btn" id="closeExpenseDetailModalBtn">關閉</button>
+    `;
 
-  expenseDetailContent.querySelector("[data-detail-delete-id]")?.addEventListener("click", async () => {
-    closeExpenseModal(expenseDetailModal);
-    await removeExpense(expense.id);
-  });
+    expenseDetailFooterActions.querySelector("[data-detail-edit-id]")?.addEventListener("click", () => {
+      closeExpenseModal(expenseDetailModal);
+      enterEditMode(expense.id);
+    });
+
+    expenseDetailFooterActions.querySelector("[data-detail-delete-id]")?.addEventListener("click", async () => {
+      closeExpenseModal(expenseDetailModal);
+      await removeExpense(expense.id);
+    });
+
+    expenseDetailFooterActions.querySelector("#closeExpenseDetailModalBtn")?.addEventListener("click", () => closeExpenseModal(expenseDetailModal));
+  }
 
   openExpenseModal(expenseDetailModal);
 }
