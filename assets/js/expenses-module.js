@@ -565,6 +565,16 @@ let stopActivityLogsListener = null;
 let tripAllowedUids = [];
 let tripCreatorUid = null;
 let allowedEmailsCache = [];
+const analyticsCategoryOrder = ["Food", "Transport", "Hotel", "Shopping", "Ticket", "Other"];
+const analyticsCategoryColors = {
+  Food: "#ff9f43",
+  Transport: "#4A90D9",
+  Hotel: "#7c5cff",
+  Shopping: "#ff6b81",
+  Ticket: "#2ecc71",
+  Other: "#8e8e93"
+};
+let analyticsSelectedCategories = null;
 let expenseModalLockCount = 0;
 let expenseModalLockedScrollTop = 0;
 
@@ -2188,13 +2198,125 @@ function renderExpenseSnapshot() {
   }).join("");
 }
 
+function getAnalyticsCategoryRows(activeExpenses, base) {
+  const byCategory = sumBy(
+    activeExpenses,
+    e => e.category || "Other",
+    e => e.convertedAmount ?? convertToBase(
+      e.originalAmount ?? e.amount ?? 0,
+      e.originalCurrency ?? e.currency ?? base
+    )
+  );
+
+  const ordered = [];
+  analyticsCategoryOrder.forEach(category => {
+    const found = byCategory.find(row => row.label === category);
+    if (found) ordered.push(found);
+  });
+
+  byCategory
+    .filter(row => !analyticsCategoryOrder.includes(row.label))
+    .forEach(row => ordered.push(row));
+
+  return ordered;
+}
+
+function ensureAnalyticsSelection(categories) {
+  if (!analyticsSelectedCategories || !(analyticsSelectedCategories instanceof Set)) {
+    analyticsSelectedCategories = new Set(categories);
+    return;
+  }
+
+  const available = new Set(categories);
+  analyticsSelectedCategories = new Set(
+    Array.from(analyticsSelectedCategories).filter(category => available.has(category))
+  );
+
+  if (analyticsSelectedCategories.size === 0 && categories.length > 0) {
+    analyticsSelectedCategories = new Set(categories);
+  }
+}
+
+function getCategoryColor(category, index = 0) {
+  if (analyticsCategoryColors[category]) return analyticsCategoryColors[category];
+  const fallback = ["#34c759", "#5856d6", "#ffcc00", "#ff3b30", "#00c7be", "#af52de"];
+  return fallback[index % fallback.length];
+}
+
+function buildPieChartSvg(rows, total) {
+  if (!rows.length || !total) {
+    return `
+      <div class="analytics-pie-empty">
+        <span>未有可顯示分類</span>
+      </div>
+    `;
+  }
+
+  let offset = 25;
+  const segments = rows.map((row, index) => {
+    const pct = Math.max(0, Number(row.amount) / total * 100);
+    const strokeOffset = offset;
+    offset -= pct;
+    return `
+      <circle
+        class="analytics-pie-segment"
+        cx="21" cy="21" r="15.9155"
+        fill="transparent"
+        stroke="${getCategoryColor(row.label, index)}"
+        stroke-width="8"
+        stroke-dasharray="${pct.toFixed(4)} ${(100 - pct).toFixed(4)}"
+        stroke-dashoffset="${strokeOffset.toFixed(4)}"
+      />
+    `;
+  }).join("");
+
+  return `
+    <div class="analytics-pie-wrap">
+      <svg class="analytics-pie-svg" viewBox="0 0 42 42" role="img" aria-label="按分類支出比例圖">
+        <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="rgba(142,142,147,0.16)" stroke-width="8"></circle>
+        ${segments}
+      </svg>
+      <div class="analytics-pie-center">
+        <span>已選分類</span>
+        <strong>${rows.length}</strong>
+      </div>
+    </div>
+  `;
+}
+
+function bindAnalyticsFilterEvents(availableCategories) {
+  const allCheckbox = analyticsSummary.querySelector('[data-analytics-filter="all"]');
+  const categoryCheckboxes = Array.from(analyticsSummary.querySelectorAll('[data-analytics-category]'));
+
+  if (allCheckbox) {
+    allCheckbox.addEventListener("change", () => {
+      analyticsSelectedCategories = allCheckbox.checked
+        ? new Set(availableCategories)
+        : new Set();
+      renderAnalytics();
+    });
+  }
+
+  categoryCheckboxes.forEach(input => {
+    input.addEventListener("change", () => {
+      const category = input.dataset.analyticsCategory;
+      if (!analyticsSelectedCategories) analyticsSelectedCategories = new Set(availableCategories);
+
+      if (input.checked) analyticsSelectedCategories.add(category);
+      else analyticsSelectedCategories.delete(category);
+
+      renderAnalytics();
+    });
+  });
+}
+
 function renderAnalytics() {
   renderExpenseSnapshot();
   if (!analyticsSummary) return;
 
   const base = tripSettings.baseCurrency || "HKD";
   const activeExpenses = expenses || [];
-  const total = round2(activeExpenses.reduce((sum, expense) => {
+  const allTotal = round2(activeExpenses.reduce((sum, expense) => {
     return sum + Number(expense.convertedAmount ?? convertToBase(expense.originalAmount ?? expense.amount ?? 0, expense.originalCurrency ?? expense.currency ?? base) ?? 0);
   }, 0));
 
@@ -2203,7 +2325,13 @@ function renderAnalytics() {
     return;
   }
 
-  const byCategory = sumBy(activeExpenses, e => e.category || "Other", e => e.convertedAmount ?? convertToBase(e.originalAmount ?? e.amount ?? 0, e.originalCurrency ?? e.currency ?? base));
+  const allCategoryRows = getAnalyticsCategoryRows(activeExpenses, base);
+  const availableCategories = allCategoryRows.map(row => row.label);
+  ensureAnalyticsSelection(availableCategories);
+
+  const selectedRows = allCategoryRows.filter(row => analyticsSelectedCategories.has(row.label));
+  const selectedTotal = round2(selectedRows.reduce((sum, row) => sum + Number(row.amount || 0), 0));
+
   const byDate = sumBy(activeExpenses, e => e.date || "未填日期", e => e.convertedAmount ?? convertToBase(e.originalAmount ?? e.amount ?? 0, e.originalCurrency ?? e.currency ?? base));
   const byPayer = sumBy(activeExpenses, e => e.paidBy || "未知付款人", e => e.convertedAmount ?? convertToBase(e.originalAmount ?? e.amount ?? 0, e.originalCurrency ?? e.currency ?? base));
 
@@ -2228,16 +2356,69 @@ function renderAnalytics() {
     `;
   }
 
+  const allChecked = availableCategories.length > 0 && availableCategories.every(category => analyticsSelectedCategories.has(category));
+  const filterHtml = `
+    <div class="analytics-filter-card">
+      <div class="analytics-filter-title">
+        <strong>分類篩選</strong>
+        <small>Pie chart 及按分類統計會即時更新</small>
+      </div>
+      <div class="analytics-filter-grid">
+        <label class="analytics-filter-chip analytics-filter-all">
+          <input type="checkbox" data-analytics-filter="all" ${allChecked ? "checked" : ""} />
+          <span>All</span>
+        </label>
+        ${availableCategories.map((category, index) => `
+          <label class="analytics-filter-chip">
+            <input type="checkbox" data-analytics-category="${safeEscape(category)}" ${analyticsSelectedCategories.has(category) ? "checked" : ""} />
+            <i style="background:${getCategoryColor(category, index)}"></i>
+            <span>${safeEscape(category)}</span>
+          </label>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  const pieLegend = selectedRows.length
+    ? `<div class="analytics-pie-legend">
+        ${selectedRows.map((row, index) => {
+          const pct = selectedTotal ? row.amount / selectedTotal * 100 : 0;
+          return `
+            <div class="analytics-pie-legend-row">
+              <span><i style="background:${getCategoryColor(row.label, index)}"></i>${safeEscape(row.label)}</span>
+              <strong>${pct.toFixed(1)}%</strong>
+            </div>
+          `;
+        }).join("")}
+      </div>`
+    : `<p class="neutral">未選擇分類。請勾選 All 或至少一個分類。</p>`;
+
   analyticsSummary.innerHTML = `
     <div class="analytics-total-card">
       <span>總支出</span>
-      <strong>${safeEscape(base)} ${total.toFixed(2)}</strong>
+      <strong>${safeEscape(base)} ${allTotal.toFixed(2)}</strong>
       <small>共 ${activeExpenses.length} 筆支出，不包括 Deleted Items</small>
     </div>
-    ${block("按分類", byCategory)}
+
+    <div class="analytics-pie-card">
+      <div class="analytics-pie-heading">
+        <div>
+          <span>按分類 Pie Chart</span>
+          <strong>${safeEscape(base)} ${selectedTotal.toFixed(2)}</strong>
+        </div>
+        <small>${selectedRows.length ? `已選 ${selectedRows.length} 類` : "未選擇分類"}</small>
+      </div>
+      ${buildPieChartSvg(selectedRows, selectedTotal)}
+      ${pieLegend}
+    </div>
+
+    ${filterHtml}
+    ${block("按分類", selectedRows)}
     ${block("按日期", byDate)}
     ${block("按付款人", byPayer)}
   `;
+
+  bindAnalyticsFilterEvents(availableCategories);
 }
 
 function renderSummary() {
