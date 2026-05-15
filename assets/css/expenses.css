@@ -2598,16 +2598,35 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
 
 /* =========================================================
    v6 UI Enhancements
-   #1 Hero snapshot · #2 Scroll tabs · #3 Category borders
-   #5 Settlement arrows · #6 Empty states · #7 Quick grid
-   #8 Radius cleanup · #10 Dark mode completeness
+   Prev session: #1 hero·#2 scroll tabs·#3 cat borders·#5 arrows·#6 empty·#7 grid·#8 radius·#9 flight·#10 dark
+   This session: #1b per-person·#2 alignment·#2b dark buttons·#4 footer style
    ========================================================= */
 
-/* #1 — Snapshot hero card */
+/* ── #1 Snapshot hero card ──────────────────────────────── */
 .expenses-module .expense-snapshot-card {
   padding: 14px 16px 12px !important;
   margin: 0 0 10px !important;
   border-radius: 16px !important;
+}
+
+.expenses-module .snapshot-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.expenses-module .snapshot-left {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.expenses-module .snapshot-right {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+  padding-top: 2px;
 }
 
 .expenses-module .snapshot-eyebrow {
@@ -2622,7 +2641,7 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
 .expenses-module .snapshot-hero-amount {
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: 4px;
   line-height: 1;
   margin-bottom: 5px;
 }
@@ -2653,26 +2672,35 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
   font-size: calc(10.5px * var(--font-scale));
   color: var(--expense-muted);
   font-weight: 650;
-  min-height: 0;
 }
 
-/* Hide old snapshot elements that may still exist */
+.expenses-module .snapshot-person-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.expenses-module .snapshot-person-name {
+  font-size: calc(10.5px * var(--font-scale));
+  font-weight: 650;
+  color: var(--expense-muted);
+}
+
+.expenses-module .snapshot-person-amt {
+  font-size: calc(13px * var(--font-scale));
+  font-weight: 750;
+  color: var(--expense-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hide old snapshot elements */
 .expenses-module .expense-snapshot-total,
 .expenses-module .expense-snapshot-cats {
   display: none !important;
 }
-/* But show the new ones */
-.expenses-module .snapshot-hero-amount,
-.expenses-module .snapshot-count-line,
-.expenses-module .snapshot-eyebrow {
-  display: block;
-}
-.expenses-module .snapshot-hero-amount {
-  display: flex !important;
-}
 
 
-/* #2 — Inner tabs: flex scroll like day-tabs */
+/* ── #2 Inner tabs: flex scroll matching day-tabs ─────────── */
 .expenses-module .expenses-inner-tabs {
   display: flex !important;
   overflow-x: auto !important;
@@ -2680,9 +2708,11 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
   -webkit-overflow-scrolling: touch !important;
   scrollbar-width: none !important;
   gap: 6px !important;
-  padding-bottom: 2px !important;
+  margin: 10px 0 10px !important;
+  padding: 0 0 2px 0 !important;
   width: 100% !important;
   grid-template-columns: none !important;
+  max-height: none !important;
 }
 
 .expenses-module .expenses-inner-tabs::-webkit-scrollbar {
@@ -2693,14 +2723,59 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
   flex: 0 0 auto !important;
   width: auto !important;
   min-width: 44px !important;
-  padding: 0 11px !important;
+  padding: 0 12px !important;
   height: 30px !important;
   min-height: 30px !important;
   white-space: nowrap !important;
+  font-size: calc(11px * var(--font-scale)) !important;
 }
 
 
-/* #3 — Category color left borders on expense rows */
+/* ── #2b Dark mode buttons fix (v5.3 !important override) ──── */
+html.theme-dark .expenses-module .secondary-btn,
+html.theme-dark .expenses-module .edit-btn,
+html.theme-dark .expenses-module .delete-btn,
+html.theme-dark .expenses-module .settle-btn,
+html.theme-dark .expenses-module .member-chip,
+html:not(.theme-light):not(.theme-dark) .expenses-module .secondary-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .edit-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .delete-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .settle-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .member-chip {
+  background: rgba(44,44,52,0.80) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+  color: rgba(230,230,238,0.92) !important;
+}
+
+html.theme-dark .expenses-module .delete-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .delete-btn {
+  color: #ff9a88 !important;
+}
+
+html.theme-dark .expenses-module .expense-action-grid .secondary-btn,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-action-grid .secondary-btn {
+  background: rgba(44,44,52,0.80) !important;
+  border-color: rgba(255,255,255,0.14) !important;
+  color: rgba(230,230,238,0.92) !important;
+}
+
+/* Inner tab dark already handled above but needs !important to beat v5.3 */
+html.theme-dark .expenses-module .expenses-inner-tab,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expenses-inner-tab {
+  background: rgba(36,36,44,0.70) !important;
+  border-color: rgba(255,255,255,0.12) !important;
+  color: rgba(200,200,215,0.78) !important;
+}
+
+html.theme-dark .expenses-module .expenses-inner-tab.active,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expenses-inner-tab.active {
+  background: var(--expense-primary) !important;
+  border-color: var(--expense-primary) !important;
+  color: #fff !important;
+}
+
+
+/* ── #3 Category color left borders ──────────────────────── */
 .expenses-module .expense-list-row[data-category] {
   border-left: 3px solid transparent !important;
   padding-left: 10px !important;
@@ -2715,7 +2790,26 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
 .expenses-module .expense-list-row[data-category="Other"]    { border-left-color: #8e8e93 !important; }
 
 
-/* #5 — Settlement arrow cards */
+/* ── #4 Footer note — matches main app .footer-note style ─── */
+.expenses-module .expense-footer-note {
+  margin: 4px 0 0;
+  font-size: calc(10px * var(--font-scale));
+  color: #3f3f3f;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.32);
+  line-height: 1.55;
+  padding-bottom: 12px;
+}
+
+html.theme-dark .expenses-module .expense-footer-note,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-footer-note {
+  color: rgba(220,220,232,0.84);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+}
+
+
+/* ── #5 Settlement arrow cards ────────────────────────────── */
 .expenses-module .settlement-arrow-card {
   background: rgba(255,255,255,0.38) !important;
   border-radius: 12px !important;
@@ -2753,7 +2847,7 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
 }
 
 
-/* #6 — Empty states */
+/* ── #6 Empty states ─────────────────────────────────────── */
 .expenses-module .expense-empty-state {
   display: flex;
   flex-direction: column;
@@ -2781,7 +2875,7 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
 }
 
 
-/* #7 — Quick grid 2-column paired layout */
+/* ── #7 Quick grid 2-column paired layout ─────────────────── */
 .expenses-module .quick-grid {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
@@ -2795,7 +2889,7 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
 }
 
 
-/* #8 — Border-radius consistency */
+/* ── #8 Border-radius consistency ─────────────────────────── */
 .expenses-module .card,
 .expenses-module .expense-snapshot-card,
 .expenses-module .analytics-pie-card,
@@ -2810,25 +2904,14 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
   border-radius: var(--expense-radius-sm) !important;
 }
 
-.expenses-module button:not(.expenses-inner-tab):not(.member-chip button):not(.edit-btn):not(.delete-btn):not(.settle-btn):not(.analytics-filter-chip):not(.modal-x-btn) {
-  border-radius: 14px !important;
-}
-
 .expenses-module .edit-btn,
 .expenses-module .delete-btn,
 .expenses-module .settle-btn {
   border-radius: 999px !important;
 }
 
-.expenses-module .modal-card,
-.expenses-module .expense-form-modal-card,
-.expenses-module .expense-detail-modal-card,
-.expenses-module .settlement-action-modal-card {
-  border-radius: 18px !important;
-}
 
-
-/* #10 — Dark mode completeness */
+/* ── #10 Dark mode completeness ──────────────────────────── */
 html.theme-dark .expenses-module .settlement-arrow-card,
 html:not(.theme-light):not(.theme-dark) .expenses-module .settlement-arrow-card {
   background: rgba(255,255,255,0.06) !important;
@@ -2864,23 +2947,6 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .analytics-total-card {
   border-color: rgba(255,255,255,0.09) !important;
 }
 
-html.theme-dark .expenses-module .split-row,
-html:not(.theme-light):not(.theme-dark) .expenses-module .split-row {
-  background: rgba(255,255,255,0.04) !important;
-}
-
-html.theme-dark .expenses-module .snapshot-amount,
-html.theme-dark .expenses-module .snapshot-currency,
-html:not(.theme-light):not(.theme-dark) .expenses-module .snapshot-amount,
-html:not(.theme-light):not(.theme-dark) .expenses-module .snapshot-currency {
-  color: var(--expense-text);
-}
-
-html.theme-dark .expenses-module .detail-split-row,
-html:not(.theme-light):not(.theme-dark) .expenses-module .detail-split-row {
-  border-bottom-color: rgba(255,255,255,0.07) !important;
-}
-
 html.theme-dark .expenses-module .expense-list-row,
 html:not(.theme-light):not(.theme-dark) .expenses-module .expense-list-row {
   border-bottom-color: rgba(255,255,255,0.07) !important;
@@ -2891,6 +2957,18 @@ html.theme-dark .expenses-module .expense-row-side strong,
 html:not(.theme-light):not(.theme-dark) .expenses-module .expense-row-main strong,
 html:not(.theme-light):not(.theme-dark) .expenses-module .expense-row-side strong {
   color: var(--expense-text) !important;
+}
+
+html.theme-dark .expenses-module .detail-split-row,
+html:not(.theme-light):not(.theme-dark) .expenses-module .detail-split-row {
+  border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+
+html.theme-dark .expenses-module .detail-grid div,
+html.theme-dark .expenses-module .detail-section,
+html:not(.theme-light):not(.theme-dark) .expenses-module .detail-grid div,
+html:not(.theme-light):not(.theme-dark) .expenses-module .detail-section {
+  background: rgba(255,255,255,0.06) !important;
 }
 
 html.theme-dark .expenses-module .modal-footer-actions,
