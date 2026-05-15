@@ -29,13 +29,9 @@ function mountExpensesHtml(root) {
   root.innerHTML = `<div class="expenses-module">
 <main class="expenses-app">
     <section class="expense-snapshot-card" id="expenseSnapshotCard">
-      <div class="expense-snapshot-total">
-        <span>目前總支出</span>
-        <strong id="expenseSnapshotTotal">--</strong>
-      </div>
-      <div class="expense-snapshot-cats" id="expenseSnapshotCats">
-        <span class="neutral">暫時未有分類分析</span>
-      </div>
+      <p class="snapshot-eyebrow">目前總支出</p>
+      <div class="snapshot-hero-amount" id="expenseSnapshotTotal">--</div>
+      <div class="snapshot-count-line" id="expenseSnapshotCats"></div>
     </section>
 
     <div class="expenses-inner-tabs" id="expensesInnerTabs" role="tablist" aria-label="支出功能">
@@ -60,7 +56,7 @@ function mountExpensesHtml(root) {
         <p class="hint">適合旅行現場即刻入數。參與人預設為所有 members，複雜分帳請用完整新增。</p>
 
         <div class="quick-grid">
-          <label>
+          <label class="quick-label-full">
             項目名稱
             <input type="text" id="quickTitle" placeholder="例如：Ichiran Ramen / Taxi / Hotel" autocomplete="off" />
           </label>
@@ -99,7 +95,7 @@ function mountExpensesHtml(root) {
             </select>
           </label>
 
-          <button type="button" id="quickAddBtn" class="quick-add-main-btn">快速新增</button>
+          <button type="button" id="quickAddBtn" class="quick-add-main-btn quick-label-full">快速新增</button>
         </div>
 
         <p id="quickAddHint" class="hint">輸入項目名稱後，系統會自動估分類；你仍可手動修改。</p>
@@ -615,6 +611,10 @@ let expenseModalLockedScrollTop = 0;
 const safeEscape = (text) => String(text ?? "")
   .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+
+function emptyStateHtml(icon, text) {
+  return `<div class="expense-empty-state"><span class="expense-empty-icon">${icon}</span><p class="expense-empty-text">${text}</p></div>`;
+}
 const round2 = (n) => Math.round((Number(n) + Number.EPSILON) * 100) / 100;
 function localDateISO(date = new Date()) {
   const y = date.getFullYear();
@@ -1982,7 +1982,7 @@ function formatTimestamp(ts) {
 function renderExpenseRows(targetEl, list, options = {}) {
   if (!targetEl) return;
   if (!list.length) {
-    targetEl.innerHTML = `<p class="neutral">暫時未有支出。</p>`;
+    targetEl.innerHTML = emptyStateHtml("🧾", "暫時未有支出");
     return;
   }
 
@@ -1996,7 +1996,7 @@ function renderExpenseRows(targetEl, list, options = {}) {
     const splitLabel = getSplitMethodLabel(expense.splitMethod || "equal");
 
     return `
-      <button type="button" class="expense-list-row" data-expense-id="${safeEscape(expense.id)}">
+      <button type="button" class="expense-list-row" data-expense-id="${safeEscape(expense.id)}" data-category="${safeEscape(expense.category || 'Other')}">
         <span class="expense-row-main">
           <strong>${safeEscape(expense.title)}</strong>
           <small>${safeEscape(expense.date)} · ${safeEscape(expense.category || "Other")} · Paid by ${safeEscape(expense.paidBy || "-")}</small>
@@ -2095,7 +2095,7 @@ function renderDeletedExpenses() {
   const deleted = getDeletedExpenses();
 
   if (!deleted.length) {
-    deletedExpenseList.innerHTML = `<p class="neutral">暫時未有已刪除支出。</p>`;
+    deletedExpenseList.innerHTML = emptyStateHtml("🗑️", "暫時未有已刪除支出");
     return;
   }
 
@@ -2212,10 +2212,13 @@ function renderExpenseSnapshot() {
     return sum + Number(expense.convertedAmount ?? convertToBase(expense.originalAmount ?? expense.amount ?? 0, expense.originalCurrency ?? expense.currency ?? base) ?? 0);
   }, 0));
 
-  expenseSnapshotTotal.textContent = `${base} ${total.toFixed(2)}`;
+  const intPart = Math.floor(total).toLocaleString();
+  const decPart = (total % 1).toFixed(2).slice(1); // ".XX"
+  expenseSnapshotTotal.innerHTML = `<span class="snapshot-currency">${safeEscape(base)}</span><span class="snapshot-amount">${intPart}<span class="snapshot-decimal">${decPart}</span></span>`;
 
   if (expenseSnapshotCats) {
-    expenseSnapshotCats.innerHTML = "";
+    const count = activeExpenses.length;
+    expenseSnapshotCats.textContent = count > 0 ? `${count} 筆支出` : "";
   }
 }
 
@@ -2342,7 +2345,7 @@ function renderAnalytics() {
   }, 0));
 
   if (!activeExpenses.length) {
-    analyticsSummary.innerHTML = `<p class="neutral">暫時未有支出可供分析。</p>`;
+    analyticsSummary.innerHTML = emptyStateHtml("📊", "暫時未有支出可供分析");
     return;
   }
 
@@ -2474,8 +2477,13 @@ function renderSummary() {
         const pairKey = getSettlementPairKey({ ...item, currency });
 
         return `
-          <div class="settlement-item">
-            <div><strong>${safeEscape(item.from)}</strong> pays <strong>${safeEscape(item.to)}</strong> <span class="negative">${currency} ${Number(item.amount).toFixed(2)}</span></div>
+          <div class="settlement-item settlement-arrow-card">
+            <div class="settlement-arrow-row">
+              <strong class="settlement-person">${safeEscape(item.from)}</strong>
+              <span class="settlement-arrow-icon">→</span>
+              <strong class="settlement-person">${safeEscape(item.to)}</strong>
+              <span class="negative settlement-arrow-amount">${currency} ${Number(item.amount).toFixed(2)}</span>
+            </div>
             <div class="settlement-status"><span class="unpaid-badge">尚欠，已扣除已找數紀錄</span></div>
             <div class="settlement-actions">
               <div class="settlement-payment-row">
@@ -2502,7 +2510,7 @@ function renderSummary() {
           </div>
         `;
       }).join("")
-    : `<p class="neutral">暫時無需結算，已計入支出及找數紀錄。</p>`;
+    : emptyStateHtml("✅", "暫時無需結算，已計入找數紀錄");
 
   const paidHistoryHtml = settlements.length
     ? settlements.map(item => {
@@ -2516,7 +2524,7 @@ function renderSummary() {
           </div>
         `;
       }).join("")
-    : `<p class="neutral">暫時未有已找數紀錄。</p>`;
+    : emptyStateHtml("💸", "暫時未有已找數紀錄");
 
   const remainingAmount = round2(settlement.reduce((sum, item) => sum + Number(item.amount || 0), 0));
 
@@ -2989,7 +2997,7 @@ function renderActivityLogs() {
   if (!activityLogList) return;
 
   if (!activityLogs.length) {
-    activityLogList.innerHTML = `<p class="neutral">暫時未有活動紀錄。</p>`;
+    activityLogList.innerHTML = emptyStateHtml("📋", "暫時未有活動紀錄");
     return;
   }
 
