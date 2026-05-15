@@ -2594,3 +2594,308 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .modal-close-btn {
     padding-right: 6px !important;
   }
 }
+
+
+/* =========================================================
+   v6 UI Enhancements
+   #1 Hero snapshot · #2 Scroll tabs · #3 Category borders
+   #5 Settlement arrows · #6 Empty states · #7 Quick grid
+   #8 Radius cleanup · #10 Dark mode completeness
+   ========================================================= */
+
+/* #1 — Snapshot hero card */
+.expenses-module .expense-snapshot-card {
+  padding: 14px 16px 12px !important;
+  margin: 0 0 10px !important;
+  border-radius: 16px !important;
+}
+
+.expenses-module .snapshot-eyebrow {
+  margin: 0 0 4px;
+  font-size: calc(10.5px * var(--font-scale));
+  font-weight: 700;
+  color: var(--expense-muted);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.expenses-module .snapshot-hero-amount {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.expenses-module .snapshot-currency {
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 700;
+  color: var(--expense-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.expenses-module .snapshot-amount {
+  font-size: calc(34px * var(--font-scale));
+  font-weight: 800;
+  color: var(--expense-text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.expenses-module .snapshot-decimal {
+  font-size: calc(20px * var(--font-scale));
+  font-weight: 700;
+  opacity: 0.55;
+}
+
+.expenses-module .snapshot-count-line {
+  font-size: calc(10.5px * var(--font-scale));
+  color: var(--expense-muted);
+  font-weight: 650;
+  min-height: 0;
+}
+
+/* Hide old snapshot elements that may still exist */
+.expenses-module .expense-snapshot-total,
+.expenses-module .expense-snapshot-cats {
+  display: none !important;
+}
+/* But show the new ones */
+.expenses-module .snapshot-hero-amount,
+.expenses-module .snapshot-count-line,
+.expenses-module .snapshot-eyebrow {
+  display: block;
+}
+.expenses-module .snapshot-hero-amount {
+  display: flex !important;
+}
+
+
+/* #2 — Inner tabs: flex scroll like day-tabs */
+.expenses-module .expenses-inner-tabs {
+  display: flex !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  gap: 6px !important;
+  padding-bottom: 2px !important;
+  width: 100% !important;
+  grid-template-columns: none !important;
+}
+
+.expenses-module .expenses-inner-tabs::-webkit-scrollbar {
+  display: none !important;
+}
+
+.expenses-module .expenses-inner-tab {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 44px !important;
+  padding: 0 11px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  white-space: nowrap !important;
+}
+
+
+/* #3 — Category color left borders on expense rows */
+.expenses-module .expense-list-row[data-category] {
+  border-left: 3px solid transparent !important;
+  padding-left: 10px !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+
+.expenses-module .expense-list-row[data-category="Food"]     { border-left-color: #ff9f43 !important; }
+.expenses-module .expense-list-row[data-category="Transport"]{ border-left-color: #4A90D9 !important; }
+.expenses-module .expense-list-row[data-category="Hotel"]    { border-left-color: #7c5cff !important; }
+.expenses-module .expense-list-row[data-category="Shopping"] { border-left-color: #ff6b81 !important; }
+.expenses-module .expense-list-row[data-category="Ticket"]   { border-left-color: #2ecc71 !important; }
+.expenses-module .expense-list-row[data-category="Other"]    { border-left-color: #8e8e93 !important; }
+
+
+/* #5 — Settlement arrow cards */
+.expenses-module .settlement-arrow-card {
+  background: rgba(255,255,255,0.38) !important;
+  border-radius: 12px !important;
+  padding: 12px 12px 10px !important;
+  margin-bottom: 8px !important;
+  border: 1px solid rgba(255,255,255,0.55) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.55) !important;
+}
+
+.expenses-module .settlement-arrow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.expenses-module .settlement-person {
+  font-size: calc(14px * var(--font-scale));
+  font-weight: 750;
+  color: var(--expense-text);
+}
+
+.expenses-module .settlement-arrow-icon {
+  font-size: calc(16px * var(--font-scale));
+  color: var(--expense-muted);
+  font-weight: 300;
+}
+
+.expenses-module .settlement-arrow-amount {
+  margin-left: auto;
+  font-size: calc(15px * var(--font-scale));
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* #6 — Empty states */
+.expenses-module .expense-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 16px 24px;
+  gap: 8px;
+  text-align: center;
+}
+
+.expenses-module .expense-empty-icon {
+  font-size: 32px;
+  line-height: 1;
+  opacity: 0.72;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.expenses-module .expense-empty-text {
+  margin: 0;
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 600;
+  color: var(--expense-muted);
+  line-height: 1.45;
+}
+
+
+/* #7 — Quick grid 2-column paired layout */
+.expenses-module .quick-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 9px !important;
+  margin-top: 10px !important;
+  align-items: end !important;
+}
+
+.expenses-module .quick-grid .quick-label-full {
+  grid-column: 1 / -1 !important;
+}
+
+
+/* #8 — Border-radius consistency */
+.expenses-module .card,
+.expenses-module .expense-snapshot-card,
+.expenses-module .analytics-pie-card,
+.expenses-module .analytics-filter-card,
+.expenses-module .analytics-total-card {
+  border-radius: var(--expense-radius) !important;
+}
+
+.expenses-module input,
+.expenses-module select,
+.expenses-module textarea {
+  border-radius: var(--expense-radius-sm) !important;
+}
+
+.expenses-module button:not(.expenses-inner-tab):not(.member-chip button):not(.edit-btn):not(.delete-btn):not(.settle-btn):not(.analytics-filter-chip):not(.modal-x-btn) {
+  border-radius: 14px !important;
+}
+
+.expenses-module .edit-btn,
+.expenses-module .delete-btn,
+.expenses-module .settle-btn {
+  border-radius: 999px !important;
+}
+
+.expenses-module .modal-card,
+.expenses-module .expense-form-modal-card,
+.expenses-module .expense-detail-modal-card,
+.expenses-module .settlement-action-modal-card {
+  border-radius: 18px !important;
+}
+
+
+/* #10 — Dark mode completeness */
+html.theme-dark .expenses-module .settlement-arrow-card,
+html:not(.theme-light):not(.theme-dark) .expenses-module .settlement-arrow-card {
+  background: rgba(255,255,255,0.06) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+}
+
+html.theme-dark .expenses-module .deleted-item,
+html:not(.theme-light):not(.theme-dark) .expenses-module .deleted-item {
+  background: rgba(255,100,80,0.06) !important;
+}
+
+html.theme-dark .expenses-module .paid-history-item,
+html:not(.theme-light):not(.theme-dark) .expenses-module .paid-history-item {
+  background: rgba(72,220,118,0.06) !important;
+}
+
+html.theme-dark .expenses-module .editing-notice,
+html:not(.theme-light):not(.theme-dark) .expenses-module .editing-notice {
+  background: rgba(255,224,130,0.12) !important;
+  color: #ffe09a !important;
+}
+
+html.theme-dark .expenses-module input::placeholder,
+html.theme-dark .expenses-module textarea::placeholder,
+html:not(.theme-light):not(.theme-dark) .expenses-module input::placeholder,
+html:not(.theme-light):not(.theme-dark) .expenses-module textarea::placeholder {
+  color: rgba(180,180,200,0.45) !important;
+}
+
+html.theme-dark .expenses-module .analytics-total-card,
+html:not(.theme-light):not(.theme-dark) .expenses-module .analytics-total-card {
+  background: rgba(255,255,255,0.05) !important;
+  border-color: rgba(255,255,255,0.09) !important;
+}
+
+html.theme-dark .expenses-module .split-row,
+html:not(.theme-light):not(.theme-dark) .expenses-module .split-row {
+  background: rgba(255,255,255,0.04) !important;
+}
+
+html.theme-dark .expenses-module .snapshot-amount,
+html.theme-dark .expenses-module .snapshot-currency,
+html:not(.theme-light):not(.theme-dark) .expenses-module .snapshot-amount,
+html:not(.theme-light):not(.theme-dark) .expenses-module .snapshot-currency {
+  color: var(--expense-text);
+}
+
+html.theme-dark .expenses-module .detail-split-row,
+html:not(.theme-light):not(.theme-dark) .expenses-module .detail-split-row {
+  border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+
+html.theme-dark .expenses-module .expense-list-row,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-list-row {
+  border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+
+html.theme-dark .expenses-module .expense-row-main strong,
+html.theme-dark .expenses-module .expense-row-side strong,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-row-main strong,
+html:not(.theme-light):not(.theme-dark) .expenses-module .expense-row-side strong {
+  color: var(--expense-text) !important;
+}
+
+html.theme-dark .expenses-module .modal-footer-actions,
+html.theme-dark .expenses-module .sticky-modal-actions,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal-footer-actions,
+html:not(.theme-light):not(.theme-dark) .expenses-module .sticky-modal-actions {
+  border-top-color: rgba(255,255,255,0.10) !important;
+}
