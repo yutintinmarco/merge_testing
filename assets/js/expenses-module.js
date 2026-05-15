@@ -29,9 +29,14 @@ function mountExpensesHtml(root) {
   root.innerHTML = `<div class="expenses-module">
 <main class="expenses-app">
     <section class="expense-snapshot-card" id="expenseSnapshotCard">
-      <p class="snapshot-eyebrow">目前總支出</p>
-      <div class="snapshot-hero-amount" id="expenseSnapshotTotal">--</div>
-      <div class="snapshot-count-line" id="expenseSnapshotCats"></div>
+      <div class="snapshot-layout">
+        <div class="snapshot-left">
+          <p class="snapshot-eyebrow">目前總支出</p>
+          <div class="snapshot-hero-amount" id="expenseSnapshotTotal">--</div>
+          <div class="snapshot-count-line" id="expenseSnapshotCats"></div>
+        </div>
+        <div class="snapshot-right" id="expenseSnapshotPersons"></div>
+      </div>
     </section>
 
     <div class="expenses-inner-tabs" id="expensesInnerTabs" role="tablist" aria-label="支出功能">
@@ -168,10 +173,10 @@ function mountExpensesHtml(root) {
       </section>
     </section>
   
-    <section class="header-card compact-status-card expense-bottom-status-card">
-      <p id="syncStatus" class="expense-status-line">Connecting...</p>
-      <p id="tripStatusText" class="hint hidden"></p>
-    </section>
+    <div class="expense-footer-note">
+      <span id="syncStatus">Connecting...</span>
+      <span id="tripStatusText" class="hidden"></span>
+    </div>
 
 </main>
 
@@ -529,6 +534,7 @@ const activityLogList = document.getElementById("activityLogList");
 const expenseSnapshotCard = document.getElementById("expenseSnapshotCard");
 const expenseSnapshotTotal = document.getElementById("expenseSnapshotTotal");
 const expenseSnapshotCats = document.getElementById("expenseSnapshotCats");
+const expenseSnapshotPersons = document.getElementById("expenseSnapshotPersons");
 const recentExpenseList = document.getElementById("recentExpenseList");
 const openFullAddBtn = document.getElementById("openFullAddBtn");
 const openOcrEntryBtn = document.getElementById("openOcrEntryBtn");
@@ -557,20 +563,12 @@ function renderCompactModuleStatus(message = lastModuleStatus) {
 
   const statusText = getCleanModuleStatus(lastModuleStatus);
   const tripLabel = tripId || "No trip";
-  const statusLabel = isTripLocked() ? "Locked" : "Open";
+  const lockLabel = isTripLocked() ? " · 🔒 已鎖定" : "";
   const loginLabel = currentUser
-    ? `已登入 ${currentUser.displayName || currentUser.email || "Google"}`
+    ? (currentUser.displayName || currentUser.email || "Google")
     : "未登入";
 
-  syncStatus.innerHTML = `
-    <span>${safeEscape(statusText)}</span>
-    <span class="status-dot-sep">·</span>
-    <span>${safeEscape(tripLabel)}</span>
-    <span class="status-dot-sep">·</span>
-    <span class="${isTripLocked() ? "locked-badge" : "open-badge"}">${statusLabel}</span>
-    <span class="status-dot-sep">·</span>
-    <span>${safeEscape(loginLabel)}</span>
-  `;
+  syncStatus.textContent = `${statusText} · ${tripLabel}${lockLabel} · ${loginLabel}`;
 }
 
 function setModuleStatus(message) {
@@ -2212,13 +2210,40 @@ function renderExpenseSnapshot() {
     return sum + Number(expense.convertedAmount ?? convertToBase(expense.originalAmount ?? expense.amount ?? 0, expense.originalCurrency ?? expense.currency ?? base) ?? 0);
   }, 0));
 
+  // Hero number: integer part + smaller decimal
   const intPart = Math.floor(total).toLocaleString();
-  const decPart = (total % 1).toFixed(2).slice(1); // ".XX"
+  const decPart = (total % 1).toFixed(2).slice(1);
   expenseSnapshotTotal.innerHTML = `<span class="snapshot-currency">${safeEscape(base)}</span><span class="snapshot-amount">${intPart}<span class="snapshot-decimal">${decPart}</span></span>`;
 
   if (expenseSnapshotCats) {
     const count = activeExpenses.length;
     expenseSnapshotCats.textContent = count > 0 ? `${count} 筆支出` : "";
+  }
+
+  // Per-person allocated spend on the right
+  if (expenseSnapshotPersons) {
+    if (!activeExpenses.length || !members.length) {
+      expenseSnapshotPersons.innerHTML = "";
+    } else {
+      const spendMap = {};
+      members.forEach(m => { spendMap[m] = 0; });
+      activeExpenses.forEach(expense => {
+        const converted = Number(expense.convertedAmount ?? convertToBase(expense.originalAmount ?? expense.amount ?? 0, expense.originalCurrency ?? expense.currency ?? base) ?? 0);
+        const splitRows = getExpenseSplitRows(expense, converted);
+        splitRows.forEach(row => {
+          if (!(row.member in spendMap)) spendMap[row.member] = 0;
+          spendMap[row.member] = round2(spendMap[row.member] + Number(row.amount));
+        });
+      });
+      expenseSnapshotPersons.innerHTML = Object.entries(spendMap)
+        .filter(([, amt]) => amt > 0)
+        .map(([person, amt]) => `
+          <div class="snapshot-person-row">
+            <span class="snapshot-person-name">${safeEscape(person)}</span>
+            <span class="snapshot-person-amt">${Math.floor(amt).toLocaleString()}</span>
+          </div>
+        `).join("");
+    }
   }
 }
 
