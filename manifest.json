@@ -1,7 +1,7 @@
 {
-  "name": "京都  大阪之旅",
-  "short_name": "京都大阪",
-  "description": "京都  大阪之旅 行程及支出記錄",
+  "name": "關嘉露西生日之旅",
+  "short_name": "生日之旅",
+  "description": "關嘉露西生日之旅行程及支出記錄",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
