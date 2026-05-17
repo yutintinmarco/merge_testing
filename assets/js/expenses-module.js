@@ -678,8 +678,61 @@ function buildCurrencyOptions(currencies, selectedValue) {
   return currencies.map(code => `<option value="${safeEscape(code)}" ${code === selected ? "selected" : ""}>${safeEscape(code)}</option>`).join("");
 }
 
+function getEditorActiveCurrenciesPreview() {
+  if (!activeCurrencyGroup || !activeCurrencyGroup.querySelector("[data-active-currency]")) return null;
+
+  const configured = getAllConfiguredCurrencies();
+  const selected = uniqueStrings(
+    Array.from(activeCurrencyGroup.querySelectorAll("[data-active-currency]:checked"))
+      .map(input => input.dataset.activeCurrency)
+  );
+
+  const base = baseCurrencyInput?.value || tripSettings.baseCurrency || selected[0] || "HKD";
+  return uniqueStrings([base, ...selected]).filter(code => configured.includes(code));
+}
+
+function getActiveCurrenciesForUi() {
+  return getEditorActiveCurrenciesPreview() || getActiveCurrencies();
+}
+
+function syncCurrencyEditorPreview() {
+  if (!activeCurrencyGroup) return;
+
+  const active = new Set(getEditorActiveCurrenciesPreview() || getActiveCurrencies());
+  const base = baseCurrencyInput?.value || tripSettings.baseCurrency;
+
+  activeCurrencyGroup.querySelectorAll(".currency-check-chip").forEach(label => {
+    const input = label.querySelector("[data-active-currency]");
+    if (!input) return;
+
+    if (input.dataset.activeCurrency === base) {
+      input.checked = true;
+      input.disabled = true;
+      label.classList.add("is-base");
+    } else {
+      input.disabled = false;
+      label.classList.remove("is-base");
+    }
+
+    label.classList.toggle("is-selected", input.checked);
+  });
+
+  ratesContainer?.querySelectorAll("[data-rate-row-code]").forEach(row => {
+    const code = row.dataset.rateRowCode;
+    const isActive = active.has(code);
+    const isBase = code === base;
+    row.classList.toggle("is-active-currency", isActive);
+    row.classList.toggle("is-inactive-currency", !isActive);
+
+    const labelText = row.querySelector("[data-rate-label]");
+    if (labelText) {
+      labelText.textContent = `${code} ${isBase ? "(base=1)" : isActive ? "" : "(未使用)"}`.trim();
+    }
+  });
+}
+
 function updateCurrencySelectOptions() {
-  const active = getActiveCurrencies();
+  const active = getActiveCurrenciesForUi();
   const allConfigured = getAllConfiguredCurrencies();
   const fullFormCurrent = currencyInput?.value || tripSettings.baseCurrency || active[0] || "HKD";
   const quickCurrent = quickCurrencyInput?.value || tripSettings.baseCurrency || active[0] || "HKD";
@@ -1558,14 +1611,23 @@ function renderRateEditor() {
         </label>
       `;
     }).join("");
+
+    activeCurrencyGroup.querySelectorAll("[data-active-currency]").forEach(input => {
+      input.addEventListener("change", () => {
+        syncCurrencyEditorPreview();
+        updateCurrencySelectOptions();
+      });
+    });
   }
 
   ratesContainer.innerHTML = currencyOptions.map(code => {
     const value = tripSettings.exchangeRates?.[code] ?? "";
     const disabled = code === tripSettings.baseCurrency ? "disabled" : "";
     const hint = code === tripSettings.baseCurrency ? "(base=1)" : active.has(code) ? "" : "(未使用)";
-    return `<label class="rate-row ${active.has(code) ? "is-active-currency" : "is-inactive-currency"}"><span>${code} ${hint}</span><input type="number" step="0.0001" min="0" data-rate-code="${code}" value="${value}" ${disabled}/></label>`;
+    return `<label class="rate-row ${active.has(code) ? "is-active-currency" : "is-inactive-currency"}" data-rate-row-code="${safeEscape(code)}"><span data-rate-label>${code} ${hint}</span><input type="number" step="0.0001" min="0" data-rate-code="${safeEscape(code)}" value="${value}" ${disabled}/></label>`;
   }).join("");
+
+  syncCurrencyEditorPreview();
 }
 
 async function saveTripSettings() {
@@ -3433,7 +3495,11 @@ if (quickAddFab) {
 }
 addMemberBtn.addEventListener("click", addMember);
 if (saveRatesBtn) saveRatesBtn.addEventListener("click", saveTripSettings);
-if (baseCurrencyInput) baseCurrencyInput.addEventListener("change", () => { tripSettings.baseCurrency = baseCurrencyInput.value; renderRateEditor(); });
+if (baseCurrencyInput) baseCurrencyInput.addEventListener("change", () => {
+  tripSettings.baseCurrency = baseCurrencyInput.value;
+  renderRateEditor();
+  updateCurrencySelectOptions();
+});
 
 if (ocrBtn) ocrBtn.addEventListener("click", runReceiptOCR);
 if (confirmAiFillBtn) confirmAiFillBtn.addEventListener("click", applyAiResultToForm);
