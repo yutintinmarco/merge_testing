@@ -1,8 +1,8 @@
 {
   "meta": {
-    "titleSmall": "Birthday Trip 2026",
-    "titleMain": "關嘉露西生日之旅",
-    "accentColor": "#e05a2b",
+    "titleSmall": "Birthday Trip 2026 🎂",
+    "titleMain": "關嘉露西 <span class=\"title-accent\">·</span> 生日之旅 🎂",
+    "accentColor": "#d85c8a",
     "dateRange": "5月23日 至 5月28日",
     "tripStartIso": "2026-05-23",
     "tripEndIso": "2026-05-28",
