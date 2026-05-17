@@ -471,50 +471,90 @@
     {
       "label": "Day 5",
       "date": "5月27日",
-      "title": "大阪北部 / 梅田",
-      "subtitle": "勝尾寺  箕面大滝  梅田  Birthday Dinner",
+      "title": "神戶一日遊",
+      "subtitle": "神戶動物王國  南京町 / 元町  Harborland / MOSAIC  夜景",
       "isoDate": "2026-05-27",
       "city": "osaka",
       "items": [
         {
-          "time": "10:00",
-          "icon": "⛩️",
-          "title": "勝尾寺 / 箕面大滝 / 箕面",
-          "note": "郊外半日行程",
+          "time": "09:30",
+          "icon": "🚆",
+          "title": "出發前往神戶",
+          "note": "由大阪出發  先去神戶動物王國",
           "who": "all",
           "popup": true,
-          "detail": "上午前往勝尾寺、箕面大滝及箕面一帶，留意交通時間及體力安排。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Katsuoji+Minoh+Waterfall+Osaka"
+          "detail": "由大阪出發前往神戶動物王國。建議先去動物王國，因為園區一般較早關門，Harborland / MOSAIC 則較適合傍晚及晚上。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom"
         },
         {
-          "time": "13:00",
-          "icon": "🍽️",
-          "title": "Lunch",
-          "note": "午餐",
+          "time": "10:45",
+          "icon": "🐧",
+          "title": "神戶動物王國",
+          "note": "Port Island  室內外動物園  預留約 2.5 至 3 小時",
           "who": "all",
           "popup": true,
-          "detail": "午餐，地點可按當日路線決定。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Minoh+Osaka+restaurants"
+          "detail": "神戶動物王國位於 Port Island，適合睇動物、互動體驗及影相。官方日曆顯示 5月27日開放時間為 10:00 至 17:00，建議中午前到達，預留約 2.5 至 3 小時。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom"
         },
         {
-          "time": "16:00",
+          "time": "13:45",
+          "icon": "🚆",
+          "title": "前往三宮 / 元町",
+          "note": "午餐及神戶市區散策",
+          "who": "all",
+          "popup": true,
+          "detail": "由神戶動物王國返回三宮或元町一帶，安排午餐、咖啡或短暫購物。此段作為動物王國與 Harborland 之間的緩衝，時間可按當日體力調整。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Sannomiya+Kobe"
+        },
+        {
+          "time": "15:00",
+          "icon": "🥟",
+          "title": "南京町 / 元町散策",
+          "note": "神戶中華街  小食  短行程",
+          "who": "all",
+          "popup": true,
+          "detail": "南京町及元町一帶適合輕鬆散步、小食及補充咖啡時間。若當日較累，可縮短此段，直接前往 Harborland。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Nankinmachi+Kobe"
+        },
+        {
+          "time": "16:30",
           "icon": "🛍️",
-          "title": "梅田",
-          "note": "購物 / 咖啡 / 休息",
+          "title": "神戶臨海樂園 umie / MOSAIC",
+          "note": "購物  海邊散步  晚餐前休息",
           "who": "all",
           "popup": true,
-          "detail": "下午安排梅田一帶購物、咖啡或休息。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Umeda+Osaka"
+          "detail": "神戶 Harborland umie / MOSAIC 適合購物、海邊散步及晚餐。官方資料顯示 umie 商店一般 10:00 至 20:00，MOSAIC 餐廳一般 11:00 至 22:00，放在傍晚最順路。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Harborland+umie+MOSAIC"
         },
         {
-          "time": "19:00",
-          "icon": "🎂",
-          "title": "Birthday Dinner",
-          "note": "生日晚餐",
+          "time": "18:30",
+          "icon": "🍽️",
+          "title": "Dinner at Harborland",
+          "note": "MOSAIC / Harborland 晚餐",
           "who": "all",
           "popup": true,
-          "detail": "生日晚餐，餐廳待確認。",
-          "maps": ""
+          "detail": "晚餐建議在 MOSAIC 或 Harborland 一帶解決，之後可順路到海邊睇夜景。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Harborland+MOSAIC+restaurants"
+        },
+        {
+          "time": "20:00",
+          "icon": "🌃",
+          "title": "Meriken Park / Kobe Port Tower 夜景",
+          "note": "神戶港夜景  輕鬆收尾",
+          "who": "all",
+          "popup": true,
+          "detail": "晚餐後可在 Meriken Park、Port Tower 及 Harborland 海邊一帶散步影夜景。呢段行程彈性高，天氣好就行耐少少，累就早返大阪。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Meriken+Park+Kobe+Port+Tower"
+        },
+        {
+          "time": "21:00",
+          "icon": "🚆",
+          "title": "返回大阪",
+          "note": "由神戶返回大阪",
+          "who": "all",
+          "popup": true,
+          "detail": "由神戶返回大阪。實際回程時間可按晚餐及夜景停留時間調整。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Station+to+Osaka"
         }
       ]
     },
