@@ -150,10 +150,10 @@ function mountExpensesHtml(root) {
         <div class="settings-menu-grid">
           <button type="button" class="settings-menu-btn" data-settings-open="account"><span>👤</span><strong>帳戶與登入</strong><small>Google login / logout</small></button>
           <button type="button" class="settings-menu-btn" data-settings-open="members"><span>👥</span><strong>成員管理</strong><small>新增 / 移除 members</small></button>
-          <button type="button" class="settings-menu-btn" data-settings-open="rates"><span>💱</span><strong>匯率設定</strong><small>修改後會重算支出</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="rates" data-admin-only="true"><span>💱</span><strong>匯率設定</strong><small>修改後會重算支出</small></button>
           <button type="button" class="settings-menu-btn" data-settings-open="backup"><span>📦</span><strong>資料備份</strong><small>Excel / JSON export</small></button>
-          <button type="button" class="settings-menu-btn" data-settings-open="access"><span>🔐</span><strong>權限管理</strong><small>Allowed emails</small></button>
-          <button type="button" class="settings-menu-btn" data-settings-open="lock"><span>🔒</span><strong>鎖定旅程</strong><small>Freeze expenses</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="access" data-admin-only="true"><span>🔐</span><strong>權限管理</strong><small>Allowed emails / Admins</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="lock" data-admin-only="true"><span>🔒</span><strong>鎖定旅程</strong><small>Freeze expenses</small></button>
           <button type="button" class="settings-menu-btn" data-settings-open="deleted"><span>🗑️</span><strong>已刪除項目</strong><small>查看及還原 deleted items</small></button>
           <button type="button" class="settings-menu-btn" data-settings-open="logs"><span>🧾</span><strong>操作記錄</strong><small>查看 activity log</small></button>
         </div>
@@ -299,7 +299,7 @@ function mountExpensesHtml(root) {
       <div class="modal-heading-row"><h3>帳戶與登入</h3></div>
       <div class="modal-body-scroll">
         <div class="auth-row">
-          <button type="button" id="googleSignInBtn" class="google-login-btn"><span class="google-g-icon" aria-hidden="true">G</span><span>Google 登入</span></button>
+          <button type="button" id="googleSignInBtn" class="google-login-btn"><span class="google-g-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/></svg></span><span>Google 登入</span></button>
           <button type="button" id="signOutBtn" class="secondary-btn hidden">登出</button>
         </div>
         <p id="authUserText" class="hint"></p>
@@ -343,9 +343,8 @@ function mountExpensesHtml(root) {
         <div id="activeCurrencyGroup" class="currency-check-grid"></div>
       </section>
       <div id="ratesContainer" class="rates-grid"></div>
-      <button type="button" id="saveRatesBtn" class="secondary-btn">儲存匯率並重算支出</button>
       </div>
-      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="ratesSettingsModal">關閉</button></div>
+      <div class="modal-footer-actions"><button type="button" id="saveRatesBtn" class="secondary-btn">儲存匯率</button><button type="button" class="modal-close-btn" data-modal-close="ratesSettingsModal">關閉</button></div>
     </div>
   </div>
 
@@ -370,14 +369,22 @@ function mountExpensesHtml(root) {
       <div class="modal-heading-row"><h3>權限管理</h3></div>
       <div class="modal-body-scroll">
       <section class="hidden" id="adminPanel">
-        <p class="hint">以下 email 登入後可自動加入此 trip。只有 creator 可見。</p>
+        <p class="hint">以下 email 登入後可自動加入此 trip。Admin 可管理成員、匯率、權限及鎖定旅程。</p>
+        <div class="setting-subtitle">可使用此旅程的 Google Email</div>
         <div id="allowedEmailList" class="member-list"></div>
         <div class="member-add-row" style="margin-top:12px">
           <input type="email" id="allowedEmailInput" placeholder="example@gmail.com" />
           <button type="button" id="addAllowedEmailBtn" class="secondary-btn">新增</button>
         </div>
+        <div class="setting-subtitle" style="margin-top:16px">Admin Google Email</div>
+        <p class="hint">Admin 除了可登入，亦可管理權限、匯率及鎖定旅程。Creator 不能被移除。</p>
+        <div id="adminEmailList" class="member-list"></div>
+        <div class="member-add-row" style="margin-top:12px">
+          <input type="email" id="adminEmailInput" placeholder="admin@gmail.com" />
+          <button type="button" id="addAdminEmailBtn" class="secondary-btn">新增 Admin</button>
+        </div>
       </section>
-      <p id="accessNoAdminHint" class="hint">如你不是 creator，權限管理不會顯示可編輯名單。</p>
+      <p id="accessNoAdminHint" class="hint">如你不是 Admin，權限管理不會顯示可編輯名單。</p>
       </div>
       <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="accessSettingsModal">關閉</button></div>
     </div>
@@ -525,6 +532,9 @@ const adminPanel = document.getElementById("adminPanel");
 const allowedEmailList = document.getElementById("allowedEmailList");
 const allowedEmailInput = document.getElementById("allowedEmailInput");
 const addAllowedEmailBtn = document.getElementById("addAllowedEmailBtn");
+const adminEmailList = document.getElementById("adminEmailList");
+const adminEmailInput = document.getElementById("adminEmailInput");
+const addAdminEmailBtn = document.getElementById("addAdminEmailBtn");
 const exportExcelBtn = document.getElementById("exportExcelBtn");
 const exportJsonBtn = document.getElementById("exportJsonBtn");
 const exportJsonBackupBtn = document.getElementById("exportJsonBackupBtn");
@@ -578,7 +588,7 @@ function renderCompactModuleStatus(message = lastModuleStatus) {
 
   const statusText = getCleanModuleStatus(lastModuleStatus);
   const tripLabel = tripId || "No trip";
-  const openLabel = isTripLocked() ? "Locked" : "Open";
+  const openLabel = tripStatus === "unknown" ? "狀態未能讀取" : (isTripLocked() ? "Locked" : "Open");
   const loginLabel = currentUser
     ? `Google 已登入 ${currentUser.displayName || currentUser.email || "Google"}`
     : "Google 未登入";
@@ -606,6 +616,8 @@ let stopSettlementsListener = null;
 let stopActivityLogsListener = null;
 let tripAllowedUids = [];
 let tripCreatorUid = null;
+let tripAdminUids = [];
+let adminEmailsCache = [];
 let allowedEmailsCache = [];
 const analyticsCategoryOrder = ["Food", "Transport", "Hotel", "Shopping", "Ticket", "Other"];
 const analyticsCategoryColors = {
@@ -924,6 +936,9 @@ function updateTripStatusUi() {
 
   [quickTitleInput, quickAmountInput, quickCurrencyInput, quickPaidByInput, quickCategoryInput, quickAddBtn].forEach(el => {
     if (el) el.disabled = locked;
+  });
+  document.querySelectorAll("[data-admin-only]").forEach(btn => {
+    btn.classList.toggle("hidden", !isAdmin());
   });
   if (quickAddFab) quickAddFab.disabled = locked;
 }
@@ -1668,6 +1683,8 @@ async function ensureTripMembersAndSettings() {
       members,
       allowedUids: tripAllowedUids,
       allowedEmails: allowedEmailsCache,
+      adminUids: [currentUser.uid],
+      adminEmails: myEmail ? [myEmail] : [],
       settings: tripSettings,
       createdAt: serverTimestamp(),
       createdBy: currentUser.uid,
@@ -1679,6 +1696,8 @@ async function ensureTripMembersAndSettings() {
   const data = tripDoc.data();
   tripAllowedUids = Array.isArray(data.allowedUids) ? uniqueStrings(data.allowedUids) : [];
   tripCreatorUid = data.createdBy || null;
+  tripAdminUids = Array.isArray(data.adminUids) ? uniqueStrings(data.adminUids) : [];
+  adminEmailsCache = Array.isArray(data.adminEmails) ? data.adminEmails.map(normalizeEmail).filter(Boolean) : [];
   const allowedEmails = Array.isArray(data.allowedEmails)
     ? data.allowedEmails.map(normalizeEmail).filter(Boolean)
     : [];
@@ -1687,17 +1706,33 @@ async function ensureTripMembersAndSettings() {
   const myEmail = normalizeEmail(currentUser.email);
   const uidAllowed = tripAllowedUids.includes(currentUser.uid);
   const emailAllowed = !!myEmail && allowedEmails.includes(myEmail);
+  const adminEmailAllowed = !!myEmail && adminEmailsCache.includes(myEmail);
   const isCreator = data.createdBy === currentUser.uid;
 
-  if (!data.status && isCreator) {
-    await setDoc(tripRef, { status: "open" }, { merge: true });
+  if (isCreator) {
+    const migrate = {};
+    if (!data.status) migrate.status = "open";
+    if (!Array.isArray(data.adminUids)) {
+      migrate.adminUids = uniqueStrings([currentUser.uid, ...tripAdminUids]);
+      tripAdminUids = migrate.adminUids;
+    }
+    if (!Array.isArray(data.adminEmails)) {
+      migrate.adminEmails = myEmail ? uniqueStrings([myEmail, ...adminEmailsCache]) : adminEmailsCache;
+      adminEmailsCache = migrate.adminEmails || [];
+    }
+    if (Object.keys(migrate).length) await setDoc(tripRef, migrate, { merge: true });
   }
 
   // 自動 claim：email 已白名單 or 係 trip 創建者 -> 自動加 uid
-  if (!uidAllowed && (emailAllowed || isCreator)) {
+  if (!uidAllowed && (emailAllowed || adminEmailAllowed || isCreator)) {
     const nextUids = uniqueStrings([...tripAllowedUids, currentUser.uid]);
-    await setDoc(tripRef, { allowedUids: nextUids }, { merge: true });
+    const updateData = { allowedUids: nextUids };
+    if (adminEmailAllowed || isCreator) {
+      updateData.adminUids = uniqueStrings([...tripAdminUids, currentUser.uid]);
+    }
+    await setDoc(tripRef, updateData, { merge: true });
     tripAllowedUids = nextUids;
+    if (updateData.adminUids) tripAdminUids = updateData.adminUids;
   }
 
   // 最終判斷
@@ -1745,10 +1780,13 @@ function startTripListener() {
     }
 
     if (Array.isArray(data.allowedUids)) tripAllowedUids = uniqueStrings(data.allowedUids);
+    if (Array.isArray(data.adminUids)) tripAdminUids = uniqueStrings(data.adminUids);
+    if (Array.isArray(data.adminEmails)) adminEmailsCache = data.adminEmails.map(normalizeEmail).filter(Boolean);
     if (data.createdBy) tripCreatorUid = data.createdBy;
     if (Array.isArray(data.allowedEmails)) {
       allowedEmailsCache = data.allowedEmails.map(normalizeEmail).filter(Boolean);
       renderAllowedEmails();
+      renderAdminEmails();
       updateTripStatusUi();
     }
 
@@ -1763,7 +1801,8 @@ function startTripListener() {
   }, err => {
     console.error(err);
     if (err?.code === "permission-denied") {
-      setModuleStatus("No access to this trip");
+      tripStatus = "unknown";
+      setModuleStatus("No access");
       alert("你無權限進入此 trip。");
     }
   });
@@ -3197,7 +3236,15 @@ function renderActivityLogs() {
 
 /* admin panel */
 function isAdmin() {
+  return !!(currentUser && (currentUser.uid === tripCreatorUid || tripAdminUids.includes(currentUser.uid)));
+}
+
+function isCreator() {
   return !!(currentUser && tripCreatorUid && currentUser.uid === tripCreatorUid);
+}
+
+function getCreatorEmail() {
+  return adminEmailsCache[0] || normalizeEmail(currentUser?.email || "");
 }
 
 function renderAllowedEmails() {
@@ -3221,6 +3268,7 @@ function renderAllowedEmails() {
   allowedEmailList.querySelectorAll("[data-remove-email]").forEach(btn => {
     btn.addEventListener("click", () => removeAllowedEmail(btn.dataset.removeEmail));
   });
+  renderAdminEmails();
 }
 
 async function addAllowedEmail() {
@@ -3234,6 +3282,61 @@ async function addAllowedEmail() {
 async function removeAllowedEmail(email) {
   if (!confirm(`移除 ${email}？`)) return;
   await setDoc(getTripDocRef(), { allowedEmails: allowedEmailsCache.filter(e => e !== email) }, { merge: true });
+}
+
+function renderAdminEmails() {
+  if (!adminEmailList) return;
+
+  if (!isAdmin()) {
+    adminEmailList.innerHTML = "";
+    return;
+  }
+
+  const creatorEmail = getCreatorEmail();
+  const emails = uniqueStrings([creatorEmail, ...adminEmailsCache].map(normalizeEmail).filter(Boolean));
+
+  adminEmailList.innerHTML = emails.length
+    ? emails.map(email => {
+        const fixed = email === creatorEmail;
+        return `
+        <div class="member-chip">
+          <span>${safeEscape(email)}${fixed ? " · Creator" : ""}</span>
+          ${fixed ? "" : `<button type="button" data-remove-admin-email="${safeEscape(email)}">移除</button>`}
+        </div>`;
+      }).join("")
+    : `<p class="hint" style="margin:0">暫無 Admin email</p>`;
+
+  adminEmailList.querySelectorAll("[data-remove-admin-email]").forEach(btn => {
+    btn.addEventListener("click", () => removeAdminEmail(btn.dataset.removeAdminEmail));
+  });
+}
+
+async function addAdminEmail() {
+  if (!isAdmin()) return alert("只有 Admin 可以管理 Admin 名單。");
+  const email = normalizeEmail(adminEmailInput.value);
+  if (!email || !email.includes("@")) return alert("請輸入有效 email。");
+  const nextAdminEmails = uniqueStrings([...adminEmailsCache, email]);
+  const nextAllowedEmails = uniqueStrings([...allowedEmailsCache, email]);
+  await setDoc(getTripDocRef(), {
+    adminEmails: nextAdminEmails,
+    allowedEmails: nextAllowedEmails
+  }, { merge: true });
+  adminEmailsCache = nextAdminEmails;
+  allowedEmailsCache = nextAllowedEmails;
+  adminEmailInput.value = "";
+  renderAdminEmails();
+  renderAllowedEmails();
+}
+
+async function removeAdminEmail(email) {
+  if (!isAdmin()) return alert("只有 Admin 可以管理 Admin 名單。");
+  const creatorEmail = getCreatorEmail();
+  if (normalizeEmail(email) === creatorEmail) return alert("Creator 不能移除。");
+  if (!confirm(`移除 Admin ${email}？`)) return;
+  const next = adminEmailsCache.filter(e => e !== email);
+  await setDoc(getTripDocRef(), { adminEmails: next }, { merge: true });
+  adminEmailsCache = next;
+  renderAdminEmails();
 }
 
 /* OCR local free */
@@ -3508,6 +3611,7 @@ if (cancelAiFillBtn) cancelAiFillBtn.addEventListener("click", closeAiPreviewMod
 googleSignInBtn.addEventListener("click", handleGoogleSignIn);
 signOutBtn.addEventListener("click", handleSignOut);
 if (addAllowedEmailBtn) addAllowedEmailBtn.addEventListener("click", addAllowedEmail);
+if (addAdminEmailBtn) addAdminEmailBtn.addEventListener("click", addAdminEmail);
 
 [exportExcelBtn, exportExcelReportBtn].forEach(button => {
   if (button) button.dataset.action = "export-excel";
@@ -3560,6 +3664,8 @@ onAuthStateChanged(auth, async (user) => {
     tripLockedBy = null;
     tripLockedByName = "";
     tripCreatorUid = null;
+    tripAdminUids = [];
+    adminEmailsCache = [];
     allowedEmailsCache = [];
     renderExpenses();
     renderDeletedExpenses();
@@ -3577,6 +3683,7 @@ onAuthStateChanged(auth, async (user) => {
     initMembers();
     renderRateEditor();
     renderAllowedEmails();
+    renderAdminEmails();
     startTripListener();
     listenToExpenses();
     listenToSettlements();
@@ -3584,6 +3691,7 @@ onAuthStateChanged(auth, async (user) => {
   } catch (error) {
     console.error(error);
     if (error?.code === "permission-denied") {
+      tripStatus = "unknown";
       setModuleStatus("No access");
       alert("你無權限進入此 trip。請管理員把你 email 加入 allowedEmails。");
     } else {
