@@ -3114,3 +3114,26 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .currency-check-chip.is
   background: rgba(224,90,43,0.22);
   border-color: rgba(255,128,92,0.55);
 }
+
+/* v6.3 birthday polish and access controls */
+.expenses-module .expenses-inner-tabs {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+}
+.expenses-module .expenses-inner-tab {
+  box-sizing: border-box !important;
+}
+.expenses-module .google-g-icon svg {
+  display: block;
+}
+.expenses-module .settings-menu-btn.hidden {
+  display: none !important;
+}
+.expenses-module .currency-check-chip.is-selected {
+  box-shadow: 0 2px 8px rgba(216, 92, 138, 0.16);
+}
+.expenses-module .expense-snapshot-card {
+  border-color: rgba(216, 92, 138, 0.22);
+}
