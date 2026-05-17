@@ -657,6 +657,41 @@ const uniqueStrings = (arr) => [...new Set((arr || []).filter(Boolean).map(v => 
 const normalizeEmail = (e) => String(e || "").trim().toLowerCase();
 const escapeRegExp = (text) => String(text || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+
+function getAllConfiguredCurrencies() {
+  const fromConfig = Array.isArray(expensesConfig.currencies) ? expensesConfig.currencies : [];
+  const fromRates = Object.keys(tripSettings.exchangeRates || {});
+  const defaults = ["JPY", "HKD", "CNY", "TWD", "KRW", "USD"];
+  return uniqueStrings([...fromConfig, ...fromRates, tripSettings.baseCurrency, ...defaults]);
+}
+
+function getActiveCurrencies() {
+  const configured = getAllConfiguredCurrencies();
+  const active = Array.isArray(tripSettings.activeCurrencies) && tripSettings.activeCurrencies.length
+    ? tripSettings.activeCurrencies
+    : configured;
+  return uniqueStrings([tripSettings.baseCurrency, ...active]).filter(code => configured.includes(code));
+}
+
+function buildCurrencyOptions(currencies, selectedValue) {
+  const selected = selectedValue && currencies.includes(selectedValue) ? selectedValue : currencies[0];
+  return currencies.map(code => `<option value="${safeEscape(code)}" ${code === selected ? "selected" : ""}>${safeEscape(code)}</option>`).join("");
+}
+
+function updateCurrencySelectOptions() {
+  const active = getActiveCurrencies();
+  const allConfigured = getAllConfiguredCurrencies();
+  const fullFormCurrent = currencyInput?.value || tripSettings.baseCurrency || active[0] || "HKD";
+  const quickCurrent = quickCurrencyInput?.value || tripSettings.baseCurrency || active[0] || "HKD";
+  const aiCurrent = aiCurrencyInput?.value || quickCurrent;
+  const baseCurrent = baseCurrencyInput?.value || tripSettings.baseCurrency || active[0] || "HKD";
+
+  if (currencyInput) currencyInput.innerHTML = buildCurrencyOptions(active, active.includes(fullFormCurrent) ? fullFormCurrent : active[0]);
+  if (quickCurrencyInput) quickCurrencyInput.innerHTML = buildCurrencyOptions(active, active.includes(quickCurrent) ? quickCurrent : active[0]);
+  if (aiCurrencyInput) aiCurrencyInput.innerHTML = buildCurrencyOptions(active, active.includes(aiCurrent) ? aiCurrent : active[0]);
+  if (baseCurrencyInput) baseCurrencyInput.innerHTML = buildCurrencyOptions(allConfigured, allConfigured.includes(baseCurrent) ? baseCurrent : tripSettings.baseCurrency);
+}
+
 function getCleanModuleStatus(message) {
   const raw = String(message || "Ready");
   if (!tripId) return raw;
