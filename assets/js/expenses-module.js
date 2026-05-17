@@ -45,8 +45,7 @@ function mountExpensesHtml(root) {
       <button type="button" class="expenses-inner-tab" data-expenses-tab="settlement">結算</button>
       <button type="button" class="expenses-inner-tab" data-expenses-tab="analytics">分析</button>
       <button type="button" class="expenses-inner-tab" data-expenses-tab="settings">設定</button>
-      <button type="button" class="expenses-inner-tab" data-expenses-tab="logs">記錄</button>
-    </div>
+          </div>
 
     <section class="expenses-panel active" data-expenses-panel="add">
       <section class="card quick-add-card" id="quickAddCard">
@@ -155,24 +154,11 @@ function mountExpensesHtml(root) {
           <button type="button" class="settings-menu-btn" data-settings-open="backup"><span>📦</span><strong>資料備份</strong><small>Excel / JSON export</small></button>
           <button type="button" class="settings-menu-btn" data-settings-open="access"><span>🔐</span><strong>權限管理</strong><small>Allowed emails</small></button>
           <button type="button" class="settings-menu-btn" data-settings-open="lock"><span>🔒</span><strong>鎖定旅程</strong><small>Freeze expenses</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="deleted"><span>🗑️</span><strong>已刪除項目</strong><small>查看及還原 deleted items</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="logs"><span>🧾</span><strong>操作記錄</strong><small>查看 activity log</small></button>
         </div>
       </section>
     </section>
-
-    <section class="expenses-panel" data-expenses-panel="logs">
-      <section class="card">
-        <h2>Deleted Items</h2>
-        <p class="hint">已刪除支出會保留作 audit trail，不會參與結算。</p>
-        <div id="deletedExpenseList"></div>
-      </section>
-
-      <section class="card">
-        <h2>操作記錄</h2>
-        <p class="hint">記錄新增、修改、刪除、找數、鎖定等主要動作。</p>
-        <div id="activityLogList"></div>
-      </section>
-    </section>
-  
     <div class="expense-footer-note">
       <span id="syncStatus">Connecting...</span>
       <span id="tripStatusText" class="hidden"></span>
@@ -313,7 +299,7 @@ function mountExpensesHtml(root) {
       <div class="modal-heading-row"><h3>帳戶與登入</h3></div>
       <div class="modal-body-scroll">
         <div class="auth-row">
-          <button type="button" id="googleSignInBtn">Google 登入</button>
+          <button type="button" id="googleSignInBtn" class="google-login-btn"><span class="google-g-icon" aria-hidden="true">G</span><span>Google 登入</span></button>
           <button type="button" id="signOutBtn" class="secondary-btn hidden">登出</button>
         </div>
         <p id="authUserText" class="hint"></p>
@@ -351,6 +337,11 @@ function mountExpensesHtml(root) {
           <option value="USD">USD</option>
         </select>
       </label>
+      <section class="active-currency-panel">
+        <div class="setting-subtitle">本旅程使用幣值</div>
+        <p class="hint">勾選後才會在新增支出及 Quick Add 出現。結算基準幣別會自動保留。</p>
+        <div id="activeCurrencyGroup" class="currency-check-grid"></div>
+      </section>
       <div id="ratesContainer" class="rates-grid"></div>
       <button type="button" id="saveRatesBtn" class="secondary-btn">儲存匯率並重算支出</button>
       </div>
@@ -409,6 +400,28 @@ function mountExpensesHtml(root) {
     </div>
   </div>
 
+  <div id="deletedItemsModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>已刪除項目</h3></div>
+      <div class="modal-body-scroll">
+        <p class="hint">已刪除支出會保留作 audit trail，不會參與結算。</p>
+        <div id="deletedExpenseList"></div>
+      </div>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="deletedItemsModal">關閉</button></div>
+    </div>
+  </div>
+
+  <div id="activityLogModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>操作記錄</h3></div>
+      <div class="modal-body-scroll">
+        <p class="hint">記錄新增、修改、刪除、找數、鎖定等主要動作。</p>
+        <div id="activityLogList"></div>
+      </div>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="activityLogModal">關閉</button></div>
+    </div>
+  </div>
+
   <div id="ocrPreviewModal" class="modal hidden">
     <div class="modal-card">
       <div class="modal-heading-row"><h3>確認收據資料</h3></div>
@@ -460,7 +473,8 @@ const provider = new GoogleAuthProvider();
 let members = [];
 let tripSettings = {
   baseCurrency: expensesConfig.baseCurrency || "HKD",
-  exchangeRates: expensesConfig.defaultExchangeRates || { HKD: 1, JPY: 0.055, CNY: 1.08, TWD: 0.24, KRW: 0.0058, USD: 7.8 }
+  exchangeRates: expensesConfig.defaultExchangeRates || { HKD: 1, JPY: 0.055, CNY: 1.08, TWD: 0.24, KRW: 0.0058, USD: 7.8 },
+  activeCurrencies: expensesConfig.currencies || Object.keys(expensesConfig.defaultExchangeRates || { HKD: 1, JPY: 0.055, CNY: 1.08, TWD: 0.24, KRW: 0.0058, USD: 7.8 })
 };
 
 const form = document.getElementById("expenseForm");
@@ -488,6 +502,7 @@ const addMemberBtn = document.getElementById("addMemberBtn");
 const baseCurrencyInput = document.getElementById("baseCurrency");
 const ratesContainer = document.getElementById("ratesContainer");
 const saveRatesBtn = document.getElementById("saveRatesBtn");
+const activeCurrencyGroup = document.getElementById("activeCurrencyGroup");
 
 const ocrFileInput = document.getElementById("ocrReceiptInput");
 const ocrBtn = document.getElementById("ocrScanBtn");
@@ -563,12 +578,12 @@ function renderCompactModuleStatus(message = lastModuleStatus) {
 
   const statusText = getCleanModuleStatus(lastModuleStatus);
   const tripLabel = tripId || "No trip";
-  const lockLabel = isTripLocked() ? " · 🔒 已鎖定" : "";
+  const openLabel = isTripLocked() ? "Locked" : "Open";
   const loginLabel = currentUser
-    ? (currentUser.displayName || currentUser.email || "Google")
-    : "未登入";
+    ? `Google 已登入 ${currentUser.displayName || currentUser.email || "Google"}`
+    : "Google 未登入";
 
-  syncStatus.textContent = `${statusText} · ${tripLabel}${lockLabel} · ${loginLabel}`;
+  syncStatus.textContent = `${statusText} · ${tripLabel} · ${openLabel} · ${loginLabel}`;
 }
 
 function setModuleStatus(message) {
@@ -1364,13 +1379,17 @@ function getSettingModalId(key) {
     rates: "ratesSettingsModal",
     backup: "backupSettingsModal",
     access: "accessSettingsModal",
-    lock: "lockSettingsModal"
+    lock: "lockSettingsModal",
+    deleted: "deletedItemsModal",
+    logs: "activityLogModal"
   }[key];
 }
 
 function openSettingModal(key) {
   const id = getSettingModalId(key);
   if (!id) return;
+  if (key === "deleted") renderDeletedExpenses();
+  if (key === "logs") renderActivityLogs();
   openExpenseModal(document.getElementById(id));
 }
 
@@ -1394,10 +1413,6 @@ function activateExpensesTab(tabName) {
   if (tabName === 'analytics') renderAnalytics();
   if (tabName === 'settlement') renderSummary();
   if (tabName === 'details') renderExpenses();
-  if (tabName === 'logs') {
-    renderDeletedExpenses();
-    renderActivityLogs();
-  }
 }
 
 function setupExpenseInnerTabs() {
@@ -1483,25 +1498,46 @@ function initMembers() {
     </label>
   `).join("");
   renderMemberManager();
+  updateCurrencySelectOptions();
   applyQuickPrefs();
 }
 
 function renderRateEditor() {
   if (!baseCurrencyInput || !ratesContainer) return;
+  updateCurrencySelectOptions();
   baseCurrencyInput.value = tripSettings.baseCurrency || "HKD";
-  const currencyOptions = Array.from(currencyInput.options).map(o => o.value);
+
+  const currencyOptions = getAllConfiguredCurrencies();
+  const active = new Set(getActiveCurrencies());
+
+  if (activeCurrencyGroup) {
+    activeCurrencyGroup.innerHTML = currencyOptions.map(code => {
+      const isBase = code === tripSettings.baseCurrency;
+      const checked = active.has(code) || isBase;
+      return `
+        <label class="currency-check-chip ${checked ? "is-selected" : ""} ${isBase ? "is-base" : ""}">
+          <input type="checkbox" data-active-currency="${safeEscape(code)}" ${checked ? "checked" : ""} ${isBase ? "disabled" : ""}/>
+          <span class="analytics-check">✓</span>
+          <span>${safeEscape(code)}</span>
+          ${isBase ? `<small>base</small>` : ""}
+        </label>
+      `;
+    }).join("");
+  }
 
   ratesContainer.innerHTML = currencyOptions.map(code => {
     const value = tripSettings.exchangeRates?.[code] ?? "";
     const disabled = code === tripSettings.baseCurrency ? "disabled" : "";
-    const hint = code === tripSettings.baseCurrency ? "(base=1)" : "";
-    return `<label class="rate-row"><span>${code} ${hint}</span><input type="number" step="0.0001" min="0" data-rate-code="${code}" value="${value}" ${disabled}/></label>`;
+    const hint = code === tripSettings.baseCurrency ? "(base=1)" : active.has(code) ? "" : "(未使用)";
+    return `<label class="rate-row ${active.has(code) ? "is-active-currency" : "is-inactive-currency"}"><span>${code} ${hint}</span><input type="number" step="0.0001" min="0" data-rate-code="${code}" value="${value}" ${disabled}/></label>`;
   }).join("");
 }
 
 async function saveTripSettings() {
   if (!assertTripOpen()) return;
   const newBase = baseCurrencyInput.value;
+  const selectedCurrencies = uniqueStrings(Array.from(activeCurrencyGroup?.querySelectorAll("[data-active-currency]:checked") || []).map(input => input.dataset.activeCurrency));
+  const nextActiveCurrencies = uniqueStrings([newBase, ...selectedCurrencies]);
   const nextRates = {};
   ratesContainer.querySelectorAll("[data-rate-code]").forEach(input => {
     const code = input.dataset.rateCode;
@@ -1510,9 +1546,10 @@ async function saveTripSettings() {
     else if (Number.isFinite(n) && n > 0) nextRates[code] = n;
   });
   if (!nextRates[newBase]) nextRates[newBase] = 1;
-  tripSettings = { ...tripSettings, baseCurrency: newBase, exchangeRates: nextRates };
+  tripSettings = { ...tripSettings, baseCurrency: newBase, exchangeRates: nextRates, activeCurrencies: nextActiveCurrencies };
 
   await setDoc(getTripDocRef(), { settings: tripSettings }, { merge: true });
+  updateCurrencySelectOptions();
   const refreshResult = await refreshAllExpenseFxAmounts();
   alert(`匯率設定已儲存，已重新換算 ${refreshResult.updated} 筆支出。${refreshResult.skipped ? ` 未能換算 ${refreshResult.skipped} 筆，請檢查匯率。` : ""}`);
   await logActivity("settings_updated", `修改匯率設定，基準貨幣為 ${newBase}，重新換算 ${refreshResult.updated} 筆支出`, "trip", tripId, { baseCurrency: newBase, updatedExpenses: refreshResult.updated, skippedExpenses: refreshResult.skipped });
@@ -1624,7 +1661,7 @@ function startTripListener() {
         ...data.settings,
         exchangeRates: { ...tripSettings.exchangeRates, ...(data.settings.exchangeRates || {}) }
       };
-      renderRateEditor(); updateTripStatusUi(); renderSummary(); renderAnalytics(); renderExpenses();
+      updateCurrencySelectOptions(); renderRateEditor(); updateTripStatusUi(); renderSummary(); renderAnalytics(); renderExpenses();
     }
   }, err => {
     console.error(err);
@@ -2201,26 +2238,51 @@ function sumBy(rows, keyFn, amountFn) {
     .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
 }
 
+function getOriginalCurrencyTotals(activeExpenses = expenses) {
+  const totals = {};
+  (activeExpenses || []).forEach(expense => {
+    const cur = expense.originalCurrency || expense.currency || tripSettings.baseCurrency || "HKD";
+    const amount = Number(expense.originalAmount ?? expense.amount ?? 0);
+    if (!Number.isFinite(amount)) return;
+    totals[cur] = round2((totals[cur] || 0) + amount);
+  });
+  return Object.entries(totals)
+    .filter(([, amount]) => amount !== 0)
+    .sort(([a], [b]) => a.localeCompare(b));
+}
+
+function renderCurrencyTotalsHtml(activeExpenses = expenses, compact = false) {
+  const rows = getOriginalCurrencyTotals(activeExpenses);
+  if (!rows.length) return "";
+  return rows.map(([cur, amount]) => `
+    <div class="snapshot-currency-total ${compact ? "is-compact" : ""}">
+      <span>${safeEscape(cur)}</span>
+      <strong>${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</strong>
+    </div>
+  `).join("");
+}
+
 function renderExpenseSnapshot() {
   if (!expenseSnapshotCard || !expenseSnapshotTotal) return;
 
   const base = tripSettings.baseCurrency || "HKD";
   const activeExpenses = expenses || [];
-  const total = round2(activeExpenses.reduce((sum, expense) => {
+  const baseTotal = round2(activeExpenses.reduce((sum, expense) => {
     return sum + Number(expense.convertedAmount ?? convertToBase(expense.originalAmount ?? expense.amount ?? 0, expense.originalCurrency ?? expense.currency ?? base) ?? 0);
   }, 0));
 
-  // Hero number: integer part + smaller decimal
-  const intPart = Math.floor(total).toLocaleString();
-  const decPart = (total % 1).toFixed(2).slice(1);
-  expenseSnapshotTotal.innerHTML = `<span class="snapshot-currency">${safeEscape(base)}</span><span class="snapshot-amount">${intPart}<span class="snapshot-decimal">${decPart}</span></span>`;
+  const currencyTotals = renderCurrencyTotalsHtml(activeExpenses);
+  if (currencyTotals) {
+    expenseSnapshotTotal.innerHTML = `<div class="snapshot-currency-list">${currencyTotals}</div>`;
+  } else {
+    expenseSnapshotTotal.innerHTML = `--`;
+  }
 
   if (expenseSnapshotCats) {
     const count = activeExpenses.length;
-    expenseSnapshotCats.textContent = count > 0 ? `${count} 筆支出` : "";
+    expenseSnapshotCats.textContent = count > 0 ? `${count} 筆支出 · 基準換算 ${safeEscape(base)} ${baseTotal.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}` : "";
   }
 
-  // Per-person allocated spend on the right
   if (expenseSnapshotPersons) {
     if (!activeExpenses.length || !members.length) {
       expenseSnapshotPersons.innerHTML = "";
@@ -2240,7 +2302,7 @@ function renderExpenseSnapshot() {
         .map(([person, amt]) => `
           <div class="snapshot-person-row">
             <span class="snapshot-person-name">${safeEscape(person)}</span>
-            <span class="snapshot-person-amt">${Math.floor(amt).toLocaleString()}</span>
+            <span class="snapshot-person-amt">${safeEscape(base)} ${Math.floor(amt).toLocaleString()}</span>
           </div>
         `).join("");
     }
@@ -2447,11 +2509,13 @@ function renderAnalytics() {
       </div>`
     : `<p class="neutral">未選擇分類。請勾選 All 或至少一個分類。</p>`;
 
+  const originalTotalsHtml = renderCurrencyTotalsHtml(activeExpenses, true);
+
   analyticsSummary.innerHTML = `
     <div class="analytics-total-card">
       <span>總支出</span>
-      <strong>${safeEscape(base)} ${allTotal.toFixed(2)}</strong>
-      <small>共 ${activeExpenses.length} 筆支出，不包括 Deleted Items</small>
+      <strong>${originalTotalsHtml || `${safeEscape(base)} ${allTotal.toFixed(2)}`}</strong>
+      <small>共 ${activeExpenses.length} 筆支出，不包括 Deleted Items；基準換算 ${safeEscape(base)} ${allTotal.toFixed(2)}</small>
     </div>
 
     <div class="analytics-pie-card">
@@ -3304,6 +3368,7 @@ document.querySelectorAll(".expenses-module .modal").forEach(modal => {
 });
 
 
+updateCurrencySelectOptions();
 setToday();
 form.addEventListener("submit", saveExpense);
 cancelEditBtn.addEventListener("click", () => { resetExpenseForm(); closeExpenseFormModal(); });
