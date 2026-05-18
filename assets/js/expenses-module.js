@@ -170,7 +170,7 @@ function mountExpensesHtml(root) {
   <div id="expenseFormModal" class="modal hidden">
     <div class="modal-card expense-form-modal-card">
       <div class="modal-heading-row">
-        <h3 id="expenseFormModalTitle">完整新增支出</h3>
+        <h3 id="expenseFormModalTitle"><span class="modal-title-icon">➕</span><span>完整新增支出</span></h3>
       </div>
       <form id="expenseForm" class="modal-form modal-form-with-footer">
         <div class="modal-body-scroll">
@@ -255,7 +255,7 @@ function mountExpensesHtml(root) {
   <div id="ocrEntryModal" class="modal hidden">
     <div class="modal-card">
       <div class="modal-heading-row">
-        <h3>OCR 入單</h3>
+        <h3><span class="modal-title-icon">📷</span><span>OCR 入單</span></h3>
       </div>
       <div class="modal-body-scroll">
         <label>
@@ -274,7 +274,7 @@ function mountExpensesHtml(root) {
   <div id="expenseDetailModal" class="modal hidden">
     <div class="modal-card expense-detail-modal-card">
       <div class="modal-heading-row">
-        <h3>支出詳情</h3>
+        <h3><span class="modal-title-icon">🧾</span><span>支出詳情</span></h3>
       </div>
       <div id="expenseDetailContent" class="modal-body-scroll"></div>
       <div id="expenseDetailFooterActions" class="modal-footer-actions">
@@ -286,7 +286,7 @@ function mountExpensesHtml(root) {
   <div id="settlementActionModal" class="modal hidden">
     <div class="modal-card settlement-action-modal-card">
       <div class="modal-heading-row">
-        <h3>找數</h3>
+        <h3><span class="modal-title-icon">💸</span><span>找數</span></h3>
       </div>
       <div id="settlementActionContent" class="modal-body-scroll"></div>
       <div class="modal-footer-actions">
@@ -297,7 +297,7 @@ function mountExpensesHtml(root) {
 
   <div id="accountSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>帳戶與登入</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">👤</span><span>帳戶與登入</span></h3></div>
       <div class="modal-body-scroll">
         <div class="auth-row">
           <button type="button" id="googleSignInBtn" class="google-login-btn"><span class="google-g-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/></svg></span><span>Google 登入</span></button>
@@ -311,7 +311,7 @@ function mountExpensesHtml(root) {
 
   <div id="backupSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>資料備份</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">📦</span><span>資料備份</span></h3></div>
       <div class="modal-body-scroll">
         <p class="hint">JSON Backup 係完整系統備份。Excel 主要用於對數及報銷。</p>
         <div class="backup-actions">
@@ -325,7 +325,7 @@ function mountExpensesHtml(root) {
 
   <div id="ratesSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>匯率設定</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">💱</span><span>匯率設定</span></h3></div>
       <div class="modal-body-scroll">
       <label>
         結算基準幣別
@@ -351,7 +351,7 @@ function mountExpensesHtml(root) {
 
   <div id="membersSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>成員管理</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">👥</span><span>成員管理</span></h3></div>
       <div class="modal-body-scroll">
       <div class="member-controls">
         <div id="memberList" class="member-list"></div>
@@ -367,7 +367,7 @@ function mountExpensesHtml(root) {
 
   <div id="accessSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>權限管理</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">🔐</span><span>權限管理</span></h3></div>
       <div class="modal-body-scroll">
       <section class="hidden" id="adminPanel">
         <p class="hint">以下 email 登入後可自動加入此 trip。Admin 可管理成員、匯率、權限及鎖定旅程。</p>
@@ -393,7 +393,7 @@ function mountExpensesHtml(root) {
 
   <div id="lockSettingsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>鎖定旅程</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">🔒</span><span>鎖定旅程</span></h3></div>
       <div class="modal-body-scroll">
       <section class="hidden" id="tripControlPanel">
         <p class="hint">鎖定後不可再新增、修改或刪除支出，亦不可修改成員及匯率；仍可記錄找數及匯出 Excel。</p>
@@ -410,7 +410,7 @@ function mountExpensesHtml(root) {
 
   <div id="deletedItemsModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>已刪除項目</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">🗑️</span><span>已刪除項目</span></h3></div>
       <div class="modal-body-scroll">
         <p class="hint">已刪除支出會保留作 audit trail，不會參與結算。</p>
         <div id="deletedExpenseList"></div>
@@ -421,7 +421,7 @@ function mountExpensesHtml(root) {
 
   <div id="activityLogModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>操作記錄</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">🧾</span><span>操作記錄</span></h3></div>
       <div class="modal-body-scroll">
         <p class="hint">記錄新增、修改、刪除、找數、鎖定等主要動作。</p>
         <div id="activityLogList"></div>
@@ -432,16 +432,16 @@ function mountExpensesHtml(root) {
 
   <div id="aboutAppModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>關於本 App</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">ℹ️</span><span>關於本 App</span></h3></div>
       <div class="modal-body-scroll">
         <div class="about-app-box">
           <div class="about-app-title">關嘉露西生日之旅</div>
-          <div class="about-app-row"><span>App version</span><strong>${window.APP_VERSION || "6.7.1"}</strong></div>
-          <div class="about-app-row"><span>Expenses module</span><strong>${window.EXPENSES_MODULE_VERSION || window.APP_VERSION || "6.7.1"}</strong></div>
+          <div class="about-app-row"><span>App version</span><strong>${window.APP_VERSION || "6.7.2"}</strong></div>
+          <div class="about-app-row"><span>Expenses module</span><strong>${window.EXPENSES_MODULE_VERSION || window.APP_VERSION || "6.7.2"}</strong></div>
           <div class="about-app-row"><span>Trip ID</span><strong id="aboutTripIdText">載入中</strong></div>
           <div class="about-app-row"><span>Mode</span><strong>PWA / GitHub Pages</strong></div>
         </div>
-        <p class="hint">如手機仍顯示舊版，請重新整理或以網址參數 ?v=${window.APP_VERSION || "671"} 開啟一次。</p>
+        <p class="hint">如手機仍顯示舊版，請重新整理或以網址參數 ?v=${window.APP_VERSION || "672"} 開啟一次。</p>
       </div>
       <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="aboutAppModal">關閉</button></div>
     </div>
@@ -449,7 +449,7 @@ function mountExpensesHtml(root) {
 
   <div id="ocrPreviewModal" class="modal hidden">
     <div class="modal-card">
-      <div class="modal-heading-row"><h3>確認收據資料</h3></div>
+      <div class="modal-heading-row"><h3><span class="modal-title-icon">✅</span><span>確認收據資料</span></h3></div>
       <div class="modal-body-scroll">
         <label>商戶 <input type="text" id="aiMerchantInput" /></label>
         <label>日期 <input type="date" id="aiDateInput" /></label>
