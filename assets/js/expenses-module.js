@@ -436,12 +436,12 @@ function mountExpensesHtml(root) {
       <div class="modal-body-scroll">
         <div class="about-app-box">
           <div class="about-app-title">關嘉露西生日之旅</div>
-          <div class="about-app-row"><span>App version</span><strong>6.4.4</strong></div>
-          <div class="about-app-row"><span>Expenses module</span><strong>6.4.4</strong></div>
+          <div class="about-app-row"><span>App version</span><strong>${window.APP_VERSION || "6.7.1"}</strong></div>
+          <div class="about-app-row"><span>Expenses module</span><strong>${window.EXPENSES_MODULE_VERSION || window.APP_VERSION || "6.7.1"}</strong></div>
           <div class="about-app-row"><span>Trip ID</span><strong id="aboutTripIdText">載入中</strong></div>
           <div class="about-app-row"><span>Mode</span><strong>PWA / GitHub Pages</strong></div>
         </div>
-        <p class="hint">如手機仍顯示舊版，請重新整理或以網址參數 ?v=643 開啟一次。</p>
+        <p class="hint">如手機仍顯示舊版，請重新整理或以網址參數 ?v=${window.APP_VERSION || "671"} 開啟一次。</p>
       </div>
       <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="aboutAppModal">關閉</button></div>
     </div>
