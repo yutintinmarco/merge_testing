@@ -162,7 +162,7 @@
           "detail": "Team Ian 乘搭 CX566 於 23/5 01:55 由香港出發，06:40 抵達關西國際機場。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport",
           "gallery": [
-            "assets/gallery/kix/01.jpg"
+            "assets/gallery/kix.jpg"
           ]
         },
         {
@@ -175,7 +175,7 @@
           "detail": "抵達後前往京都市區，交通可按實際時間選擇 Haruka 特急或巴士。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kyoto+Station",
           "gallery": [
-            "assets/gallery/kyoto_station/01.jpg"
+            "assets/gallery/kyoto_station.jpg"
           ]
         },
         {
@@ -188,7 +188,7 @@
           "detail": "錦市場有各式小食、豆腐、醃菜及串燒，適合作為第一日輕鬆行程。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market+Kyoto",
           "gallery": [
-            "assets/gallery/nishiki_market/01.jpg"
+            "assets/gallery/nishiki_market.jpg"
           ]
         },
         {
@@ -211,7 +211,7 @@
           "detail": "Team Edan 乘搭 CX506 於 23/5 10:25 由香港起飛，15:10 抵達關西機場。抵達後按當日安排與大隊合流。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport",
           "gallery": [
-            "assets/gallery/kix/01.jpg"
+            "assets/gallery/kix.jpg"
           ]
         },
         {
@@ -224,7 +224,7 @@
           "detail": "抵達後前往京都市區，交通可按實際時間選擇 Haruka 特急或巴士。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kyoto+Station",
           "gallery": [
-            "assets/gallery/kyoto_station/01.jpg"
+            "assets/gallery/kyoto_station.jpg"
           ]
         },
         {
@@ -277,7 +277,7 @@
           "detail": "平等院是宇治代表景點，建議早上先到。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Byodoin+Temple+Uji",
           "gallery": [
-            "assets/gallery/byodoin/01.jpg"
+            "assets/gallery/byodoin.jpg"
           ]
         },
         {
@@ -290,7 +290,7 @@
           "detail": "中村藤吉平等院店，適合食抹茶甜品或稍作休息。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nakamura+Tokichi+Byodoin+Uji",
           "gallery": [
-            "assets/gallery/byodoin/01.jpg"
+            "assets/gallery/byodoin.jpg"
           ]
         },
         {
@@ -334,7 +334,7 @@
           "detail": "伏見稻荷大社，視乎體力可只行山腳一段鳥居。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Fushimi+Inari+Taisha",
           "gallery": [
-            "assets/gallery/fushimi_inari/01.jpg"
+            "assets/gallery/fushimi_inari.jpg"
           ]
         },
         {
@@ -347,7 +347,7 @@
           "detail": "由伏見稻荷一帶返回京都市區。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kyoto+Station",
           "gallery": [
-            "assets/gallery/kyoto_station/01.jpg"
+            "assets/gallery/kyoto_station.jpg"
           ]
         },
         {
@@ -411,7 +411,7 @@
           "detail": "銀閣寺及周邊散步，視乎時間可順行哲學之道一小段。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Ginkakuji+Kyoto",
           "gallery": [
-            "assets/gallery/ginkakuji/01.jpg"
+            "assets/gallery/ginkakuji.jpg"
           ]
         },
         {
@@ -464,7 +464,7 @@
           "detail": "金閣寺是京都經典景點，建議早上前往。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kinkakuji+Kyoto",
           "gallery": [
-            "assets/gallery/kinkakuji/01.jpg"
+            "assets/gallery/kinkakuji.jpg"
           ]
         },
         {
@@ -477,7 +477,7 @@
           "detail": "由京都移動至大阪，按實際位置選擇 JR 或其他交通。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Osaka+Station",
           "gallery": [
-            "assets/gallery/dotonbori/01.jpg"
+            "assets/gallery/dotonbori.jpg"
           ]
         },
         {
@@ -490,7 +490,7 @@
           "detail": "下午安排心齋橋、難波一帶自由行，購物及打卡。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi+Namba+Osaka",
           "gallery": [
-            "assets/gallery/dotonbori/01.jpg"
+            "assets/gallery/dotonbori.jpg"
           ]
         },
         {
@@ -503,7 +503,7 @@
           "detail": "下午安排心齋橋、難波一帶自由行，購物及打卡。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi+Namba+Osaka",
           "gallery": [
-            "assets/gallery/dotonbori/01.jpg"
+            "assets/gallery/dotonbori.jpg"
           ]
         },
         {
@@ -516,6 +516,10 @@
           "detail": "大阪晚餐，餐廳可再決定。",
           "maps": ""
         }
+      ],
+      "cities": [
+        "kyoto",
+        "osaka"
       ]
     },
     {
@@ -546,7 +550,7 @@
           "detail": "神戶動物王國位於 Port Island，適合安排 2.5 至 3 小時。出發前建議再確認當日營業時間及休園日。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom",
           "gallery": [
-            "assets/gallery/kobe_animal_kingdom/01.jpg"
+            "assets/gallery/kobe_animal_kingdom.jpg"
           ]
         },
         {
@@ -559,7 +563,7 @@
           "detail": "由神戶動物王國一帶返回三宮 / 元町，可按當日體力安排午餐或輕食。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Sannomiya+Motomachi+Kobe",
           "gallery": [
-            "assets/gallery/nankinmachi/01.jpg"
+            "assets/gallery/nankinmachi.jpg"
           ]
         },
         {
@@ -572,7 +576,7 @@
           "detail": "南京町是神戶代表性中華街，適合小食、散步及拍照；之後可步行或短程交通前往 Harborland。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nankinmachi+Kobe",
           "gallery": [
-            "assets/gallery/nankinmachi/01.jpg"
+            "assets/gallery/nankinmachi.jpg"
           ]
         },
         {
@@ -585,8 +589,8 @@
           "detail": "神戶 Harborland / umie / MOSAIC 適合購物、咖啡、晚餐及海邊散步，傍晚至夜晚景色較好。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Harborland+umie+MOSAIC",
           "gallery": [
-            "assets/gallery/kobe_harborland/01.jpg",
-            "assets/gallery/kobe_port_tower/01.jpg"
+            "assets/gallery/kobe_harborland.jpg",
+            "assets/gallery/kobe_port_tower.jpg"
           ]
         },
         {
@@ -599,8 +603,8 @@
           "detail": "可於 MOSAIC 或 Harborland 一帶晚餐，餐廳選擇較多，亦方便晚餐後到海邊睇夜景。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Harborland+MOSAIC+restaurants",
           "gallery": [
-            "assets/gallery/kobe_harborland/01.jpg",
-            "assets/gallery/kobe_port_tower/01.jpg"
+            "assets/gallery/kobe_harborland.jpg",
+            "assets/gallery/kobe_port_tower.jpg"
           ]
         },
         {
@@ -613,8 +617,8 @@
           "detail": "Meriken Park 是神戶港代表地標之一，可欣賞 Kobe Port Tower、海事博物館及港灣夜景。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Meriken+Park+Kobe+Port+Tower",
           "gallery": [
-            "assets/gallery/kobe_port_tower/01.jpg",
-            "assets/gallery/kobe_harborland/01.jpg"
+            "assets/gallery/kobe_port_tower.jpg",
+            "assets/gallery/kobe_harborland.jpg"
           ]
         },
         {
@@ -647,7 +651,7 @@
           "detail": "上午安排天王寺 Q’s Mall，視乎航班時間作最後購物。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Abeno+Q's+Mall+Tennoji+Osaka",
           "gallery": [
-            "assets/gallery/abeno_qs_mall/01.jpg"
+            "assets/gallery/abeno_qs_mall.jpg"
           ]
         },
         {
@@ -660,7 +664,7 @@
           "detail": "下午前往關西機場，建議預留充足交通及辦理登機時間。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport",
           "gallery": [
-            "assets/gallery/kix/01.jpg"
+            "assets/gallery/kix.jpg"
           ]
         },
         {
@@ -699,7 +703,7 @@
         "opening": "09:00-18:00",
         "maps": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market+Kyoto",
         "gallery": [
-          "assets/gallery/nishiki_market/01.jpg"
+          "assets/gallery/nishiki_market.jpg"
         ]
       },
       {
@@ -711,7 +715,7 @@
         "opening": "",
         "maps": "https://www.google.com/maps/search/?api=1&query=takoyaki+Dotonbori+Osaka",
         "gallery": [
-          "assets/gallery/dotonbori/01.jpg"
+          "assets/gallery/dotonbori.jpg"
         ]
       },
       {
@@ -723,7 +727,7 @@
         "opening": "",
         "maps": "https://www.google.com/maps/search/?api=1&query=551+Horai+Osaka",
         "gallery": [
-          "assets/gallery/dotonbori/01.jpg"
+          "assets/gallery/dotonbori.jpg"
         ]
       },
       {
