@@ -1,8 +1,0 @@
-Gallery source list used in trip.json
-
-Note: Due to packaging limits, gallery items in trip.json currently use remote image URLs. If you want fully local galleries later, download images into the matching folders below and replace URLs with local paths.
-
-Nishiki Market: https://asset.japan.travel/image/upload/v1648006915/kyoto/H_00480_001.jpg
-Ginkakuji: https://res-2.cloudinary.com/jnto/image/upload/w_2064%2Ch_1300%2Cc_fill%2Cf_auto%2Cfl_lossy%2Cq_auto/v1514372745/kyoto/Kyoto1078_1
-Kinkakuji: https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg/800px-Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg
-Kobe Harborland / Meriken Park: https://res-1.cloudinary.com/jnto/image/upload/w_750%2Ch_503%2Cc_fill%2Cf_auto%2Cfl_lossy%2Cq_auto/v1508227939/hyogo/Hyogo751_9.jpg
