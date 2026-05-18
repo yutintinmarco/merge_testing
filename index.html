@@ -118,6 +118,7 @@
 .city-tab { padding: 4px 12px; border-radius: 999px; font-size: calc(11px * var(--font-scale)); border: 1px solid #dadada; background: #f8f8fa; color: #555; }
 .city-tab.active-kyoto { background: #d4ecd4; border-color: #5a9e5a; color: #2a5a2a; font-weight: 600; }
 .city-tab.active-osaka { background: #ffddd4; border-color: #e06040; color: #6a2010; font-weight: 600; }
+.city-tab.active-kobe { background: #e5ddff; border-color: #7b61d1; color: #3e2a84; font-weight: 600; }
 
 /* Day tabs */
 .day-tabs { display: flex; gap: 8px; margin: 16px 0 10px 0; overflow-x: auto; }
@@ -125,6 +126,7 @@
 .day-tab.active { background: #ffe58f; border-color: #f5c542; color: #111; font-weight: 600; }
 .day-tab.city-kyoto.active { background: #d4ecd4; border-color: #5a9e5a; color: #2a5a2a; }
 .day-tab.city-osaka.active { background: #ffddd4; border-color: #e06040; color: #6a2010; }
+.day-tab.city-kobe.active { background: #e5ddff; border-color: #7b61d1; color: #3e2a84; }
 .day-tab.city-both.active { background: linear-gradient(to right, #d4ecd4, #fce8d4); border-color: transparent; color: #3a3a2a; font-weight: 600; position: relative; }
 .day-tab.city-both.active::before { content: ""; position: absolute; inset: -1px; border-radius: 999px; padding: 1px; background: linear-gradient(to right, #5a9e5a, #e06040); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
 .day-content { display: none; }
@@ -134,6 +136,7 @@
 .city-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; font-size: calc(10px * var(--font-scale)); border-radius: 999px; font-weight: 600; vertical-align: middle; }
 .city-badge-kyoto { background: #d4ecd4; color: #2a5a2a; border: 1px solid #5a9e5a; }
 .city-badge-osaka { background: #ffddd4; color: #6a2010; border: 1px solid #e06040; }
+.city-badge-kobe { background: #e5ddff; color: #3e2a84; border: 1px solid #7b61d1; }
 
 /* Timeline */
 .timeline-item { display: flex; gap: 10px; padding: 10px 8px; border-radius: 12px; background: rgba(255,255,255,0.20); margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.52); backdrop-filter: blur(24px) saturate(1.08); -webkit-backdrop-filter: blur(24px) saturate(1.08); box-shadow: 0 6px 16px rgba(15,23,42,0.08); }
@@ -302,16 +305,19 @@ html.theme-light .theme-btn { color: #111; }
   html:not(.theme-light):not(.theme-dark) .city-tab { background: rgba(36,36,44,0.72); border-color: rgba(255,255,255,0.12); color: rgba(210,210,222,0.80); }
   html:not(.theme-light):not(.theme-dark) .city-tab.active-kyoto { background: rgba(42,90,42,0.70); border-color: #5a9e5a; color: #a8dba8; }
   html:not(.theme-light):not(.theme-dark) .city-tab.active-osaka { background: rgba(100,40,20,0.70); border-color: #e06040; color: #ffb09a; }
+  html:not(.theme-light):not(.theme-dark) .city-tab.active-kobe { background: rgba(74,58,130,0.70); border-color: #9b8af0; color: #d8d0ff; }
   html:not(.theme-light):not(.theme-dark) .day-tab { background: rgba(36,36,44,0.70); border-color: rgba(255,255,255,0.12); color: rgba(200,200,215,0.78); }
   html:not(.theme-light):not(.theme-dark) .day-tab.active { background: rgba(120,96,10,0.75); border-color: #c9a030; color: #ffe9a0; }
   html:not(.theme-light):not(.theme-dark) .day-tab.city-kyoto.active { background: rgba(38,80,38,0.75); border-color: #5a9e5a; color: #a8dba8; }
   html:not(.theme-light):not(.theme-dark) .day-tab.city-osaka.active { background: rgba(100,40,20,0.75); border-color: #e06040; color: #ffb09a; }
+  html:not(.theme-light):not(.theme-dark) .day-tab.city-kobe.active { background: rgba(74,58,130,0.75); border-color: #9b8af0; color: #d8d0ff; }
   html:not(.theme-light):not(.theme-dark) .day-tab.city-both.active { background: linear-gradient(to right, rgba(38,80,38,0.80), rgba(110,46,20,0.80)); border-color: transparent; color: #e8e8e8; position: relative; }
   html:not(.theme-light):not(.theme-dark) .day-tab.city-both.active::before { content: ""; position: absolute; inset: -1px; border-radius: 999px; padding: 1px; background: linear-gradient(to right, #5a9e5a, #e06040); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
   html:not(.theme-light):not(.theme-dark) .section-title { color: #f0f0f2; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
   html:not(.theme-light):not(.theme-dark) .section-sub { color: rgba(200,200,215,0.78); text-shadow: none; }
   html:not(.theme-light):not(.theme-dark) .city-badge-kyoto { background: rgba(42,90,42,0.65); color: #a8dba8; border-color: #5a9e5a; }
   html:not(.theme-light):not(.theme-dark) .city-badge-osaka { background: rgba(100,40,20,0.65); color: #ffb09a; border-color: #e06040; }
+  html:not(.theme-light):not(.theme-dark) .city-badge-kobe { background: rgba(74,58,130,0.65); color: #d8d0ff; border-color: #9b8af0; }
   html:not(.theme-light):not(.theme-dark) .timeline-item { background: rgba(24,24,32,0.58); border-color: rgba(255,255,255,0.09); box-shadow: 0 4px 14px rgba(0,0,0,0.30); }
   html:not(.theme-light):not(.theme-dark) .timeline-item.who-team1 { border-left: 3px solid var(--team1-color); background: rgba(74,144,217,0.10); }
   html:not(.theme-light):not(.theme-dark) .timeline-item.who-team2 { border-left: 3px solid var(--team2-color); background: rgba(232,168,56,0.10); }
@@ -383,16 +389,19 @@ html.theme-dark .weather-temp { color: rgba(210,210,222,0.85); }
 html.theme-dark .city-tab { background: rgba(36,36,44,0.72); border-color: rgba(255,255,255,0.12); color: rgba(210,210,222,0.80); }
 html.theme-dark .city-tab.active-kyoto { background: rgba(42,90,42,0.70); border-color: #5a9e5a; color: #a8dba8; }
 html.theme-dark .city-tab.active-osaka { background: rgba(100,40,20,0.70); border-color: #e06040; color: #ffb09a; }
+html.theme-dark .city-tab.active-kobe { background: rgba(74,58,130,0.70); border-color: #9b8af0; color: #d8d0ff; }
 html.theme-dark .day-tab { background: rgba(36,36,44,0.70); border-color: rgba(255,255,255,0.12); color: rgba(200,200,215,0.78); }
 html.theme-dark .day-tab.active { background: rgba(120,96,10,0.75); border-color: #c9a030; color: #ffe9a0; }
 html.theme-dark .day-tab.city-kyoto.active { background: rgba(38,80,38,0.75); border-color: #5a9e5a; color: #a8dba8; }
 html.theme-dark .day-tab.city-osaka.active { background: rgba(100,40,20,0.75); border-color: #e06040; color: #ffb09a; }
+html.theme-dark .day-tab.city-kobe.active { background: rgba(74,58,130,0.75); border-color: #9b8af0; color: #d8d0ff; }
 html.theme-dark .day-tab.city-both.active { background: linear-gradient(to right, rgba(38,80,38,0.80), rgba(110,46,20,0.80)); border-color: transparent; color: #e8e8e8; position: relative; }
 html.theme-dark .day-tab.city-both.active::before { content: ""; position: absolute; inset: -1px; border-radius: 999px; padding: 1px; background: linear-gradient(to right, #5a9e5a, #e06040); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
 html.theme-dark .section-title { color: #f0f0f2; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
 html.theme-dark .section-sub { color: rgba(200,200,215,0.78); text-shadow: none; }
 html.theme-dark .city-badge-kyoto { background: rgba(42,90,42,0.65); color: #a8dba8; border-color: #5a9e5a; }
 html.theme-dark .city-badge-osaka { background: rgba(100,40,20,0.65); color: #ffb09a; border-color: #e06040; }
+html.theme-dark .city-badge-kobe { background: rgba(74,58,130,0.65); color: #d8d0ff; border-color: #9b8af0; }
 html.theme-dark .timeline-item { background: rgba(24,24,32,0.58); border-color: rgba(255,255,255,0.09); box-shadow: 0 4px 14px rgba(0,0,0,0.30); }
 html.theme-dark .timeline-item.who-team1 { border-left: 3px solid var(--team1-color); background: rgba(74,144,217,0.10); }
 html.theme-dark .timeline-item.who-team2 { border-left: 3px solid var(--team2-color); background: rgba(232,168,56,0.10); }
