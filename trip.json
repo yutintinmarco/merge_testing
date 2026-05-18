@@ -34,6 +34,14 @@
         "timezone": "Asia/Tokyo",
         "startIso": "2026-05-26",
         "endIso": "2026-05-28"
+      },
+      "kobe": {
+        "label": "神戶",
+        "latitude": 34.6901,
+        "longitude": 135.1955,
+        "timezone": "Asia/Tokyo",
+        "startIso": "2026-05-27",
+        "endIso": "2026-05-27"
       }
     },
     "flights": [
@@ -138,7 +146,7 @@
   "days": [
     {
       "label": "Day 1",
-      "date": "5月23日",
+      "date": "5月23日（星期六）",
       "title": "抵達京都",
       "subtitle": "關西機場  錦市場  Pokémon Center  AEON Mall",
       "isoDate": "2026-05-23",
@@ -172,7 +180,10 @@
           "who": "team1",
           "popup": true,
           "detail": "錦市場有各式小食、豆腐、醃菜及串燒，適合作為第一日輕鬆行程。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market+Kyoto"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market+Kyoto",
+          "gallery": [
+            "https://asset.japan.travel/image/upload/v1648006915/kyoto/H_00480_001.jpg"
+          ]
         },
         {
           "time": "12:00",
@@ -228,7 +239,7 @@
     },
     {
       "label": "Day 2",
-      "date": "5月24日",
+      "date": "5月24日（星期日）",
       "title": "宇治 / Nintendo Museum",
       "subtitle": "平等院  中村藤吉  Nintendo Museum  伏見稻荷",
       "isoDate": "2026-05-24",
@@ -329,7 +340,7 @@
     },
     {
       "label": "Day 3",
-      "date": "5月25日",
+      "date": "5月25日（星期一）",
       "title": "京都購物 / 銀閣寺",
       "subtitle": "大丸  Hands  商店街  Kobe Beef Mouriya  銀閣寺",
       "isoDate": "2026-05-25",
@@ -374,7 +385,10 @@
           "who": "all",
           "popup": true,
           "detail": "銀閣寺及周邊散步，視乎時間可順行哲學之道一小段。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Ginkakuji+Kyoto"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Ginkakuji+Kyoto",
+          "gallery": [
+            "https://res-2.cloudinary.com/jnto/image/upload/w_2064%2Ch_1300%2Cc_fill%2Cf_auto%2Cfl_lossy%2Cq_auto/v1514372745/kyoto/Kyoto1078_1"
+          ]
         },
         {
           "time": "18:00",
@@ -400,7 +414,7 @@
     },
     {
       "label": "Day 4",
-      "date": "5月26日",
+      "date": "5月26日（星期二）",
       "title": "京都 → 大阪",
       "subtitle": "早餐  金閣寺  移動大阪  心齋橋 / 難波",
       "isoDate": "2026-05-26",
@@ -424,7 +438,10 @@
           "who": "all",
           "popup": true,
           "detail": "金閣寺是京都經典景點，建議早上前往。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Kinkakuji+Kyoto"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kinkakuji+Kyoto",
+          "gallery": [
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg/800px-Golden_Pavilion_Kinkaku-ji_water_mirror_2024.jpg"
+          ]
         },
         {
           "time": "13:00",
@@ -470,61 +487,64 @@
     },
     {
       "label": "Day 5",
-      "date": "5月27日",
+      "date": "5月27日（星期三）",
       "title": "神戶一日遊",
       "subtitle": "神戶動物王國  南京町 / 元町  Harborland / MOSAIC  夜景",
       "isoDate": "2026-05-27",
-      "city": "osaka",
+      "city": "kobe",
       "items": [
         {
           "time": "09:30",
           "icon": "🚆",
           "title": "出發前往神戶",
-          "note": "由大阪出發  先去神戶動物王國",
+          "note": "大阪出發  前往神戶 Port Island",
           "who": "all",
           "popup": true,
-          "detail": "由大阪出發前往神戶動物王國。建議先去動物王國，因為園區一般較早關門，Harborland / MOSAIC 則較適合傍晚及晚上。",
+          "detail": "由大阪出發前往神戶。建議先前往神戶動物王國，因為動物王國收得較早，之後再到神戶市區及海邊夜景收尾。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom"
         },
         {
           "time": "10:45",
-          "icon": "🐧",
+          "icon": "🐾",
           "title": "神戶動物王國",
-          "note": "Port Island  室內外動物園  預留約 2.5 至 3 小時",
+          "note": "室內外動物園  Port Island",
           "who": "all",
           "popup": true,
-          "detail": "神戶動物王國位於 Port Island，適合睇動物、互動體驗及影相。官方日曆顯示 5月27日開放時間為 10:00 至 17:00，建議中午前到達，預留約 2.5 至 3 小時。",
+          "detail": "神戶動物王國位於 Port Island，適合安排 2.5 至 3 小時。出發前建議再確認當日營業時間及休園日。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom"
         },
         {
           "time": "13:45",
           "icon": "🚆",
           "title": "前往三宮 / 元町",
-          "note": "午餐及神戶市區散策",
+          "note": "由 Port Island 回神戶市區",
           "who": "all",
           "popup": true,
-          "detail": "由神戶動物王國返回三宮或元町一帶，安排午餐、咖啡或短暫購物。此段作為動物王國與 Harborland 之間的緩衝，時間可按當日體力調整。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Sannomiya+Kobe"
+          "detail": "由神戶動物王國一帶返回三宮 / 元町，可按當日體力安排午餐或輕食。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Sannomiya+Motomachi+Kobe"
         },
         {
           "time": "15:00",
           "icon": "🥟",
           "title": "南京町 / 元町散策",
-          "note": "神戶中華街  小食  短行程",
+          "note": "神戶中華街  小食  散步",
           "who": "all",
           "popup": true,
-          "detail": "南京町及元町一帶適合輕鬆散步、小食及補充咖啡時間。若當日較累，可縮短此段，直接前往 Harborland。",
+          "detail": "南京町是神戶代表性中華街，適合小食、散步及拍照；之後可步行或短程交通前往 Harborland。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nankinmachi+Kobe"
         },
         {
           "time": "16:30",
           "icon": "🛍️",
           "title": "神戶臨海樂園 umie / MOSAIC",
-          "note": "購物  海邊散步  晚餐前休息",
+          "note": "購物  海邊  晚餐前休息",
           "who": "all",
           "popup": true,
-          "detail": "神戶 Harborland umie / MOSAIC 適合購物、海邊散步及晚餐。官方資料顯示 umie 商店一般 10:00 至 20:00，MOSAIC 餐廳一般 11:00 至 22:00，放在傍晚最順路。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Harborland+umie+MOSAIC"
+          "detail": "神戶 Harborland / umie / MOSAIC 適合購物、咖啡、晚餐及海邊散步，傍晚至夜晚景色較好。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Harborland+umie+MOSAIC",
+          "gallery": [
+            "https://res-1.cloudinary.com/jnto/image/upload/w_750%2Ch_503%2Cc_fill%2Cf_auto%2Cfl_lossy%2Cq_auto/v1508227939/hyogo/Hyogo751_9.jpg"
+          ]
         },
         {
           "time": "18:30",
@@ -533,18 +553,21 @@
           "note": "MOSAIC / Harborland 晚餐",
           "who": "all",
           "popup": true,
-          "detail": "晚餐建議在 MOSAIC 或 Harborland 一帶解決，之後可順路到海邊睇夜景。",
+          "detail": "可於 MOSAIC 或 Harborland 一帶晚餐，餐廳選擇較多，亦方便晚餐後到海邊睇夜景。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Harborland+MOSAIC+restaurants"
         },
         {
           "time": "20:00",
           "icon": "🌃",
           "title": "Meriken Park / Kobe Port Tower 夜景",
-          "note": "神戶港夜景  輕鬆收尾",
+          "note": "神戶港夜景  散步打卡",
           "who": "all",
           "popup": true,
-          "detail": "晚餐後可在 Meriken Park、Port Tower 及 Harborland 海邊一帶散步影夜景。呢段行程彈性高，天氣好就行耐少少，累就早返大阪。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Meriken+Park+Kobe+Port+Tower"
+          "detail": "Meriken Park 是神戶港代表地標之一，可欣賞 Kobe Port Tower、海事博物館及港灣夜景。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Meriken+Park+Kobe+Port+Tower",
+          "gallery": [
+            "https://res-1.cloudinary.com/jnto/image/upload/w_750%2Ch_503%2Cc_fill%2Cf_auto%2Cfl_lossy%2Cq_auto/v1508227939/hyogo/Hyogo751_9.jpg"
+          ]
         },
         {
           "time": "21:00",
@@ -553,14 +576,14 @@
           "note": "由神戶返回大阪",
           "who": "all",
           "popup": true,
-          "detail": "由神戶返回大阪。實際回程時間可按晚餐及夜景停留時間調整。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Station+to+Osaka"
+          "detail": "由神戶返回大阪。時間可按晚餐及夜景實際情況調整。",
+          "maps": "https://www.google.com/maps/search/?api=1&query=Osaka+Station"
         }
       ]
     },
     {
       "label": "Day 6",
-      "date": "5月28日",
+      "date": "5月28日（星期四）",
       "title": "回程",
       "subtitle": "天王寺 Q’s Mall  前往機場  返港",
       "isoDate": "2026-05-28",
@@ -620,7 +643,10 @@
         "must": "各式串燒、豆腐",
         "note": "京都嘅廚房，各式醃菜、豆腐、串燒任你揀",
         "opening": "09:00-18:00",
-        "maps": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market+Kyoto"
+        "maps": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market+Kyoto",
+        "gallery": [
+          "https://asset.japan.travel/image/upload/v1648006915/kyoto/H_00480_001.jpg"
+        ]
       },
       {
         "title": "章魚燒（道頓堀）",
