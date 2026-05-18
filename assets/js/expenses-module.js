@@ -436,8 +436,8 @@ function mountExpensesHtml(root) {
       <div class="modal-body-scroll">
         <div class="about-app-box">
           <div class="about-app-title">關嘉露西生日之旅</div>
-          <div class="about-app-row"><span>App version</span><strong>${window.APP_VERSION || "6.7.2"}</strong></div>
-          <div class="about-app-row"><span>Expenses module</span><strong>${window.EXPENSES_MODULE_VERSION || window.APP_VERSION || "6.7.2"}</strong></div>
+          <div class="about-app-row"><span>App version</span><strong>${window.APP_VERSION || "6.7.3"}</strong></div>
+          <div class="about-app-row"><span>Expenses module</span><strong>${window.EXPENSES_MODULE_VERSION || window.APP_VERSION || "6.7.3"}</strong></div>
           <div class="about-app-row"><span>Trip ID</span><strong id="aboutTripIdText">載入中</strong></div>
           <div class="about-app-row"><span>Mode</span><strong>PWA / GitHub Pages</strong></div>
         </div>
