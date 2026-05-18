@@ -3850,7 +3850,7 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .about-app-row span {
 }
 
 
-/* v6.7.2 Modal title polish: match app icon language and improve hierarchy */
+/* v6.7.3 Modal title polish: match app icon language and improve hierarchy */
 .expenses-module .modal-heading-row {
   margin-bottom: 12px;
   padding-bottom: 6px;
