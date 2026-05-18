@@ -156,6 +156,7 @@ function mountExpensesHtml(root) {
           <button type="button" class="settings-menu-btn" data-settings-open="lock" data-admin-only="true"><span>🔒</span><strong>鎖定旅程</strong><small>Freeze expenses</small></button>
           <button type="button" class="settings-menu-btn" data-settings-open="deleted"><span>🗑️</span><strong>已刪除項目</strong><small>查看及還原 deleted items</small></button>
           <button type="button" class="settings-menu-btn" data-settings-open="logs"><span>🧾</span><strong>操作記錄</strong><small>查看 activity log</small></button>
+          <button type="button" class="settings-menu-btn" data-settings-open="about"><span>ℹ️</span><strong>關於本 App</strong><small>版本及系統資訊</small></button>
         </div>
       </section>
     </section>
@@ -429,6 +430,23 @@ function mountExpensesHtml(root) {
     </div>
   </div>
 
+  <div id="aboutAppModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-heading-row"><h3>關於本 App</h3></div>
+      <div class="modal-body-scroll">
+        <div class="about-app-box">
+          <div class="about-app-title">關嘉露西生日之旅</div>
+          <div class="about-app-row"><span>App version</span><strong>6.4.3</strong></div>
+          <div class="about-app-row"><span>Expenses module</span><strong>6.4.3</strong></div>
+          <div class="about-app-row"><span>Trip ID</span><strong id="aboutTripIdText">載入中</strong></div>
+          <div class="about-app-row"><span>Mode</span><strong>PWA / GitHub Pages</strong></div>
+        </div>
+        <p class="hint">如手機仍顯示舊版，請重新整理或以網址參數 ?v=643 開啟一次。</p>
+      </div>
+      <div class="modal-footer-actions"><button type="button" class="modal-close-btn" data-modal-close="aboutAppModal">關閉</button></div>
+    </div>
+  </div>
+
   <div id="ocrPreviewModal" class="modal hidden">
     <div class="modal-card">
       <div class="modal-heading-row"><h3>確認收據資料</h3></div>
@@ -476,6 +494,7 @@ const db = getFirestore(app);
 const expensesConfig = tripData?.meta?.expenses || {};
 const tripId = expensesConfig.tripId || new URLSearchParams(window.location.search).get("expensesTrip") || new URLSearchParams(window.location.search).get("trip") || "demo-trip-001";
 const provider = new GoogleAuthProvider();
+if (aboutTripIdText) aboutTripIdText.textContent = tripId;
 
 let members = [];
 let tripSettings = {
@@ -535,6 +554,7 @@ const addAllowedEmailBtn = document.getElementById("addAllowedEmailBtn");
 const adminEmailList = document.getElementById("adminEmailList");
 const adminEmailInput = document.getElementById("adminEmailInput");
 const addAdminEmailBtn = document.getElementById("addAdminEmailBtn");
+const aboutTripIdText = document.getElementById("aboutTripIdText");
 const exportExcelBtn = document.getElementById("exportExcelBtn");
 const exportJsonBtn = document.getElementById("exportJsonBtn");
 const exportJsonBackupBtn = document.getElementById("exportJsonBackupBtn");
@@ -1504,7 +1524,8 @@ function getSettingModalId(key) {
     access: "accessSettingsModal",
     lock: "lockSettingsModal",
     deleted: "deletedItemsModal",
-    logs: "activityLogModal"
+    logs: "activityLogModal",
+    about: "aboutAppModal"
   }[key];
 }
 
