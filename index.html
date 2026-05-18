@@ -5,6 +5,27 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title id="page-title">行程</title>
+  <script>
+  (function(){
+    try{
+      var savedTheme=localStorage.getItem("trip_theme")||"auto";
+      var root=document.documentElement;
+      root.classList.remove("theme-light","theme-dark");
+      if(savedTheme==="dark"){root.classList.add("theme-dark");return;}
+      if(savedTheme==="light"){root.classList.add("theme-light");return;}
+      var sun=null;
+      try{sun=JSON.parse(localStorage.getItem("trip_sun")||"null");}catch(e){}
+      var today=new Date().toISOString().slice(0,10);
+      if(sun&&sun.date===today&&sun.rise&&sun.set){
+        var now=new Date(), rise=new Date(sun.rise), set=new Date(sun.set);
+        root.classList.add((now>=rise&&now<set)?"theme-light":"theme-dark");
+        return;
+      }
+      if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches){root.classList.add("theme-dark");}
+      else{root.classList.add("theme-light");}
+    }catch(e){}
+  })();
+  </script>
   <style>
     :root {
       --font-scale: 1;
@@ -521,13 +542,13 @@ body.expenses-view-active .container {
   </style>
             <link rel="apple-touch-icon" href="assets/icon/trip_icon.png">
   <link rel="icon" type="image/png" href="assets/icon/trip_icon.png">
-  <link rel="manifest" href="manifest.json?v=6.7.1">
+  <link rel="manifest" href="manifest.json?v=6.7.3">
   <meta name="theme-color" content="#f5f5f7">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="京都大阪">
-  <link rel="stylesheet" href="assets/css/expenses.css?v=6.7.1">
+  <link rel="stylesheet" href="assets/css/expenses.css?v=6.7.3">
 </head>
 <body>
 <div class="bg-fixed"></div>
@@ -868,23 +889,38 @@ function applyTeam(team){
 // Now indicator
 function updateNowIndicator(){
   document.querySelectorAll(".now-indicator").forEach(el=>el.remove());
-  const chip=document.getElementById("today-chip");
-  if(!chip?.classList.contains("active"))return;
+  const data=window.tripData;
+  if(!data?.days?.length)return;
+  const cities=data.meta?.cities;
+  const tz=cities?Object.values(cities)[0]?.timezone:(data.meta?.weather?.timezone||"UTC");
+  const today=dateInTZ(tz);
+  const todayIdx=data.days.findIndex(d=>d.isoDate===today);
+  if(todayIdx<0)return;
   const activeContent=document.querySelector(".day-content.active");
-  if(!activeContent)return;
-  const nowStr=new Date().toLocaleTimeString("en-GB",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit"});
-  const items=[...activeContent.querySelectorAll(".timeline-item:not(.hidden-item):not(.snack-item)")];
+  if(!activeContent||Number(activeContent.dataset.dayIndex)!==todayIdx)return;
+  const nowStr=new Date().toLocaleTimeString("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",hour12:false});
+  const items=[...activeContent.querySelectorAll(".timeline-item:not(.hidden-item):not(.snack-item)")].filter(item=>{
+    const t=item.querySelector(".time")?.textContent?.trim()||"";
+    return /^(\d{1,2}):(\d{2})/.test(t);
+  });
   if(!items.length)return;
-  let insertAfter=null;
-  items.forEach(item=>{
+  const itemTimes=items.map(item=>{
     const t=item.querySelector(".time")?.textContent?.trim()||"";
     const m=t.match(/^(\d{1,2}):(\d{2})/);
-    if(m){const it=m[1].padStart(2,"0")+":"+m[2];if(it<=nowStr)insertAfter=item;}
+    return m?m[1].padStart(2,"0")+":"+m[2]:null;
+  }).filter(Boolean);
+  if(!itemTimes.length)return;
+  const firstTime=itemTimes[0];
+  const lastTime=itemTimes[itemTimes.length-1];
+  if(nowStr<firstTime||nowStr>lastTime)return;
+  let insertAfter=null;
+  items.forEach((item,idx)=>{
+    if(itemTimes[idx]&&itemTimes[idx]<=nowStr)insertAfter=item;
   });
+  if(!insertAfter)return;
   const ind=document.createElement("div");ind.className="now-indicator";
   ind.innerHTML='<span class="now-dot"></span><span class="now-label">現在</span><div class="now-line"></div>';
-  if(insertAfter)insertAfter.after(ind);
-  else items[0].before(ind);
+  insertAfter.after(ind);
 }
 
 // Today chip
@@ -899,7 +935,8 @@ function updateChip(data){
   function diffD(a,b){return Math.round((new Date(b)-new Date(a))/86400000);}
   function showSq(m,s){sq.style.display="flex";document.getElementById("status-main").textContent=m;document.getElementById("status-sub").textContent=s;}
   if(idx>=0){
-    chip.innerHTML=`今日  Day ${idx+1}（${data.days[idx].date}）`;chip.classList.add("active");sq.style.display="none";
+    const compactDate=String(data.days[idx].date||"").replace(/（[^）]*）/g,"");
+    chip.innerHTML=`Day ${idx+1} · ${compactDate}`;chip.classList.add("active");sq.style.display="none";
     document.querySelectorAll(".day-tab").forEach(t=>t.classList.remove("active"));
     document.querySelectorAll(".day-content").forEach(c=>c.classList.remove("active"));
     document.querySelector(`.day-tab[data-day-index="${idx}"]`)?.classList.add("active");
@@ -1214,7 +1251,7 @@ function render(data){
 // FAB
 const ivw=document.getElementById("itinerary-view"),svw=document.getElementById("snacks-view"),infvw=document.getElementById("info-view"),expvw=document.getElementById("expenses-view");
 const bti=document.getElementById("bt-itinerary"),bts=document.getElementById("bt-snacks"),btinfo=document.getElementById("bt-info"),btexp=document.getElementById("bt-expenses");
-const APP_VERSION = "6.7.2";
+const APP_VERSION = "6.7.3";
 const EXPENSES_MODULE_VERSION = APP_VERSION;
 window.APP_VERSION = APP_VERSION;
 window.EXPENSES_MODULE_VERSION = EXPENSES_MODULE_VERSION;
@@ -1301,7 +1338,7 @@ document.addEventListener("click",()=>fm.classList.remove("open"),{passive:true}
 // Android / Chrome PWA support. Network-only service worker, no aggressive cache.
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js?v=1.0.0").catch(() => {});
+    navigator.serviceWorker.register("./sw.js?v=1.3.3").catch(() => {});
   });
 }
 
