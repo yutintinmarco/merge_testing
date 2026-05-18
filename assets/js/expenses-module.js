@@ -629,6 +629,7 @@ const analyticsCategoryColors = {
   Other: "#8e8e93"
 };
 let analyticsSelectedCategories = null;
+let settlementViewMode = localStorage.getItem("expense_settlement_view_mode") || "base";
 let expenseModalLockCount = 0;
 let expenseModalLockedScrollTop = 0;
 
@@ -2361,6 +2362,111 @@ function calculateSummary() {
   };
 }
 
+function getExpenseOriginalSplitRows(expense) {
+  const originalAmount = Number(expense.originalAmount ?? expense.amount ?? 0);
+  const originalCurrency = expense.originalCurrency ?? expense.currency ?? tripSettings.baseCurrency;
+  const converted = Number(
+    expense.convertedAmount ??
+    convertToBase(originalAmount, originalCurrency) ??
+    originalAmount
+  );
+
+  const rows = getExpenseSplitRows(expense, converted);
+  if (rows.length) {
+    const originalRows = rows.map(row => {
+      const explicitOriginal = Number(row.originalAmount);
+      let amount = Number.isFinite(explicitOriginal) && explicitOriginal > 0
+        ? explicitOriginal
+        : (converted ? originalAmount * Number(row.amount || 0) / converted : 0);
+
+      return {
+        member: row.member,
+        amount
+      };
+    });
+
+    return allocateRoundingDifference(originalRows, originalAmount);
+  }
+
+  const participants = Array.isArray(expense.sharedBy) && expense.sharedBy.length ? expense.sharedBy : [];
+  if (!participants.length) return [];
+
+  return allocateRoundingDifference(participants.map(member => ({
+    member,
+    amount: originalAmount / participants.length
+  })), originalAmount);
+}
+
+function calculateExpenseNetByOriginalCurrencyOnly() {
+  const groups = new Map();
+
+  function ensureCurrency(currency) {
+    const cur = currency || tripSettings.baseCurrency || "HKD";
+    if (!groups.has(cur)) {
+      const net = {};
+      members.forEach(m => { net[m] = 0; });
+      groups.set(cur, { currency: cur, net });
+    }
+    return groups.get(cur);
+  }
+
+  expenses.forEach(expense => {
+    const currency = expense.originalCurrency ?? expense.currency ?? tripSettings.baseCurrency ?? "HKD";
+    const amount = Number(expense.originalAmount ?? expense.amount ?? 0);
+    if (!Number.isFinite(amount) || amount <= 0) return;
+
+    const group = ensureCurrency(currency);
+    const splitRows = getExpenseOriginalSplitRows(expense);
+    if (!splitRows.length) return;
+
+    if (!Object.prototype.hasOwnProperty.call(group.net, expense.paidBy)) group.net[expense.paidBy] = 0;
+    group.net[expense.paidBy] += amount;
+
+    splitRows.forEach(row => {
+      if (!Object.prototype.hasOwnProperty.call(group.net, row.member)) group.net[row.member] = 0;
+      group.net[row.member] -= Number(row.amount || 0);
+    });
+  });
+
+  return Array.from(groups.values()).map(group => {
+    Object.keys(group.net).forEach(person => {
+      group.net[person] = round2(group.net[person]);
+    });
+    return group;
+  }).sort((a, b) => {
+    const order = getActiveCurrencies();
+    return order.indexOf(a.currency) - order.indexOf(b.currency);
+  });
+}
+
+function calculateSummaryByOriginalCurrency() {
+  const groups = calculateExpenseNetByOriginalCurrencyOnly();
+
+  settlements.forEach(record => {
+    const currency = record.currency || tripSettings.baseCurrency || "HKD";
+    if (!groups.some(group => group.currency === currency)) {
+      const net = {};
+      members.forEach(m => { net[m] = 0; });
+      groups.push({ currency, net });
+    }
+  });
+
+  return groups.map(group => {
+    const netAfterPayments = applyRecordedPaymentsToNet({ ...group.net }, group.currency);
+    const settlement = buildSettlement(netAfterPayments);
+    return {
+      currency: group.currency,
+      expenseNet: group.net,
+      net: netAfterPayments,
+      settlement,
+      recordedPaymentsTotal: getTotalRecordedPayments(group.currency)
+    };
+  }).filter(group => {
+    const hasNet = Object.values(group.net).some(amount => Math.abs(Number(amount || 0)) >= 0.01);
+    return hasNet || group.recordedPaymentsTotal > 0 || group.settlement.length > 0;
+  });
+}
+
 
 function sumBy(rows, keyFn, amountFn) {
   const map = new Map();
@@ -2675,31 +2781,53 @@ function renderAnalytics() {
   bindAnalyticsFilterEvents(availableCategories);
 }
 
-function renderSummary() {
-  const { expenseNet, net, settlement, currency, recordedPaymentsTotal } = calculateSummary();
+function renderSettlementModeControl() {
+  const active = settlementViewMode === "original" ? "original" : "base";
+  return `
+    <div class="settlement-mode-card" role="group" aria-label="結算顯示方式">
+      <button type="button" class="settlement-mode-btn ${active === "base" ? "active" : ""}" data-settlement-view="base">
+        <span>基準幣別</span>
+        <small>${safeEscape(tripSettings.baseCurrency || "HKD")} 統一換算</small>
+      </button>
+      <button type="button" class="settlement-mode-btn ${active === "original" ? "active" : ""}" data-settlement-view="original">
+        <span>原幣分開</span>
+        <small>按付款幣值結算</small>
+      </button>
+    </div>
+  `;
+}
 
-  const netHtml = Object.entries(net).map(([person, amount]) => {
+function renderNetRowsHtml(group) {
+  const entries = Object.entries(group.net || {});
+  if (!entries.length) return emptyStateHtml("✅", "暫時無需結算");
+
+  return entries.map(([person, amount]) => {
     const r = round2(amount);
-    const original = round2(expenseNet[person] ?? 0);
+    const original = round2(group.expenseNet?.[person] ?? 0);
     const cls = r > 0 ? "positive" : r < 0 ? "negative" : "neutral";
     const label = r > 0 ? "應收" : r < 0 ? "應付" : "已平數";
     const originalText = original === r
       ? ""
-      : `<div class="expense-meta">原本：${original > 0 ? "應收" : original < 0 ? "應付" : "已平數"} ${currency} ${Math.abs(original).toFixed(2)}，已計入找數紀錄</div>`;
+      : `<div class="expense-meta">原本：${original > 0 ? "應收" : original < 0 ? "應付" : "已平數"} ${safeEscape(group.currency)} ${Math.abs(original).toFixed(2)}，已計入找數紀錄</div>`;
 
     return `
       <div class="summary-item">
         <strong>${safeEscape(person)}</strong>
-        <span class="${cls}">${label} ${currency} ${Math.abs(r).toFixed(2)}</span>
+        <span class="${cls}">${label} ${safeEscape(group.currency)} ${Math.abs(r).toFixed(2)}</span>
         ${originalText}
       </div>
     `;
   }).join("");
+}
 
-  const settlementHtml = settlement.length
-    ? settlement.map(item => {
-        const key = getSettlementKey({ ...item, currency });
-        const pairKey = getSettlementPairKey({ ...item, currency });
+function renderSettlementCardsHtml(groups) {
+  const visibleCurrencies = new Set(groups.map(group => group.currency));
+  const settlementItems = groups.flatMap(group => (group.settlement || []).map(item => ({ ...item, currency: group.currency })));
+
+  const settlementHtml = settlementItems.length
+    ? settlementItems.map(item => {
+        const key = getSettlementKey(item);
+        const pairKey = getSettlementPairKey(item);
 
         return `
           <div class="settlement-item settlement-arrow-card">
@@ -2707,7 +2835,7 @@ function renderSummary() {
               <strong class="settlement-person">${safeEscape(item.from)}</strong>
               <span class="settlement-arrow-icon">→</span>
               <strong class="settlement-person">${safeEscape(item.to)}</strong>
-              <span class="negative settlement-arrow-amount">${currency} ${Number(item.amount).toFixed(2)}</span>
+              <span class="negative settlement-arrow-amount">${safeEscape(item.currency)} ${Number(item.amount).toFixed(2)}</span>
             </div>
             <div class="settlement-status"><span class="unpaid-badge">尚欠，已扣除已找數紀錄</span></div>
             <div class="settlement-actions">
@@ -2727,7 +2855,7 @@ function renderSummary() {
                   data-from="${safeEscape(item.from)}"
                   data-to="${safeEscape(item.to)}"
                   data-amount="${Number(item.amount).toFixed(2)}"
-                  data-currency="${safeEscape(currency)}"
+                  data-currency="${safeEscape(item.currency)}"
                   data-balance="${Number(item.amount).toFixed(2)}"
                 >記錄找數</button>
               </div>
@@ -2737,8 +2865,9 @@ function renderSummary() {
       }).join("")
     : emptyStateHtml("✅", "暫時無需結算，已計入找數紀錄");
 
-  const paidHistoryHtml = settlements.length
-    ? settlements.map(item => {
+  const visibleSettlements = settlements.filter(item => visibleCurrencies.has(item.currency || tripSettings.baseCurrency || "HKD"));
+  const paidHistoryHtml = visibleSettlements.length
+    ? visibleSettlements.map(item => {
         const paidAmount = Number(item.paidAmount ?? item.amount ?? 0);
         return `
           <div class="settlement-item paid-history-item">
@@ -2751,17 +2880,70 @@ function renderSummary() {
       }).join("")
     : emptyStateHtml("💸", "暫時未有已找數紀錄");
 
-  const remainingAmount = round2(settlement.reduce((sum, item) => sum + Number(item.amount || 0), 0));
+  return { settlementHtml, paidHistoryHtml, settlementItems };
+}
+
+function bindSettlementSummaryEvents() {
+  document.querySelectorAll('.expenses-module [data-settlement-view]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      settlementViewMode = btn.dataset.settlementView === "original" ? "original" : "base";
+      try { localStorage.setItem("expense_settlement_view_mode", settlementViewMode); } catch(e) {}
+      renderSummary();
+    });
+  });
+
+  document.getElementById("openSettlementActionBtn")?.addEventListener("click", () => {
+    openSettlementActionModal();
+  });
+}
+
+function renderSummary() {
+  const baseSummary = calculateSummary();
+  const groups = settlementViewMode === "original"
+    ? calculateSummaryByOriginalCurrency()
+    : [baseSummary];
+
+  const displayGroups = groups.length ? groups : [{
+    currency: tripSettings.baseCurrency || "HKD",
+    expenseNet: {},
+    net: {},
+    settlement: [],
+    recordedPaymentsTotal: 0
+  }];
+
+  const summaryGroupsHtml = displayGroups.map(group => {
+    const remaining = round2((group.settlement || []).reduce((sum, item) => sum + Number(item.amount || 0), 0));
+    return `
+      <section class="summary-currency-group">
+        <div class="summary-currency-heading">
+          <h3>${settlementViewMode === "original" ? `${safeEscape(group.currency)} 結算` : `每人淨額（${safeEscape(group.currency)}，已計入找數）`}</h3>
+          <span>${safeEscape(group.currency)} ${remaining.toFixed(2)} 尚欠</span>
+        </div>
+        <p class="hint">已找數總額：${safeEscape(group.currency)} ${Number(group.recordedPaymentsTotal || 0).toFixed(2)}。</p>
+        ${renderNetRowsHtml(group)}
+      </section>
+    `;
+  }).join("");
+
+  const remainingText = displayGroups
+    .map(group => {
+      const amount = round2((group.settlement || []).reduce((sum, item) => sum + Number(item.amount || 0), 0));
+      return `${group.currency} ${amount.toFixed(2)}`;
+    })
+    .join(" / ");
+
+  const totalSettlementCount = displayGroups.reduce((sum, group) => sum + (group.settlement || []).length, 0);
 
   summary.innerHTML = `
-    <h3>每人淨額（${currency}，已計入找數）</h3>
-    <p class="hint">已找數總額：${currency} ${recordedPaymentsTotal.toFixed(2)}。如有人找多咗，系統會自動反映為對方要找返。</p>
-    ${netHtml}
+    ${renderSettlementModeControl()}
+    <p class="hint settlement-mode-hint">${settlementViewMode === "original" ? "按原始付款幣值分開結算，適合有人用當地貨幣、有人用港幣找數。" : "所有支出統一換算成基準幣別結算，適合最後一次過對數。"}</p>
+    ${summaryGroupsHtml}
     <button type="button" id="openSettlementActionBtn" class="secondary-btn settlement-popup-btn">找數 / 查看建議結算</button>
-    <p class="hint">剩餘應找：${currency} ${remainingAmount.toFixed(2)}，建議結算 ${settlement.length} 項。</p>
+    <p class="hint">剩餘應找：${safeEscape(remainingText || "0.00")}，建議結算 ${totalSettlementCount} 項。</p>
   `;
 
   if (settlementActionContent) {
+    const { settlementHtml, paidHistoryHtml } = renderSettlementCardsHtml(displayGroups);
     settlementActionContent.innerHTML = `
       <h3>建議結算（剩餘應找）</h3>
       ${settlementHtml}
@@ -2770,9 +2952,7 @@ function renderSummary() {
     `;
   }
 
-  document.getElementById("openSettlementActionBtn")?.addEventListener("click", () => {
-    openSettlementActionModal();
-  });
+  bindSettlementSummaryEvents();
 
   const settlementContainer = settlementActionContent || summary;
 
