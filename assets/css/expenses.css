@@ -3848,3 +3848,41 @@ html.theme-dark .expenses-module .about-app-row span,
 html:not(.theme-light):not(.theme-dark) .expenses-module .about-app-row span {
   color: rgba(190,190,205,0.78);
 }
+
+
+/* v6.7.2 Modal title polish: match app icon language and improve hierarchy */
+.expenses-module .modal-heading-row {
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+}
+
+.expenses-module .modal-heading-row h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: calc(18px * var(--font-scale));
+  line-height: 1.25;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.expenses-module .modal-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(26px * var(--font-scale));
+  height: calc(26px * var(--font-scale));
+  border-radius: 999px;
+  background: rgba(255,255,255,0.62);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+  font-size: calc(15px * var(--font-scale));
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+html.theme-dark .expenses-module .modal-title-icon,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal-title-icon {
+  background: rgba(255,255,255,0.10);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
+}
