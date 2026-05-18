@@ -436,8 +436,8 @@ function mountExpensesHtml(root) {
       <div class="modal-body-scroll">
         <div class="about-app-box">
           <div class="about-app-title">關嘉露西生日之旅</div>
-          <div class="about-app-row"><span>App version</span><strong>6.4.3</strong></div>
-          <div class="about-app-row"><span>Expenses module</span><strong>6.4.3</strong></div>
+          <div class="about-app-row"><span>App version</span><strong>6.4.4</strong></div>
+          <div class="about-app-row"><span>Expenses module</span><strong>6.4.4</strong></div>
           <div class="about-app-row"><span>Trip ID</span><strong id="aboutTripIdText">載入中</strong></div>
           <div class="about-app-row"><span>Mode</span><strong>PWA / GitHub Pages</strong></div>
         </div>
@@ -494,8 +494,6 @@ const db = getFirestore(app);
 const expensesConfig = tripData?.meta?.expenses || {};
 const tripId = expensesConfig.tripId || new URLSearchParams(window.location.search).get("expensesTrip") || new URLSearchParams(window.location.search).get("trip") || "demo-trip-001";
 const provider = new GoogleAuthProvider();
-if (aboutTripIdText) aboutTripIdText.textContent = tripId;
-
 let members = [];
 let tripSettings = {
   baseCurrency: expensesConfig.baseCurrency || "HKD",
@@ -555,6 +553,7 @@ const adminEmailList = document.getElementById("adminEmailList");
 const adminEmailInput = document.getElementById("adminEmailInput");
 const addAdminEmailBtn = document.getElementById("addAdminEmailBtn");
 const aboutTripIdText = document.getElementById("aboutTripIdText");
+if (aboutTripIdText) aboutTripIdText.textContent = tripId;
 const exportExcelBtn = document.getElementById("exportExcelBtn");
 const exportJsonBtn = document.getElementById("exportJsonBtn");
 const exportJsonBackupBtn = document.getElementById("exportJsonBackupBtn");
