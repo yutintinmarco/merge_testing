@@ -3421,3 +3421,281 @@ html:not(.theme-light):not(.theme-dark) .expenses-module .settlement-mode-btn.ac
     align-items: flex-start;
   }
 }
+
+
+/* v6.4.2 Appearance consistency polish
+   Focus: modal spacing, mobile button layout, setting rows, and compact form rhythm. */
+.expenses-module {
+  --expense-gap-xs: 4px;
+  --expense-gap-sm: 8px;
+  --expense-gap-md: 12px;
+  --expense-gap-lg: 16px;
+}
+
+.expenses-module .card,
+.expenses-module .header-card {
+  margin-bottom: 12px !important;
+}
+
+.expenses-module .expenses-inner-tabs {
+  gap: 6px !important;
+  margin: 10px 0 12px !important;
+}
+
+.expenses-module .expenses-inner-tab {
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 4px !important;
+  font-size: calc(10.5px * var(--font-scale)) !important;
+  letter-spacing: 0 !important;
+}
+
+.expenses-module h2 {
+  margin: 0 0 8px !important;
+}
+
+.expenses-module h3 {
+  margin: 0 0 8px !important;
+}
+
+.expenses-module .hint {
+  margin-top: 4px !important;
+  line-height: 1.42 !important;
+}
+
+.expenses-module label {
+  gap: 5px !important;
+  font-size: calc(11.5px * var(--font-scale)) !important;
+}
+
+.expenses-module input,
+.expenses-module select,
+.expenses-module textarea {
+  min-height: 44px !important;
+  padding: 10px 12px !important;
+  border-radius: 13px !important;
+}
+
+.expenses-module form,
+.expenses-module .split-config {
+  gap: 10px !important;
+}
+
+.expenses-module .quick-grid {
+  gap: 9px !important;
+}
+
+.expenses-module .checkbox-grid,
+.expenses-module .split-member-grid {
+  gap: 8px !important;
+}
+
+.expenses-module .checkbox-item {
+  min-height: 38px !important;
+  padding: 8px 10px !important;
+  border-radius: 13px !important;
+}
+
+.expenses-module .split-config,
+.expenses-module .detail-section,
+.expenses-module .setting-section,
+.expenses-module .analytics-total-card {
+  padding: 12px !important;
+  border-radius: 15px !important;
+}
+
+.expenses-module .settings-menu-grid {
+  gap: 8px !important;
+}
+
+.expenses-module .settings-menu-btn {
+  min-height: 58px !important;
+  padding: 10px 12px !important;
+  border-radius: 15px !important;
+  column-gap: 10px !important;
+}
+
+.expenses-module .settings-menu-btn span {
+  font-size: calc(19px * var(--font-scale)) !important;
+}
+
+.expenses-module .settings-menu-btn strong {
+  font-size: calc(12.5px * var(--font-scale)) !important;
+  line-height: 1.25 !important;
+}
+
+.expenses-module .settings-menu-btn small {
+  font-size: calc(10px * var(--font-scale)) !important;
+  line-height: 1.25 !important;
+  margin-top: 1px !important;
+}
+
+.expenses-module .modal-card,
+.expenses-module .expense-form-modal-card,
+.expenses-module .expense-detail-modal-card,
+.expenses-module .settlement-action-modal-card {
+  padding: 14px 16px 16px !important;
+}
+
+.expenses-module .modal-heading-row {
+  margin-bottom: 10px !important;
+  align-items: center !important;
+}
+
+.expenses-module .modal-heading-row h3 {
+  margin: 0 !important;
+  font-size: calc(14px * var(--font-scale)) !important;
+}
+
+.expenses-module .modal-footer-actions,
+.expenses-module .sticky-modal-actions,
+.expenses-module .detail-footer-actions {
+  display: grid !important;
+  grid-auto-flow: column !important;
+  grid-auto-columns: minmax(0, 1fr) !important;
+  gap: 8px !important;
+  align-items: center !important;
+  margin-top: 12px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid rgba(210,210,215,0.72) !important;
+}
+
+.expenses-module .modal-footer-actions button,
+.expenses-module .sticky-modal-actions button,
+.expenses-module .detail-footer-actions button {
+  width: 100% !important;
+  min-height: 40px !important;
+  margin: 0 !important;
+  padding: 8px 10px !important;
+  white-space: nowrap !important;
+}
+
+.expenses-module .auth-row,
+.expenses-module .member-add-row,
+.expenses-module .allowed-email-row,
+.expenses-module .admin-email-row,
+.expenses-module .input-action-row {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.expenses-module .auth-row {
+  grid-template-columns: 1fr !important;
+}
+
+.expenses-module .auth-row button {
+  width: 100% !important;
+}
+
+.expenses-module .member-list,
+.expenses-module #allowedEmailList,
+.expenses-module #adminEmailList {
+  gap: 7px !important;
+  margin-top: 8px !important;
+}
+
+.expenses-module .member-chip {
+  padding: 7px 10px !important;
+  min-height: 34px !important;
+  line-height: 1.2 !important;
+}
+
+.expenses-module .setting-subtitle {
+  margin: 12px 0 6px !important;
+  font-size: calc(11px * var(--font-scale)) !important;
+  font-weight: 750 !important;
+}
+
+.expenses-module .rate-row {
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr) !important;
+  gap: 8px !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+.expenses-module .rate-row:last-child {
+  border-bottom: 0 !important;
+}
+
+.expenses-module .currency-chip,
+.expenses-module .category-filter-chip {
+  min-height: 34px !important;
+  padding: 7px 10px !important;
+}
+
+.expenses-module .expense-status-line {
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 8px 6px 2px !important;
+  font-size: calc(10.5px * var(--font-scale)) !important;
+}
+
+@media (max-width: 480px) {
+  .expenses-module .expenses-app {
+    padding-bottom: 82px !important;
+  }
+
+  .expenses-module .card {
+    padding: 12px !important;
+    margin-bottom: 11px !important;
+  }
+
+  .expenses-module .expenses-inner-tab {
+    height: 31px !important;
+    min-height: 31px !important;
+    font-size: calc(10px * var(--font-scale)) !important;
+  }
+
+  .expenses-module .modal-card,
+  .expenses-module .expense-form-modal-card,
+  .expenses-module .expense-detail-modal-card,
+  .expenses-module .settlement-action-modal-card {
+    width: 90% !important;
+    max-width: 420px !important;
+    padding: 13px 14px 15px !important;
+  }
+
+  .expenses-module .auth-row,
+  .expenses-module .member-add-row,
+  .expenses-module .allowed-email-row,
+  .expenses-module .admin-email-row,
+  .expenses-module .input-action-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .expenses-module .member-add-row button,
+  .expenses-module .allowed-email-row button,
+  .expenses-module .admin-email-row button,
+  .expenses-module .input-action-row button {
+    width: 100% !important;
+  }
+
+  .expenses-module .modal-footer-actions,
+  .expenses-module .sticky-modal-actions,
+  .expenses-module .detail-footer-actions {
+    gap: 7px !important;
+  }
+
+  .expenses-module .modal-footer-actions button,
+  .expenses-module .sticky-modal-actions button,
+  .expenses-module .detail-footer-actions button {
+    min-height: 39px !important;
+    font-size: calc(12px * var(--font-scale)) !important;
+  }
+}
+
+html.theme-dark .expenses-module .rate-row,
+html:not(.theme-light):not(.theme-dark) .expenses-module .rate-row {
+  border-bottom-color: rgba(255,255,255,0.08) !important;
+}
+
+html.theme-dark .expenses-module .modal-footer-actions,
+html.theme-dark .expenses-module .sticky-modal-actions,
+html.theme-dark .expenses-module .detail-footer-actions,
+html:not(.theme-light):not(.theme-dark) .expenses-module .modal-footer-actions,
+html:not(.theme-light):not(.theme-dark) .expenses-module .sticky-modal-actions,
+html:not(.theme-light):not(.theme-dark) .expenses-module .detail-footer-actions {
+  border-top-color: rgba(255,255,255,0.12) !important;
+}
