@@ -972,20 +972,39 @@ function getSettlementPairKey(item) {
   return `${item.from}|${item.to}|${item.currency}`;
 }
 
-function getTotalRecordedPayments(currency) {
+function getSettlementPaymentAmountInCurrency(record, targetCurrency, options = {}) {
+  const paidAmount = Number(record.paidAmount ?? record.amount ?? 0);
+  const recordCurrency = record.currency || tripSettings.baseCurrency || "HKD";
+  const target = targetCurrency || tripSettings.baseCurrency || "HKD";
+
+  if (!Number.isFinite(paidAmount) || paidAmount <= 0) return null;
+
+  if (recordCurrency === target) {
+    return paidAmount;
+  }
+
+  // Base currency view means all settlement cash flows should also be translated into base currency.
+  // Otherwise a JPY/HKD payment recorded under 原幣分開 would be ignored after switching back to 基準幣別.
+  if (options.convertToTarget && target === (tripSettings.baseCurrency || "HKD")) {
+    const converted = convertToBase(paidAmount, recordCurrency);
+    return Number.isFinite(Number(converted)) ? Number(converted) : null;
+  }
+
+  return null;
+}
+
+function getTotalRecordedPayments(currency, options = {}) {
   return round2(settlements.reduce((sum, record) => {
-    if (record.currency !== currency) return sum;
-    return sum + Number(record.paidAmount ?? record.amount ?? 0);
+    const amount = getSettlementPaymentAmountInCurrency(record, currency, options);
+    return amount == null ? sum : sum + amount;
   }, 0));
 }
 
-function applyRecordedPaymentsToNet(net, currency) {
+function applyRecordedPaymentsToNet(net, currency, options = {}) {
   settlements.forEach(record => {
-    if (record.currency !== currency) return;
-
     const from = record.from;
     const to = record.to;
-    const paidAmount = Number(record.paidAmount ?? record.amount ?? 0);
+    const paidAmount = getSettlementPaymentAmountInCurrency(record, currency, options);
 
     if (!from || !to || !Number.isFinite(paidAmount) || paidAmount <= 0) return;
 
@@ -2351,14 +2370,14 @@ function calculateExpenseNetOnly() {
 
 function calculateSummary() {
   const { net: expenseNet, currency } = calculateExpenseNetOnly();
-  const netAfterPayments = applyRecordedPaymentsToNet({ ...expenseNet }, currency);
+  const netAfterPayments = applyRecordedPaymentsToNet({ ...expenseNet }, currency, { convertToTarget: true });
 
   return {
     expenseNet,
     net: netAfterPayments,
     settlement: buildSettlement(netAfterPayments),
     currency,
-    recordedPaymentsTotal: getTotalRecordedPayments(currency)
+    recordedPaymentsTotal: getTotalRecordedPayments(currency, { convertToTarget: true })
   };
 }
 
@@ -2865,7 +2884,9 @@ function renderSettlementCardsHtml(groups) {
       }).join("")
     : emptyStateHtml("✅", "暫時無需結算，已計入找數紀錄");
 
-  const visibleSettlements = settlements.filter(item => visibleCurrencies.has(item.currency || tripSettings.baseCurrency || "HKD"));
+  const visibleSettlements = settlementViewMode === "base"
+    ? settlements
+    : settlements.filter(item => visibleCurrencies.has(item.currency || tripSettings.baseCurrency || "HKD"));
   const paidHistoryHtml = visibleSettlements.length
     ? visibleSettlements.map(item => {
         const paidAmount = Number(item.paidAmount ?? item.amount ?? 0);
