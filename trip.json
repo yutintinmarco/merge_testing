@@ -254,7 +254,9 @@
           "detail": "錦市場有各式小食、豆腐、醃菜及串燒，適合作為第一日輕鬆行程。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market+Kyoto",
           "gallery": [
-            "assets/gallery/nishiki_market.jpg"
+            "assets/gallery/nishiki_market_01.jpg";
+            "assets/gallery/nishiki_market_02.jpg";
+            "assets/gallery/nishiki_market_03.jpg"
           ]
         },
         {
