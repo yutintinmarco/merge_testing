@@ -269,7 +269,8 @@
           "detail": "Pokémon Center Kyoto，適合購物及打卡。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Pokemon+Center+Kyoto",
           "gallery": [
-            "assets/gallery/default_shopping.jpg"
+            "assets/gallery/Pokemon_Center_Kyoto_01.jpg";
+            "assets/gallery/Pokemon_Center_Kyoto_02.jpg"
           ]
         },
         {
@@ -341,7 +342,7 @@
           "detail": "早上由京都出發前往宇治。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Uji+Station+Kyoto",
           "gallery": [
-            "assets/gallery/kyoto_station.jpg"
+            "assets/gallery/uji_station.jpg"
           ]
         },
         {
@@ -353,8 +354,10 @@
           "popup": true,
           "detail": "平等院是宇治代表景點，建議早上先到。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Byodoin+Temple+Uji",
+          "dianping": "https://www.byodoin.or.jp/ch2/",
           "gallery": [
-            "assets/gallery/byodoin.jpg"
+            "assets/gallery/byodoin_01.jpg";
+            "assets/gallery/byodoin_02.jpg"
           ]
         },
         {
@@ -367,11 +370,12 @@
           "detail": "中村藤吉平等院店，適合食抹茶甜品或稍作休息。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nakamura+Tokichi+Byodoin+Uji",
           "gallery": [
-            "assets/gallery/byodoin.jpg"
+            "assets/gallery/byodointea_01.jpg";
+            "assets/gallery/byodointea_02.jpg"
           ]
         },
         {
-          "time": "11:00",
+          "time": "10:30",
           "icon": "🚆",
           "title": "Travel",
           "note": "前往 Nintendo Museum",
@@ -390,8 +394,14 @@
           "detail": "已預約 Nintendo Museum。請按門票入場時段到場，建議預早抵達及準備門票資料。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nintendo+Museum+Uji+Kyoto",
           "booked": true,
+          "booking": {
+            "pdf": "assets/pdf/nintendo_museum_ticket.png"
+          },
           "gallery": [
-            "assets/gallery/default_kyoto.jpg"
+            "assets/gallery/nintendo_museum_01.jpg";
+            "assets/gallery/nintendo_museum_02.jpg";
+            "assets/gallery/nintendo_museum_03.jpg";
+            "assets/gallery/nintendo_museum_04.jpg"
           ]
         },
         {
@@ -474,7 +484,8 @@
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Beef+Mouriya+Gion",
           "booked": true,
           "gallery": [
-            "assets/gallery/default_food.jpg"
+            "assets/gallery/mouriya_01.jpg";
+            "assets/gallery/mouriya_02.jpg"
           ]
         },
         {
@@ -497,7 +508,8 @@
           "detail": "銀閣寺及周邊散步，視乎時間可順行哲學之道一小段。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Ginkakuji+Kyoto",
           "gallery": [
-            "assets/gallery/ginkakuji.jpg"
+            "assets/gallery/ginkakuji_01.webp";
+            "assets/gallery/ginkakuji_02.jpg"
           ]
         },
         {
@@ -550,7 +562,8 @@
           "detail": "金閣寺是京都經典景點，建議早上前往。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kinkakuji+Kyoto",
           "gallery": [
-            "assets/gallery/kinkakuji.jpg"
+            "assets/gallery/kinkakuji_01.jpg";
+            "assets/gallery/kinkakuji_02.jpg"
           ]
         },
         {
@@ -576,7 +589,9 @@
           "detail": "下午安排心齋橋、難波一帶自由行，購物及打卡。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi+Namba+Osaka",
           "gallery": [
-            "assets/gallery/dotonbori.jpg"
+            "assets/gallery/dotonbori_01.webp";
+            "assets/gallery/dotonbori_02.jpg";
+            "assets/gallery/dotonbori_03.jpg"
           ]
         },
         {
@@ -589,7 +604,9 @@
           "detail": "下午安排心齋橋、難波一帶自由行，購物及打卡。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi+Namba+Osaka",
           "gallery": [
-            "assets/gallery/dotonbori.jpg"
+            "assets/gallery/dotonbori_01.webp";
+            "assets/gallery/dotonbori_02.jpg";
+            "assets/gallery/dotonbori_03.jpg"
           ]
         },
         {
@@ -638,8 +655,11 @@
           "popup": true,
           "detail": "神戶動物王國位於 Port Island，適合安排 2.5 至 3 小時。出發前建議再確認當日營業時間及休園日。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom",
+          "dianping": "https://www.kobe-oukoku.com/en",
           "gallery": [
-            "assets/gallery/kobe_animal_kingdom.jpg"
+            "assets/gallery/kobe_animal_kingdom_01.jpg";
+            "assets/gallery/kobe_animal_kingdom_02.jpg";
+            "assets/gallery/kobe_animal_kingdom_03.jpg"
           ]
         },
         {
@@ -671,7 +691,8 @@
         {
           "time": "16:30",
           "icon": "🛍️",
-          "title": "神戶臨海樂園 umie / MOSAIC",
+          "title": "
+          ",
           "note": "購物  海邊  晚餐前休息",
           "who": "all",
           "popup": true,
@@ -734,7 +755,20 @@
       "city": "osaka",
       "items": [
         {
-          "time": "10:00",
+          "time": "08:00",
+          "icon": "🛍️",
+          "title": "木津市場",
+          "note": "晨早買餸",
+          "who": "all",
+          "popup": true,
+          "detail": "晨早買餸。",
+          "maps": "https://maps.app.goo.gl/gHhYGkgWEd9Cbh4Y7",
+          "gallery": [
+            "assets/gallery/market_01.jpg"
+          ]
+        },
+        {
+          "time": "10:30",
           "icon": "🛍️",
           "title": "天王寺 Q’s Mall",
           "note": "最後購物 / 午餐前散策",
