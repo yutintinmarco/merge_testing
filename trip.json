@@ -254,8 +254,8 @@
           "detail": "錦市場有各式小食、豆腐、醃菜及串燒，適合作為第一日輕鬆行程。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nishiki+Market+Kyoto",
           "gallery": [
-            "assets/gallery/nishiki_market_01.jpg";
-            "assets/gallery/nishiki_market_02.jpg";
+            "assets/gallery/nishiki_market_01.jpg",
+            "assets/gallery/nishiki_market_02.jpg",
             "assets/gallery/nishiki_market_03.jpg"
           ]
         },
@@ -269,7 +269,7 @@
           "detail": "Pokémon Center Kyoto，適合購物及打卡。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Pokemon+Center+Kyoto",
           "gallery": [
-            "assets/gallery/Pokemon_Center_Kyoto_01.jpg";
+            "assets/gallery/Pokemon_Center_Kyoto_01.jpg",
             "assets/gallery/Pokemon_Center_Kyoto_02.jpg"
           ]
         },
@@ -356,7 +356,7 @@
           "maps": "https://www.google.com/maps/search/?api=1&query=Byodoin+Temple+Uji",
           "dianping": "https://www.byodoin.or.jp/ch2/",
           "gallery": [
-            "assets/gallery/byodoin_01.jpg";
+            "assets/gallery/byodoin_01.jpg",
             "assets/gallery/byodoin_02.jpg"
           ]
         },
@@ -370,7 +370,7 @@
           "detail": "中村藤吉平等院店，適合食抹茶甜品或稍作休息。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nakamura+Tokichi+Byodoin+Uji",
           "gallery": [
-            "assets/gallery/byodointea_01.jpg";
+            "assets/gallery/byodointea_01.jpg",
             "assets/gallery/byodointea_02.jpg"
           ]
         },
@@ -398,9 +398,9 @@
             "pdf": "assets/pdf/nintendo_museum_ticket.png"
           },
           "gallery": [
-            "assets/gallery/nintendo_museum_01.jpg";
-            "assets/gallery/nintendo_museum_02.jpg";
-            "assets/gallery/nintendo_museum_03.jpg";
+            "assets/gallery/nintendo_museum_01.jpg",
+            "assets/gallery/nintendo_museum_02.jpg",
+            "assets/gallery/nintendo_museum_03.jpg",
             "assets/gallery/nintendo_museum_04.jpg"
           ]
         },
@@ -484,7 +484,7 @@
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Beef+Mouriya+Gion",
           "booked": true,
           "gallery": [
-            "assets/gallery/mouriya_01.jpg";
+            "assets/gallery/mouriya_01.jpg",
             "assets/gallery/mouriya_02.jpg"
           ]
         },
@@ -508,7 +508,7 @@
           "detail": "銀閣寺及周邊散步，視乎時間可順行哲學之道一小段。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Ginkakuji+Kyoto",
           "gallery": [
-            "assets/gallery/ginkakuji_01.webp";
+            "assets/gallery/ginkakuji_01.webp",
             "assets/gallery/ginkakuji_02.jpg"
           ]
         },
@@ -562,7 +562,7 @@
           "detail": "金閣寺是京都經典景點，建議早上前往。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kinkakuji+Kyoto",
           "gallery": [
-            "assets/gallery/kinkakuji_01.jpg";
+            "assets/gallery/kinkakuji_01.jpg",
             "assets/gallery/kinkakuji_02.jpg"
           ]
         },
@@ -589,8 +589,8 @@
           "detail": "下午安排心齋橋、難波一帶自由行，購物及打卡。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi+Namba+Osaka",
           "gallery": [
-            "assets/gallery/dotonbori_01.webp";
-            "assets/gallery/dotonbori_02.jpg";
+            "assets/gallery/dotonbori_01.webp",
+            "assets/gallery/dotonbori_02.jpg",
             "assets/gallery/dotonbori_03.jpg"
           ]
         },
@@ -604,8 +604,8 @@
           "detail": "下午安排心齋橋、難波一帶自由行，購物及打卡。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Shinsaibashi+Namba+Osaka",
           "gallery": [
-            "assets/gallery/dotonbori_01.webp";
-            "assets/gallery/dotonbori_02.jpg";
+            "assets/gallery/dotonbori_01.webp",
+            "assets/gallery/dotonbori_02.jpg",
             "assets/gallery/dotonbori_03.jpg"
           ]
         },
@@ -657,8 +657,8 @@
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom",
           "dianping": "https://www.kobe-oukoku.com/en",
           "gallery": [
-            "assets/gallery/kobe_animal_kingdom_01.jpg";
-            "assets/gallery/kobe_animal_kingdom_02.jpg";
+            "assets/gallery/kobe_animal_kingdom_01.jpg",
+            "assets/gallery/kobe_animal_kingdom_02.jpg",
             "assets/gallery/kobe_animal_kingdom_03.jpg"
           ]
         },
