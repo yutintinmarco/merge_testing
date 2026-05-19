@@ -141,6 +141,72 @@
         "jsonBackup": true,
         "activityLog": true
       }
+    },
+    "galleryDefaults": {
+      "byIcon": {
+        "✈️": [
+          "assets/gallery/default_airport.jpg"
+        ],
+        "🚆": [
+          "assets/gallery/default_transport.jpg"
+        ],
+        "🍽️": [
+          "assets/gallery/default_food.jpg"
+        ],
+        "🥩": [
+          "assets/gallery/default_food.jpg"
+        ],
+        "☕": [
+          "assets/gallery/default_cafe.jpg"
+        ],
+        "🍵": [
+          "assets/gallery/default_cafe.jpg"
+        ],
+        "🛍️": [
+          "assets/gallery/default_shopping.jpg"
+        ],
+        "🛒": [
+          "assets/gallery/default_shopping.jpg"
+        ],
+        "🎮": [
+          "assets/gallery/default_kyoto.jpg"
+        ],
+        "⛩️": [
+          "assets/gallery/default_temple.jpg"
+        ],
+        "🏯": [
+          "assets/gallery/default_temple.jpg"
+        ],
+        "🥟": [
+          "assets/gallery/default_food.jpg"
+        ],
+        "🐾": [
+          "assets/gallery/default_kobe.jpg"
+        ],
+        "🌃": [
+          "assets/gallery/default_kobe.jpg"
+        ],
+        "🎂": [
+          "assets/gallery/default_food.jpg"
+        ],
+        "🍡": [
+          "assets/gallery/default_food.jpg"
+        ]
+      },
+      "byCity": {
+        "kyoto": [
+          "assets/gallery/default_kyoto.jpg"
+        ],
+        "osaka": [
+          "assets/gallery/default_osaka.jpg"
+        ],
+        "kobe": [
+          "assets/gallery/default_kobe.jpg"
+        ]
+      },
+      "fallback": [
+        "assets/gallery/default_trip.jpg"
+      ]
     }
   },
   "days": [
@@ -199,7 +265,10 @@
           "who": "team1",
           "popup": true,
           "detail": "Pokémon Center Kyoto，適合購物及打卡。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Pokemon+Center+Kyoto"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Pokemon+Center+Kyoto",
+          "gallery": [
+            "assets/gallery/default_shopping.jpg"
+          ]
         },
         {
           "time": "15:10",
@@ -235,7 +304,10 @@
           "who": "team1",
           "popup": true,
           "detail": "AEON Mall KYOTO 可購物、補給日用品，亦適合第一日較輕鬆安排。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=AEON+Mall+KYOTO"
+          "maps": "https://www.google.com/maps/search/?api=1&query=AEON+Mall+KYOTO",
+          "gallery": [
+            "assets/gallery/default_shopping.jpg"
+          ]
         },
         {
           "time": "19:00",
@@ -265,7 +337,10 @@
           "who": "all",
           "popup": true,
           "detail": "早上由京都出發前往宇治。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Uji+Station+Kyoto"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Uji+Station+Kyoto",
+          "gallery": [
+            "assets/gallery/kyoto_station.jpg"
+          ]
         },
         {
           "time": "09:00",
@@ -312,7 +387,10 @@
           "popup": true,
           "detail": "已預約 Nintendo Museum。請按門票入場時段到場，建議預早抵達及準備門票資料。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Nintendo+Museum+Uji+Kyoto",
-          "booked": true
+          "booked": true,
+          "gallery": [
+            "assets/gallery/default_kyoto.jpg"
+          ]
         },
         {
           "time": "16:00",
@@ -378,7 +456,10 @@
           "who": "all",
           "popup": true,
           "detail": "上午安排大丸、Hands、商店街及 JINS 一帶購物。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Daimaru+Kyoto+Hands+JINS"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Daimaru+Kyoto+Hands+JINS",
+          "gallery": [
+            "assets/gallery/default_shopping.jpg"
+          ]
         },
         {
           "time": "11:30",
@@ -389,7 +470,10 @@
           "popup": true,
           "detail": "Kobe Beef Mouriya Gion 已預約 11:30，建議準時到達。",
           "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Beef+Mouriya+Gion",
-          "booked": true
+          "booked": true,
+          "gallery": [
+            "assets/gallery/default_food.jpg"
+          ]
         },
         {
           "time": "14:00",
@@ -538,7 +622,10 @@
           "who": "all",
           "popup": true,
           "detail": "由大阪出發前往神戶。建議先前往神戶動物王國，因為動物王國收得較早，之後再到神戶市區及海邊夜景收尾。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kobe+Animal+Kingdom",
+          "gallery": [
+            "assets/gallery/default_transport.jpg"
+          ]
         },
         {
           "time": "10:45",
@@ -629,7 +716,10 @@
           "who": "all",
           "popup": true,
           "detail": "由神戶返回大阪。時間可按晚餐及夜景實際情況調整。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Osaka+Station"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Osaka+Station",
+          "gallery": [
+            "assets/gallery/default_transport.jpg"
+          ]
         }
       ]
     },
@@ -675,7 +765,10 @@
           "who": "team1",
           "popup": true,
           "detail": "Team Ian 乘搭 CX595 於 28/5 18:30 由大阪回港，21:40 抵達香港。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport",
+          "gallery": [
+            "assets/gallery/kix.jpg"
+          ]
         },
         {
           "time": "19:25",
@@ -685,7 +778,10 @@
           "who": "team2",
           "popup": true,
           "detail": "Team Edan 乘搭 CX569 於 28/5 19:25 由大阪關西機場起飛，22:40 抵達香港。建議預留充足時間前往關西機場辦理登機。",
-          "maps": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport"
+          "maps": "https://www.google.com/maps/search/?api=1&query=Kansai+International+Airport",
+          "gallery": [
+            "assets/gallery/kix.jpg"
+          ]
         }
       ]
     }
