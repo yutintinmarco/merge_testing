@@ -662,6 +662,23 @@ function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
 function fmtMMDD(iso){return iso.slice(5).replace("-","/");}
 function dateInTZ(tz){try{return new Intl.DateTimeFormat("en-CA",{timeZone:tz||"UTC",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());}catch(e){return new Date().toISOString().slice(0,10);}}
 function normGallery(v){if(!v)return[];if(Array.isArray(v))return v;return[v];}
+function getGalleryForItem(item, day, cityKey, matchedCities, meta){
+  const explicit=[...normGallery(item.gallery),...normGallery(item.booking?.gallery)];
+  if(explicit.length)return explicit;
+  const defs=meta?.galleryDefaults||{};
+  const byIcon=defs.byIcon||{};
+  if(item.icon&&byIcon[item.icon])return normGallery(byIcon[item.icon]);
+  const cityCandidates=[];
+  if(day?.city&&day.city!=="both")cityCandidates.push(day.city);
+  if(Array.isArray(day?.cities))day.cities.forEach(c=>cityCandidates.push(c));
+  if(cityKey&&cityKey!=="both")cityCandidates.push(cityKey);
+  if(Array.isArray(matchedCities))matchedCities.forEach(c=>cityCandidates.push(c));
+  const byCity=defs.byCity||{};
+  for(const c of [...new Set(cityCandidates)]){
+    if(byCity[c])return normGallery(byCity[c]);
+  }
+  return normGallery(defs.fallback);
+}
 
 // Font / Refresh
 function getCurrentAppView(){
@@ -962,7 +979,12 @@ function renderSnacks(data){
     el.setAttribute("data-time",[s.area||"",s.category||""].filter(Boolean).join("  "));
     const lines=[];if(s.must)lines.push(`必點  ${s.must}`);if(s.note)lines.push(s.note);if(s.opening)lines.push(`營業  ${s.opening}`);
     el.setAttribute("data-detail-lines",JSON.stringify(lines.length?lines:["點擊地圖前往"]));
-    if(s.gallery)el.setAttribute("data-gallery",JSON.stringify(s.gallery));
+    const snackGallery=[...normGallery(s.gallery)];
+    if(!snackGallery.length){
+      const gd=data.meta?.galleryDefaults||{};
+      snackGallery.push(...normGallery(gd.byIcon?.[s.icon||"🍡"]||gd.byIcon?.["🍽️"]||gd.fallback));
+    }
+    if(snackGallery.length)el.setAttribute("data-gallery",JSON.stringify(snackGallery));
     const icon=document.createElement("div");icon.className="icon";icon.textContent=s.icon||"🍡";
     const cw=document.createElement("div");cw.className="content";
     cw.innerHTML=`<div class="content-title">${s.title||""}</div>${[s.area||"",s.category||""].filter(Boolean).length?`<div class="content-note">${[s.area||"",s.category||""].filter(Boolean).join("  ")}</div>`:""}`;
@@ -1213,7 +1235,7 @@ function render(data){
         if(item.detailLines)el.setAttribute("data-detail-lines",JSON.stringify(item.detailLines));
         if(item.booked)el.setAttribute("data-booked","true");
         el.setAttribute("data-maps",item.maps||"");
-        const mg=[...normGallery(item.gallery),...normGallery(item.booking?.gallery)];
+        const mg=getGalleryForItem(item,day,ck,matchedCities,meta);
         if(mg.length)el.setAttribute("data-gallery",JSON.stringify(mg));
         if(item.dianping)el.setAttribute("data-dianping",item.dianping);
         if(item.booking?.pdf)el.setAttribute("data-booking-pdf",item.booking.pdf);
@@ -1251,7 +1273,7 @@ function render(data){
 // FAB
 const ivw=document.getElementById("itinerary-view"),svw=document.getElementById("snacks-view"),infvw=document.getElementById("info-view"),expvw=document.getElementById("expenses-view");
 const bti=document.getElementById("bt-itinerary"),bts=document.getElementById("bt-snacks"),btinfo=document.getElementById("bt-info"),btexp=document.getElementById("bt-expenses");
-const APP_VERSION = "6.7.3";
+const APP_VERSION = "6.8.0";
 const EXPENSES_MODULE_VERSION = APP_VERSION;
 window.APP_VERSION = APP_VERSION;
 window.EXPENSES_MODULE_VERSION = EXPENSES_MODULE_VERSION;
